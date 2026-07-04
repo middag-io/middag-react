@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-docs.middag.io/schemas/connectors.json",
+  "title": "MIDDAG Connectors Contract",
+  "description": "TypeScript contract types for the connector management subsystem. Mirrors PHP VOs in classes/extensions/core/connectors/connector/*. Used for connector list pages, detail views, health checks, and type catalogs.",
+
+  "types": {
+    "ConnectorStatus": {
+      "type": "string",
+      "enum": ["unconfigured", "configured", "connected", "degraded", "disconnected"],
+      "description": "Lifecycle state of a connector instance.",
+      "x-ai-purpose": "Use to display status badges in connector lists and details. Maps to semantic colors: connected→success, degraded→warning, disconnected→destructive, configured→info, unconfigured→neutral."
+    },
+    "CredentialField": {
+      "type": "object",
+      "description": "Schema for a single credential input in the connector configuration form.",
+      "properties": {
+        "key": { "type": "string", "description": "Field identifier." },
+        "label": { "type": "string", "description": "Display label." },
+        "type": { "type": "string", "enum": ["text", "password", "url", "select"], "description": "Input component type." },
+        "required": { "type": "boolean", "description": "Whether the field is required." },
+        "placeholder": { "type": ["string", "null"], "description": "Placeholder text." }
+      },
+      "required": ["key", "label", "type"]
+    },
+    "HealthCheckResult": {
+      "type": "object",
+      "description": "Result of a single health check probe against a connector.",
+      "properties": {
+        "success": { "type": "boolean", "description": "Whether the health check passed." },
+        "latency_ms": { "type": ["number", "null"], "description": "Response time in milliseconds." },
+        "error_message": { "type": ["string", "null"], "description": "Error details when check fails." },
+        "resulting_status": { "type": "string", "description": "ConnectorStatus after this check." },
+        "checked_at": { "type": "number", "description": "Unix timestamp of the check." }
+      },
+      "required": ["success", "latency_ms", "error_message", "resulting_status", "checked_at"]
+    },
+    "ConnectorListItem": {
+      "type": "object",
+      "description": "Summary connector data for list/table views.",
+      "properties": {
+        "id": { "type": "number" },
+        "fullname": { "type": "string" },
+        "connector_type": { "type": "string" },
+        "extension": { "type": "string", "description": "Owning extension (e.g. 'local_middag')." },
+        "status": { "$ref": "#/types/ConnectorStatus" },
+        "enabled": { "type": "boolean" },
+        "last_check_at": { "type": ["number", "null"], "description": "Unix timestamp of last health check." },
+        "latency_ms": { "type": ["number", "null"] }
+      },
+      "required": ["id", "fullname", "connector_type", "extension", "status", "enabled"]
+    },
+    "ConnectorDetail": {
+      "type": "object",
+      "description": "Full connector data for detail/edit views.",
+      "properties": {
+        "id": { "type": "number" },
+        "fullname": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "connector_type": { "type": "string" },
+        "endpoint": { "type": ["string", "null"], "description": "API endpoint URL." },
+        "extension": { "type": "string" },
+        "status": { "$ref": "#/types/ConnectorStatus" },
+        "enabled": { "type": "boolean" },
+        "created_at": { "type": "number" },
+        "modified_at": { "type": "number" },
+        "credential_fields": {
+          "type": "array",
+          "items": { "$ref": "#/types/CredentialField" },
+          "description": "Schema for the connector's credential form."
+        },
+        "health_history": {
+          "type": "array",
+          "items": { "$ref": "#/types/HealthCheckResult" },
+          "description": "Recent health check history (most recent first)."
+        }
+      },
+      "required": ["id", "fullname", "connector_type", "extension", "status", "enabled", "created_at", "modified_at", "credential_fields", "health_history"]
+    },
+    "ConnectorTypeInfo": {
+      "type": "object",
+      "description": "Catalog entry for a connector type (not an instance).",
+      "properties": {
+        "type": { "type": "string", "description": "Unique type identifier." },
+        "name": { "type": "string", "description": "Display name." },
+        "extension": { "type": "string" },
+        "credential_fields": {
+          "type": "array",
+          "items": { "$ref": "#/types/CredentialField" }
+        }
+      },
+      "required": ["type", "name", "extension", "credential_fields"]
+    }
+  },
+
+  "x-ai-purpose": "These types are used when building connector management pages (list, detail, configuration). They are NOT part of the PageContract block system — connectors are a separate subsystem with its own pages that happen to use the same block types (dense_table for lists, detail_panel for details, form_panel for configuration)."
+}

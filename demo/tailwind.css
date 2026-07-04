@@ -1,0 +1,9 @@
+/*
+ * FREE demo harness CSS entry point.
+ *
+ * Re-exports the engine tailwind.css and adds an @source directive so
+ * Tailwind v4 scans the engine src/ for class usage. Community-only:
+ * no react-pro @source here — the PRO demo (packages/react-demo) has its own.
+ */
+@source "../src";
+@import "../src/tailwind.css";

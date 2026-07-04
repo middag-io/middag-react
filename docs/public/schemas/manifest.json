@@ -1,0 +1,119 @@
+{
+  "$comment": "MIDDAG React UI — Schema Manifest. Entry point for AI agents and tooling to discover all available schemas.",
+  "name": "@middag-io/react",
+  "version": "0.9.0",
+  "description": "Design system schemas for theme generation, block composition, and component usage.",
+  "schemas": [
+    {
+      "id": "theme",
+      "title": "Theme Schema",
+      "description": "JSON Schema defining the structure of a MIDDAG theme: tokens (colors, spacing, radius, shadows, typography, motion, layout, z-index), component overrides, and block overrides.",
+      "path": "theme.json",
+      "url": "https://ui-docs.middag.io/schemas/theme.json",
+      "usage": "Validate and generate theme JSON files. AI reads this to understand what can be customized."
+    },
+    {
+      "id": "theme-defaults",
+      "title": "Theme Defaults",
+      "description": "All default token values for light and dark modes. Shows what a theme inherits when no override is specified. AI uses this as the baseline to diff against.",
+      "path": "theme-defaults.json",
+      "url": "https://ui-docs.middag.io/schemas/theme-defaults.json",
+      "usage": "Reference defaults when generating a theme. Only override tokens that differ from these values."
+    },
+    {
+      "id": "blocks",
+      "title": "Block Types Schema",
+      "description": "All block types with data shapes, layout region compatibility, and customization options. Used to compose PageContracts.",
+      "path": "blocks.json",
+      "url": "https://ui-docs.middag.io/schemas/blocks.json",
+      "usage": "AI reads this to generate valid PageContract JSON with correct block types and data structures."
+    },
+    {
+      "id": "components",
+      "title": "Components Schema",
+      "description": "All ReUI components with variants, sizes, and props. Used for themed UI composition.",
+      "path": "components.json",
+      "url": "https://ui-docs.middag.io/schemas/components.json",
+      "usage": "AI reads this to understand which components exist, their variants, and how to style them via theme overrides."
+    },
+    {
+      "id": "navigation",
+      "title": "Navigation Contract",
+      "description": "Sidebar navigation tree contract (NavigationNode, NavigationTreePayload, NavigationEntityType). Consumed by ProductShell.",
+      "path": "navigation.json",
+      "url": "https://ui-docs.middag.io/schemas/navigation.json",
+      "usage": "Understand the sidebar navigation structure when generating pages with navigation context."
+    },
+    {
+      "id": "shared-props",
+      "title": "Shared Props Contract",
+      "description": "Inertia shared props (auth, theme, flash, scope, locale) sent on every request. Consumed by providers.",
+      "path": "shared-props.json",
+      "url": "https://ui-docs.middag.io/schemas/shared-props.json",
+      "usage": "Understand global data available on every page via usePage<SharedProps>().props."
+    },
+    {
+      "id": "connectors",
+      "title": "Connectors Contract",
+      "description": "Connector management types (ConnectorStatus, CredentialField, ConnectorDetail). Separate subsystem.",
+      "path": "connectors.json",
+      "url": "https://ui-docs.middag.io/schemas/connectors.json",
+      "usage": "Understand connector data shapes when building connector management pages."
+    },
+    {
+      "id": "ai-contract-manifest",
+      "title": "AI Contract Manifest",
+      "description": "Machine-readable manifest for LLMs and AI agents. Describes the full contract-driven rendering system with generation rules, validation, examples, and anti-patterns.",
+      "path": "ai-contract-manifest.json",
+      "url": "https://ui-docs.middag.io/schemas/ai-contract-manifest.json",
+      "usage": "Primary entry point for AI agents. Read this first to understand how to generate, validate, and adapt PageContracts."
+    }
+  ],
+  "shells": ["product", "immersive"],
+  "layouts": ["stack", "sidebar", "dashboard", "wizard"],
+  "themes": [
+    {
+      "id": "classic",
+      "displayName": "Classic (Maia)",
+      "description": "Default MIDDAG design language. Warm neutral base, dark blue-charcoal primary, generous radii, comfortable density.",
+      "primaryHue": 264,
+      "tier": "community"
+    },
+    {
+      "id": "enterprise",
+      "displayName": "Enterprise",
+      "description": "Issue-tracker style. Cool corporate blue primary, tighter spacing, smaller radii, denser tables.",
+      "primaryHue": 255,
+      "tier": "pro"
+    },
+    {
+      "id": "soft",
+      "displayName": "Soft",
+      "description": "Warm, approachable. Rose/pink primary, larger radii, spacious density, warm cream surfaces.",
+      "primaryHue": 330,
+      "tier": "pro"
+    },
+    {
+      "id": "midnight",
+      "displayName": "Midnight",
+      "description": "Dark-first, high-contrast. Deep indigo primary, tight radii, compact density, dev-tools aesthetic.",
+      "primaryHue": 220,
+      "tier": "pro"
+    }
+  ],
+  "colorSpace": "OKLCH",
+  "colorFormat": "oklch(lightness chroma hue)",
+  "i18n": {
+    "defaultLocale": "en",
+    "supportedLocales": ["en", "pt-BR", "es"],
+    "keyPrefix": "middag.ui.",
+    "interpolation": "{variable}",
+    "defaultsFile": "src/app/providers/i18n-defaults.ts"
+  },
+  "theming": {
+    "method": "CSS custom properties scoped to a class",
+    "example": ".theme-{name} { --primary: oklch(...); }",
+    "colorModes": ["light", "dark"],
+    "darkSelector": ":root.dark .theme-{name}, [data-theme='dark'] .theme-{name}"
+  }
+}

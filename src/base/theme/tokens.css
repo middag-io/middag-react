@@ -1,0 +1,290 @@
+/**
+ * MIDDAG ReUI Maia — Design Tokens
+ *
+ * Source of truth for all visual tokens.
+ * Consumed by Tailwind CSS v4 via @theme in tailwind.css.
+ *
+ * @see NV-05-ux-design-system.md
+ */
+
+:root {
+  /* ── Canvas ── */
+  --background: oklch(0.99 0.001 286);
+  --foreground: oklch(0.17 0.01 286);
+
+  /* ── Primary (Brand) ── */
+  --primary: oklch(0.21 0.034 264.06);
+  --primary-foreground: oklch(0.98 0 0);
+  --primary-subtle: oklch(0.95 0.012 264.06);
+  --primary-muted: oklch(0.88 0.02 264.06);
+
+  /* ── Secondary ── */
+  --secondary: oklch(0.97 0.001 286);
+  --secondary-foreground: oklch(0.45 0.01 286);
+
+  /* ── Destructive ── */
+  --destructive: oklch(0.577 0.245 27.33);
+  --destructive-foreground: oklch(0.98 0 0);
+  --destructive-subtle: oklch(0.95 0.05 27.33);
+  --destructive-muted: oklch(0.88 0.08 27.33);
+
+  /* ── Success ── */
+  --success: oklch(0.55 0.17 155);
+  --success-foreground: oklch(0.98 0 0);
+  --success-subtle: oklch(0.95 0.04 155);
+  --success-muted: oklch(0.88 0.06 155);
+
+  /* ── Warning ── */
+  --warning: oklch(0.75 0.18 75);
+  --warning-foreground: oklch(0.18 0.02 75);
+  --warning-subtle: oklch(0.96 0.04 75);
+  --warning-muted: oklch(0.9 0.06 75);
+
+  /* ── Info ── */
+  --info: oklch(0.58 0.16 250);
+  --info-foreground: oklch(0.98 0 0);
+  --info-subtle: oklch(0.95 0.04 250);
+  --info-muted: oklch(0.88 0.06 250);
+
+  /* ── Neutral (Surface & Structure) ── */
+  --muted: oklch(0.97 0.001 286);
+  --muted-foreground: oklch(0.58 0.008 286);
+  --accent: oklch(0.97 0.001 286);
+  --accent-foreground: oklch(0.21 0.014 285.82);
+
+  /* ── Structure ── */
+  --border: oklch(0.975 0.001 286);
+  --input: oklch(0.89 0.004 286);
+  --ring: oklch(0.708 0.028 256.85);
+
+  /* ── Overlays ── */
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.014 285.82);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.014 285.82);
+
+  /* ── Sidebar ── */
+  --sidebar: oklch(0.975 0.002 286);
+  --sidebar-foreground: oklch(0.45 0.01 286);
+  --sidebar-primary: oklch(0.21 0.034 264.06);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.93 0.012 264);
+  --sidebar-accent-foreground: oklch(0.21 0.014 285.82);
+  --sidebar-hover: oklch(0.955 0.003 286);
+  --sidebar-border: oklch(0.91 0.005 286);
+
+  /* ── Chart ── */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.714);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  /* ── Typography ── */
+  --font-sans:
+    "Figtree Variable", "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    "JetBrains Mono", "Fira Code", ui-monospace, "Cascadia Mono", "Segoe UI Mono",
+    "Liberation Mono", Menlo, Monaco, monospace;
+
+  /* ── Invert (ReUI) ── */
+  --invert: oklch(0.21 0.014 285.82);
+  --invert-foreground: oklch(0.985 0 0);
+
+  /* ── Border Radius (Maia style) ── */
+  --radius: 0.625rem;
+
+  /* ── Shadows ── */
+  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.06), 0 1px 3px oklch(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px oklch(0 0 0 / 0.06), 0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.08), 0 4px 6px oklch(0 0 0 / 0.04);
+  --shadow-xl: 0 20px 25px oklch(0 0 0 / 0.08), 0 8px 10px oklch(0 0 0 / 0.04);
+  --shadow-2xl: 0 25px 50px oklch(0 0 0 / 0.12);
+
+  /* ── Spacing (8px base grid) ── */
+  --space-0: 0px;
+  --space-0\.5: 2px;
+  --space-1: 4px;
+  --space-1\.5: 6px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* ── Typography Scale ── */
+  --text-display: clamp(1.75rem, 4vw, 2rem); /* 32px — hero, page title destaque */
+  --text-h1: 1.5rem; /* 24px — page title (1 per page) */
+  --text-h2: 1.25rem; /* 20px — section title */
+  --text-h3: 1.125rem; /* 18px — card title, panel header */
+  --text-h4: 1rem; /* 16px — sub-section, field group */
+  --text-body-l: 1rem; /* 16px — long reading, descriptions */
+  --text-body-m: 0.875rem; /* 14px — body default, table cells, labels */
+  --text-body-s: 0.75rem; /* 12px — captions, help text, timestamps */
+  --text-mono: 0.8125rem; /* 13px — code, IDs, technical values */
+  --text-overline: 0.6875rem; /* 11px — section labels (uppercase) */
+
+  /* ── Motion Duration Scale ── */
+  --duration-instant: 0ms;
+  --duration-fast: 100ms;
+  --duration-normal: 150ms;
+  --duration-moderate: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+
+  /* ── Motion Easing Functions ── */
+  --ease-default: cubic-bezier(0.2, 0, 0, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Layout Dimensions ── */
+  --content-max-width: 1280px;
+  --content-narrow: 720px;
+  --content-wide: 1440px;
+  --sidebar-width: 260px;
+  --sidebar-width-collapsed: 60px;
+  --sidebar-width-mobile: 300px;
+
+  /* ── Breakpoints ── */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* ── Component Sizing (touch targets) ── */
+  --size-button-sm: 32px;
+  --size-button-md: 36px;
+  --size-button-lg: 44px;
+  --size-input: 36px;
+  --size-table-row: 48px;
+  --size-sidebar-item: 40px;
+  --size-avatar-sm: 24px;
+  --size-avatar-md: 32px;
+  --size-avatar-lg: 40px;
+
+  /* ── Z-Index Scale ── */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-dropdown: 20;
+  --z-overlay: 30;
+  --z-popover: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+  --z-command: 100;
+
+  /* ── Border Radius Scale (Maia) ── */
+  --radius-none: 0px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+}
+
+:root.dark,
+[data-theme="dark"] {
+  /* ── Canvas ── */
+  --background: oklch(0.13 0.01 285.82);
+  --foreground: oklch(0.93 0.005 285.82);
+
+  /* ── Primary (Brand) ── */
+  --primary: oklch(0.6 0.06 264.06);
+  --primary-foreground: oklch(0.1 0.01 264.06);
+  --primary-subtle: oklch(0.22 0.03 264.06);
+  --primary-muted: oklch(0.28 0.04 264.06);
+
+  /* ── Secondary ── */
+  --secondary: oklch(0.2 0.005 286.38);
+  --secondary-foreground: oklch(0.9 0.005 285.82);
+
+  /* ── Destructive ── */
+  --destructive: oklch(0.63 0.24 27.33);
+  --destructive-foreground: oklch(0.1 0.01 27.33);
+  --destructive-subtle: oklch(0.22 0.06 27.33);
+  --destructive-muted: oklch(0.28 0.08 27.33);
+
+  /* ── Success ── */
+  --success: oklch(0.62 0.17 155);
+  --success-foreground: oklch(0.1 0.01 155);
+  --success-subtle: oklch(0.2 0.04 155);
+  --success-muted: oklch(0.26 0.06 155);
+
+  /* ── Warning ── */
+  --warning: oklch(0.78 0.18 75);
+  --warning-foreground: oklch(0.15 0.02 75);
+  --warning-subtle: oklch(0.22 0.04 75);
+  --warning-muted: oklch(0.28 0.06 75);
+
+  /* ── Info ── */
+  --info: oklch(0.65 0.16 250);
+  --info-foreground: oklch(0.1 0.01 250);
+  --info-subtle: oklch(0.2 0.04 250);
+  --info-muted: oklch(0.26 0.06 250);
+
+  /* ── Neutral (Surface & Structure) ── */
+  --muted: oklch(0.2 0.005 286.38);
+  --muted-foreground: oklch(0.6 0.01 285.82);
+  --accent: oklch(0.22 0.005 286.38);
+  --accent-foreground: oklch(0.9 0.005 285.82);
+
+  /* ── Structure ── */
+  --border: oklch(0.24 0.004 286.32);
+  --input: oklch(0.32 0.005 286.32);
+  --ring: oklch(0.55 0.04 256.85);
+
+  /* ── Overlays ── */
+  --popover: oklch(0.18 0.008 285.82);
+  --popover-foreground: oklch(0.93 0.005 285.82);
+  --card: oklch(0.17 0.008 285.82);
+  --card-foreground: oklch(0.93 0.005 285.82);
+
+  /* ── Sidebar ── */
+  --sidebar: oklch(0.12 0.008 285.82);
+  --sidebar-foreground: oklch(0.7 0.01 264.06);
+  --sidebar-primary: oklch(0.6 0.06 264.06);
+  --sidebar-primary-foreground: oklch(0.1 0.01 264.06);
+  --sidebar-accent: oklch(0.22 0.02 264.06);
+  --sidebar-accent-foreground: oklch(0.9 0.005 285.82);
+  --sidebar-hover: oklch(0.185 0.006 286);
+  --sidebar-border: oklch(0.25 0.005 286.32);
+
+  /* ── Invert (ReUI) ── */
+  --invert: oklch(0.7 0.01 285.82);
+  --invert-foreground: oklch(0.13 0.01 285.82);
+
+  /* ── Chart ── */
+  --chart-1: oklch(0.7 0.2 41.116);
+  --chart-2: oklch(0.65 0.12 184.714);
+  --chart-3: oklch(0.5 0.07 227.392);
+  --chart-4: oklch(0.85 0.17 84.429);
+  --chart-5: oklch(0.8 0.17 70.08);
+
+  /* ── Shadows (higher opacity for dark surfaces) ── */
+  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.2);
+  --shadow-sm: 0 1px 3px oklch(0 0 0 / 0.25), 0 1px 2px oklch(0 0 0 / 0.2);
+  --shadow-md: 0 4px 6px oklch(0 0 0 / 0.3), 0 2px 4px oklch(0 0 0 / 0.2);
+  --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.35), 0 4px 6px oklch(0 0 0 / 0.2);
+  --shadow-xl: 0 20px 25px oklch(0 0 0 / 0.35), 0 8px 10px oklch(0 0 0 / 0.2);
+  --shadow-2xl: 0 25px 50px oklch(0 0 0 / 0.45);
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

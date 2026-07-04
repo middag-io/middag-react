@@ -1,0 +1,85 @@
+import { Frame, FramePanel } from "@/components/reui/frame";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/reui/avatar";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/reui/breadcrumb";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { File02Icon } from "@hugeicons/core-free-icons";
+
+export function Pattern() {
+  return (
+    <Frame spacing="sm">
+      <FramePanel>
+        <Breadcrumb>
+          <BreadcrumbList className="gap-3">
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                href="#"
+                className="text-foreground flex items-center gap-2"
+              >
+                <Avatar className="size-6">
+                  <AvatarImage src="https://github.com/vercel.png" />
+                  <AvatarFallback>VC</AvatarFallback>
+                </Avatar>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+
+            <BreadcrumbSeparator className="text-muted-foreground/60">
+              /
+            </BreadcrumbSeparator>
+
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#" className="flex items-center gap-3">
+                <Avatar className="size-6">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    className="object-cover"
+                  />
+                  <AvatarFallback>MP</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                  <span className="text-foreground leading-tight font-medium">
+                    shadcn
+                  </span>
+                  <span className="text-muted-foreground leading-tight">
+                    ui@shadcn.com
+                  </span>
+                </div>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+
+            <BreadcrumbSeparator className="text-muted-foreground/60">
+              /
+            </BreadcrumbSeparator>
+
+            <BreadcrumbItem>
+              <BreadcrumbPage className="flex items-center gap-2.5">
+                <span className="flex size-6 items-center justify-center rounded-md bg-sky-100 text-sky-500 dark:bg-sky-500/10 dark:text-sky-400">
+                  <HugeiconsIcon
+                    icon={File02Icon}
+                    strokeWidth={2}
+                    className="size-3.5"
+                  />
+                </span>
+                <div className="flex flex-col">
+                  <span className="text-foreground leading-tight font-medium">
+                    Document
+                  </span>
+                  <span className="text-muted-foreground flex items-center gap-1 leading-tight">
+                    agents.md
+                  </span>
+                </div>
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </FramePanel>
+    </Frame>
+  );
+}

@@ -1,0 +1,42 @@
+#!/bin/sh
+# pre-push — typecheck + contract drift (php-ui) + build
+
+echo "[pre-push] Running typecheck..."
+npx tsc --noEmit
+if [ $? -ne 0 ]; then
+    echo "[pre-push] BLOCKED: TypeScript errors. Fix before pushing."
+    exit 1
+fi
+
+# typecheck:tests — the test tree (tsconfig.test.json) is not covered by the
+# build tsconfig, so a type error in a *.test.ts(x) file would otherwise only
+# surface in CI. Gate it here too, same as `npm run check`.
+echo "[pre-push] Running typecheck:tests..."
+npm run typecheck:tests
+if [ $? -ne 0 ]; then
+    echo "[pre-push] BLOCKED: TypeScript errors in tests. Fix before pushing."
+    exit 1
+fi
+
+# Contract drift gate — same check the CI (ci.yml / publish workflow) runs.
+# generated/ must stay in sync with the schema (php-ui sibling if present, else
+# the committed mirror). Catches "PHP VO changed but react contracts not
+# regenerated" locally, before push.
+echo "[pre-push] Checking contract drift..."
+npm run gen:contracts:check
+if [ $? -ne 0 ]; then
+    echo "[pre-push] BLOCKED: generated contracts drifted from the schema."
+    echo "  A PHP VO/schema moved (or generated/ was hand-edited)."
+    echo "  Fix: npm run gen:contracts"
+    echo "  Then commit BOTH generated/ and the refreshed mirror."
+    exit 1
+fi
+
+echo "[pre-push] Running lib build..."
+npm run build
+if [ $? -ne 0 ]; then
+    echo "[pre-push] BLOCKED: Build failed. Fix before pushing."
+    exit 1
+fi
+
+echo "[pre-push] OK — typecheck and build passed."

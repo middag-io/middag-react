@@ -1,0 +1,401 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-docs.middag.io/schemas/theme.json",
+  "title": "MIDDAG React Theme",
+  "description": "Schema for @middag-io/react theme customization. Themes override CSS custom properties scoped to a class (e.g. .theme-ocean). All color values use OKLCH: oklch(lightness chroma hue).",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Theme identifier used as CSS class: .theme-{name}",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "examples": ["ocean", "middag", "sunset"]
+    },
+    "extends": {
+      "type": "string",
+      "enum": ["classic", "enterprise", "soft", "midnight"],
+      "description": "PRO: Extend a built-in theme. Only override tokens that differ."
+    },
+    "displayName": {
+      "type": "string",
+      "description": "Human-readable theme name for UI pickers"
+    },
+    "description": {
+      "type": "string",
+      "description": "One-line description of the theme's visual identity"
+    },
+    "colorMode": {
+      "type": "string",
+      "enum": ["light", "dark", "both"],
+      "default": "both",
+      "description": "Which color modes this theme provides tokens for"
+    },
+    "tokens": {
+      "$ref": "#/$defs/ThemeTokens"
+    },
+    "components": {
+      "$ref": "#/$defs/ComponentOverrides"
+    },
+    "blocks": {
+      "$ref": "#/$defs/BlockOverrides"
+    }
+  },
+  "required": ["name", "tokens"],
+  "$defs": {
+    "OklchColor": {
+      "type": "string",
+      "description": "OKLCH color value: oklch(L C H) where L=0-1, C=0-0.4, H=0-360",
+      "pattern": "^oklch\\([\\d.]+ [\\d.]+ [\\d.]+\\)$",
+      "examples": ["oklch(0.45 0.2 260)", "oklch(0.98 0 0)"]
+    },
+    "CssValue": {
+      "type": "string",
+      "description": "Any valid CSS value (rem, px, number, etc.)"
+    },
+    "ThemeTokens": {
+      "type": "object",
+      "description": "CSS custom property overrides grouped by category",
+      "properties": {
+        "colors": {
+          "$ref": "#/$defs/ColorTokens"
+        },
+        "colorsDark": {
+          "$ref": "#/$defs/ColorTokens",
+          "description": "Dark mode color overrides. Omitted tokens inherit from colors."
+        },
+        "spacing": {
+          "$ref": "#/$defs/SpacingTokens"
+        },
+        "radius": {
+          "$ref": "#/$defs/RadiusTokens"
+        },
+        "shadows": {
+          "$ref": "#/$defs/ShadowTokens"
+        },
+        "typography": {
+          "$ref": "#/$defs/TypographyTokens"
+        },
+        "motion": {
+          "$ref": "#/$defs/MotionTokens"
+        },
+        "layout": {
+          "$ref": "#/$defs/LayoutTokens"
+        },
+        "zIndex": {
+          "$ref": "#/$defs/ZIndexTokens"
+        }
+      }
+    },
+    "ColorTokens": {
+      "type": "object",
+      "description": "Color token overrides. All values are OKLCH.",
+      "properties": {
+        "background": { "$ref": "#/$defs/OklchColor" },
+        "foreground": { "$ref": "#/$defs/OklchColor" },
+        "primary": { "$ref": "#/$defs/OklchColor" },
+        "primaryForeground": { "$ref": "#/$defs/OklchColor" },
+        "primarySubtle": { "$ref": "#/$defs/OklchColor" },
+        "primaryMuted": { "$ref": "#/$defs/OklchColor" },
+        "secondary": { "$ref": "#/$defs/OklchColor" },
+        "secondaryForeground": { "$ref": "#/$defs/OklchColor" },
+        "destructive": { "$ref": "#/$defs/OklchColor" },
+        "destructiveForeground": { "$ref": "#/$defs/OklchColor" },
+        "destructiveSubtle": { "$ref": "#/$defs/OklchColor" },
+        "destructiveMuted": { "$ref": "#/$defs/OklchColor" },
+        "success": { "$ref": "#/$defs/OklchColor" },
+        "successForeground": { "$ref": "#/$defs/OklchColor" },
+        "successSubtle": { "$ref": "#/$defs/OklchColor" },
+        "successMuted": { "$ref": "#/$defs/OklchColor" },
+        "warning": { "$ref": "#/$defs/OklchColor" },
+        "warningForeground": { "$ref": "#/$defs/OklchColor" },
+        "warningSubtle": { "$ref": "#/$defs/OklchColor" },
+        "warningMuted": { "$ref": "#/$defs/OklchColor" },
+        "info": { "$ref": "#/$defs/OklchColor" },
+        "infoForeground": { "$ref": "#/$defs/OklchColor" },
+        "infoSubtle": { "$ref": "#/$defs/OklchColor" },
+        "infoMuted": { "$ref": "#/$defs/OklchColor" },
+        "muted": { "$ref": "#/$defs/OklchColor" },
+        "mutedForeground": { "$ref": "#/$defs/OklchColor" },
+        "accent": { "$ref": "#/$defs/OklchColor" },
+        "accentForeground": { "$ref": "#/$defs/OklchColor" },
+        "card": { "$ref": "#/$defs/OklchColor" },
+        "cardForeground": { "$ref": "#/$defs/OklchColor" },
+        "popover": { "$ref": "#/$defs/OklchColor" },
+        "popoverForeground": { "$ref": "#/$defs/OklchColor" },
+        "border": { "$ref": "#/$defs/OklchColor" },
+        "input": { "$ref": "#/$defs/OklchColor" },
+        "ring": { "$ref": "#/$defs/OklchColor" },
+        "invert": { "$ref": "#/$defs/OklchColor" },
+        "invertForeground": { "$ref": "#/$defs/OklchColor" },
+        "chart1": { "$ref": "#/$defs/OklchColor" },
+        "chart2": { "$ref": "#/$defs/OklchColor" },
+        "chart3": { "$ref": "#/$defs/OklchColor" },
+        "chart4": { "$ref": "#/$defs/OklchColor" },
+        "chart5": { "$ref": "#/$defs/OklchColor" },
+        "sidebar": { "$ref": "#/$defs/OklchColor" },
+        "sidebarForeground": { "$ref": "#/$defs/OklchColor" },
+        "sidebarPrimary": { "$ref": "#/$defs/OklchColor" },
+        "sidebarPrimaryForeground": { "$ref": "#/$defs/OklchColor" },
+        "sidebarAccent": { "$ref": "#/$defs/OklchColor" },
+        "sidebarAccentForeground": { "$ref": "#/$defs/OklchColor" },
+        "sidebarHover": { "$ref": "#/$defs/OklchColor" },
+        "sidebarBorder": { "$ref": "#/$defs/OklchColor" },
+        "sidebarRing": { "$ref": "#/$defs/OklchColor" }
+      },
+      "additionalProperties": false
+    },
+    "SpacingTokens": {
+      "type": "object",
+      "description": "Spacing scale overrides (8px base grid).",
+      "properties": {
+        "space0": { "$ref": "#/$defs/CssValue" },
+        "space0_5": { "$ref": "#/$defs/CssValue" },
+        "space1": { "$ref": "#/$defs/CssValue" },
+        "space1_5": { "$ref": "#/$defs/CssValue" },
+        "space2": { "$ref": "#/$defs/CssValue" },
+        "space3": { "$ref": "#/$defs/CssValue" },
+        "space4": { "$ref": "#/$defs/CssValue" },
+        "space5": { "$ref": "#/$defs/CssValue" },
+        "space6": { "$ref": "#/$defs/CssValue" },
+        "space8": { "$ref": "#/$defs/CssValue" },
+        "space10": { "$ref": "#/$defs/CssValue" },
+        "space12": { "$ref": "#/$defs/CssValue" },
+        "space16": { "$ref": "#/$defs/CssValue" },
+        "space20": { "$ref": "#/$defs/CssValue" }
+      },
+      "additionalProperties": false
+    },
+    "RadiusTokens": {
+      "type": "object",
+      "properties": {
+        "base": { "$ref": "#/$defs/CssValue", "description": "Base radius (--radius). Components derive sm/md/lg from this." },
+        "sm": { "$ref": "#/$defs/CssValue" },
+        "md": { "$ref": "#/$defs/CssValue" },
+        "lg": { "$ref": "#/$defs/CssValue" },
+        "xl": { "$ref": "#/$defs/CssValue" },
+        "xxl": { "$ref": "#/$defs/CssValue" },
+        "full": { "$ref": "#/$defs/CssValue" }
+      },
+      "additionalProperties": false
+    },
+    "ShadowTokens": {
+      "type": "object",
+      "properties": {
+        "xs": { "type": "string" },
+        "sm": { "type": "string" },
+        "md": { "type": "string" },
+        "lg": { "type": "string" },
+        "xl": { "type": "string" },
+        "xxl": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "TypographyTokens": {
+      "type": "object",
+      "properties": {
+        "fontSans": { "type": "string", "description": "Sans-serif font stack (--font-sans)" },
+        "fontMono": { "type": "string", "description": "Monospace font stack (--font-mono)" }
+      },
+      "additionalProperties": false
+    },
+    "MotionTokens": {
+      "type": "object",
+      "properties": {
+        "durationInstant": { "$ref": "#/$defs/CssValue" },
+        "durationFast": { "$ref": "#/$defs/CssValue" },
+        "durationNormal": { "$ref": "#/$defs/CssValue" },
+        "durationModerate": { "$ref": "#/$defs/CssValue" },
+        "durationSlow": { "$ref": "#/$defs/CssValue" },
+        "durationSlower": { "$ref": "#/$defs/CssValue" },
+        "easeDefault": { "type": "string" },
+        "easeIn": { "type": "string" },
+        "easeOut": { "type": "string" },
+        "easeBounce": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "LayoutTokens": {
+      "type": "object",
+      "properties": {
+        "sidebarWidth": { "$ref": "#/$defs/CssValue", "default": "260px" },
+        "sidebarWidthCollapsed": { "$ref": "#/$defs/CssValue", "default": "60px" },
+        "sidebarWidthMobile": { "$ref": "#/$defs/CssValue", "default": "300px" },
+        "contentMaxWidth": { "$ref": "#/$defs/CssValue" },
+        "contentNarrow": { "$ref": "#/$defs/CssValue" },
+        "contentWide": { "$ref": "#/$defs/CssValue" }
+      },
+      "additionalProperties": false
+    },
+    "ZIndexTokens": {
+      "type": "object",
+      "properties": {
+        "base": { "type": "integer" },
+        "sticky": { "type": "integer" },
+        "dropdown": { "type": "integer" },
+        "overlay": { "type": "integer" },
+        "popover": { "type": "integer" },
+        "modal": { "type": "integer" },
+        "toast": { "type": "integer" },
+        "command": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "ComponentOverrides": {
+      "type": "object",
+      "description": "Per-component customization. Each key is a component name.",
+      "properties": {
+        "button": {
+          "$ref": "#/$defs/ComponentConfig",
+          "description": "Button component. Variants: default, destructive, outline, secondary, ghost, link. Sizes: default, xs, sm, lg, icon, icon-xs, icon-sm, icon-lg."
+        },
+        "badge": {
+          "$ref": "#/$defs/ComponentConfig",
+          "description": "Badge component. Variants: default, outline, secondary, info, success, warning, destructive, invert, plus -light and -outline suffixed variants. Sizes: xs, sm, default, lg, xl. Radius: default, full."
+        },
+        "alert": {
+          "$ref": "#/$defs/ComponentConfig",
+          "description": "Alert component. Variants: default, destructive, info, success, warning, invert."
+        },
+        "toggle": {
+          "$ref": "#/$defs/ComponentConfig",
+          "description": "Toggle component. Variants: default, outline. Sizes: default, sm, lg."
+        },
+        "tabs": {
+          "$ref": "#/$defs/ComponentConfig",
+          "description": "Tabs list. Variants: default, line."
+        },
+        "frame": {
+          "$ref": "#/$defs/ComponentConfig",
+          "description": "Frame container. Variants: default, inverse, ghost. Spacing: xs, sm, default, lg."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ComponentConfig": {
+      "type": "object",
+      "properties": {
+        "defaultVariant": { "type": "string", "description": "Override the default variant" },
+        "defaultSize": { "type": "string", "description": "Override the default size" },
+        "className": { "type": "string", "description": "Additional CSS classes applied to all instances" },
+        "variantOverrides": {
+          "type": "object",
+          "description": "Per-variant CSS class overrides. Key is variant name, value is CSS class string.",
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "BlockOverrides": {
+      "type": "object",
+      "description": "Per-block type customization options.",
+      "properties": {
+        "dense_table": { "$ref": "#/$defs/BlockConfig" },
+        "empty_state": { "$ref": "#/$defs/BlockConfig" },
+        "metric_card": { "$ref": "#/$defs/BlockConfig" },
+        "status_strip": { "$ref": "#/$defs/BlockConfig" },
+        "detail_panel": { "$ref": "#/$defs/BlockConfig" },
+        "activity_timeline": { "$ref": "#/$defs/BlockConfig" },
+        "form_panel": { "$ref": "#/$defs/BlockConfig" },
+        "markdown_panel": { "$ref": "#/$defs/BlockConfig" },
+        "card_grid": { "$ref": "#/$defs/BlockConfig" },
+        "action_grid": { "$ref": "#/$defs/BlockConfig" },
+        "link_list": { "$ref": "#/$defs/BlockConfig" },
+        "tabbed_panel": { "$ref": "#/$defs/BlockConfig" },
+        "condition_tree": { "$ref": "#/$defs/BlockConfig" },
+        "sentence_builder": { "$ref": "#/$defs/BlockConfig" },
+        "flow_editor": { "$ref": "#/$defs/BlockConfig" },
+        "form_builder": { "$ref": "#/$defs/BlockConfig" },
+        "workflow_progress": { "$ref": "#/$defs/BlockConfig" }
+      },
+      "additionalProperties": false
+    },
+    "BlockConfig": {
+      "type": "object",
+      "properties": {
+        "className": { "type": "string", "description": "Additional CSS classes for the block wrapper" },
+        "hideTitle": { "type": "boolean", "description": "Hide the block title", "default": false },
+        "compact": { "type": "boolean", "description": "Use compact spacing variant", "default": false }
+      },
+      "additionalProperties": false
+    },
+    "ShellConfig": {
+      "type": "object",
+      "description": "Shell-level customization.",
+      "properties": {
+        "shell": {
+          "type": "string",
+          "enum": ["product", "immersive"],
+          "description": "Which shell this theme targets"
+        },
+        "sidebarPosition": {
+          "type": "string",
+          "enum": ["left", "right"],
+          "default": "left"
+        },
+        "sidebarCollapsible": {
+          "type": "string",
+          "enum": ["offcanvas", "icon", "none"],
+          "default": "offcanvas",
+          "description": "Sidebar collapse behavior: offcanvas (fully hidden), icon (narrow strip), none (always full)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "LayoutConfig": {
+      "type": "object",
+      "description": "Layout template options.",
+      "properties": {
+        "template": {
+          "type": "string",
+          "enum": ["stack", "sidebar", "dashboard", "wizard"],
+          "description": "Layout template key"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ThemeId": {
+      "type": "string",
+      "enum": ["classic", "enterprise", "soft", "midnight"],
+      "description": "Built-in theme identifiers (PRO). Import via @middag-io/react/themes/{id}.css"
+    },
+    "ThemeComponentOverrides": {
+      "type": "object",
+      "description": "Component-level overrides applied via MIDDAGThemeProvider (PRO). These control variant/size/behavior beyond CSS tokens.",
+      "properties": {
+        "badge": {
+          "type": "object",
+          "properties": {
+            "variant": { "type": "string", "enum": ["default", "outline", "soft"] },
+            "rounded": { "type": "boolean" }
+          }
+        },
+        "button": {
+          "type": "object",
+          "properties": {
+            "size": { "type": "string", "enum": ["default", "sm"] }
+          }
+        },
+        "tabs": {
+          "type": "object",
+          "properties": {
+            "variant": { "type": "string", "enum": ["default", "line", "pill"] }
+          }
+        },
+        "table": {
+          "type": "object",
+          "properties": {
+            "density": { "type": "string", "enum": ["compact", "comfortable", "spacious"] },
+            "stripedRows": { "type": "boolean" }
+          }
+        },
+        "card": {
+          "type": "object",
+          "properties": {
+            "bordered": { "type": "boolean" }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

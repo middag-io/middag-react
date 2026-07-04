@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-docs.middag.io/schemas/shared-props.json",
+  "title": "MIDDAG Shared Props Contract",
+  "description": "TypeScript contract for Inertia shared props — data sent on every request from the PHP backend. Read via usePage<SharedProps>().props. Consumed by providers (AuthProvider, FlashProvider, ScopeProvider, I18nProvider).",
+
+  "types": {
+    "SharedPropsAuth": {
+      "type": "object",
+      "description": "Authenticated user data from Inertia shared props. Consumed by AuthProvider → useAuth() hook.",
+      "properties": {
+        "id": { "type": "number", "description": "Moodle user ID." },
+        "name": { "type": "string", "description": "Full display name." },
+        "email": { "type": "string", "description": "Email address." },
+        "avatarUrl": { "type": "string", "description": "URL to user avatar (Moodle profile picture)." },
+        "capabilities": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Moodle capability strings the user holds in current context. Used by <Can>/<Cannot> gates."
+        },
+        "logoutUrl": {
+          "type": "string",
+          "description": "Host-signed logout URL (e.g. Moodle sesskey). Canonical location for the logout endpoint — the shell POSTs here to sign out. Present when the host injects it."
+        }
+      },
+      "required": ["id", "name", "email", "capabilities"]
+    },
+    "SharedPropsTheme": {
+      "type": "object",
+      "description": "Theme and i18n data from Inertia shared props. Consumed by I18nProvider and theme system.",
+      "properties": {
+        "strings": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Pre-loaded i18n strings for the current page (key → translated string)."
+        },
+        "appearance": {
+          "type": "string",
+          "enum": ["system", "light", "dark"],
+          "description": "Server-side appearance preference for cross-device sync."
+        },
+        "brandColor": {
+          "type": "string",
+          "description": "Moodle brand color (hex). Present when local_middag/inherit_theme_colors = ON."
+        },
+        "inherit": {
+          "type": "boolean",
+          "description": "Whether Moodle theme color inheritance is active."
+        }
+      }
+    },
+    "SharedPropsFlash": {
+      "type": "object",
+      "description": "Flash messages from backend. Consumed by FlashProvider → Sonner toasts.",
+      "properties": {
+        "success": { "type": "string", "description": "Success toast message." },
+        "error": { "type": "string", "description": "Error toast message." },
+        "info": { "type": "string", "description": "Info toast message." },
+        "warning": { "type": "string", "description": "Warning toast message." },
+        "toast": {
+          "type": "object",
+          "description": "Structured toast with custom duration.",
+          "properties": {
+            "severity": { "type": "string", "enum": ["success", "error", "warning", "info"] },
+            "message": { "type": "string" },
+            "duration": { "type": "number", "description": "Duration in ms." }
+          },
+          "required": ["severity", "message"]
+        }
+      }
+    },
+    "AdminTabItem": {
+      "type": "object",
+      "description": "A single tab in the admin tab bar rendered by ProductShell.",
+      "properties": {
+        "key": { "type": "string" },
+        "label": { "type": "string" },
+        "href": { "type": "string" }
+      },
+      "required": ["key", "label", "href"]
+    },
+    "AdminTabsProps": {
+      "type": "object",
+      "description": "Admin tab bar data. When present in shared props, ProductShell renders a tab bar between header and content.",
+      "properties": {
+        "active": { "type": "string", "description": "Key of the currently active tab." },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/types/AdminTabItem" }
+        }
+      },
+      "required": ["active", "items"]
+    },
+    "SharedProps": {
+      "type": "object",
+      "description": "Full Inertia shared props shape. This is the top-level object available via usePage<SharedProps>().props on every page.",
+      "properties": {
+        "navigation": { "description": "Sidebar navigation tree. See navigation.json schema.", "type": "object" },
+        "auth": {
+          "description": "Authenticated user. Null or absent on guest-facing pages (e.g. login); AuthProvider tolerates its absence (user null, isAuthenticated false, every capability check false).",
+          "oneOf": [{ "$ref": "#/types/SharedPropsAuth" }, { "type": "null" }]
+        },
+        "theme": { "$ref": "#/types/SharedPropsTheme" },
+        "flash": { "$ref": "#/types/SharedPropsFlash" },
+        "locale": { "type": "string", "description": "Effective locale string (e.g. 'pt-BR', 'en')." },
+        "version": { "type": "string", "description": "MIDDAG version string (e.g. '5.0.0')." },
+        "scope": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Global scope data from global_scope_manager. Extensions add their keys via scope::set()."
+        }
+      },
+      "required": ["navigation", "theme", "locale", "version"]
+    }
+  },
+
+  "x-ai-purpose": "These types describe the global data available on every page via Inertia shared props. They are NOT part of the PageContract — they are parallel data consumed by providers (AuthProvider, FlashProvider, ScopeProvider, I18nProvider). AI agents can assume navigation, theme, locale and version are always present; `auth` is optional and may be null on guest-facing pages (e.g. login) — never assume an authenticated user exists."
+}

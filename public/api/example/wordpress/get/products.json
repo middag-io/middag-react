@@ -1,0 +1,165 @@
+{
+  "description": "Example: GET /api/example/wordpress/get/products.json -- Product catalog for a WordPress/WooCommerce storefront. Demonstrates the `stack` layout with a card_grid block using the 'store' variant. Actions use the current target/intent hierarchy. Shape validated (see tests/fixtures/public-api-contracts.test.ts).",
+  "host": "wordpress",
+  "method": "GET",
+  "contract": {
+    "version": "1",
+    "shell": "product",
+    "page": {
+      "key": "products-catalog",
+      "title": "Products",
+      "breadcrumbs": [
+        { "label": "Store", "href": "/store" },
+        { "label": "Products" }
+      ],
+      "actions": [
+        {
+          "id": "add-product",
+          "label": "Add Product",
+          "intent": "primary",
+          "icon": "plus",
+          "target": { "kind": "link", "href": "/store/products/new" }
+        },
+        {
+          "id": "import-products",
+          "label": "Import",
+          "intent": "secondary",
+          "icon": "upload",
+          "target": { "kind": "link", "href": "/store/products/import" }
+        }
+      ],
+      "filterTabs": [
+        { "key": "all", "label": "All Products", "badge": 24 },
+        { "key": "published", "label": "Published", "badge": 18 },
+        { "key": "draft", "label": "Draft", "badge": 4 },
+        { "key": "out-of-stock", "label": "Out of Stock", "badge": 2 }
+      ]
+    },
+    "layout": {
+      "template": "stack",
+      "regions": {
+        "content": [
+          {
+            "type": "card_grid",
+            "key": "products-grid",
+            "data": {
+              "columns": [
+                { "key": "name", "label": "Product", "kind": "text" },
+                { "key": "price", "label": "Price", "kind": "text" },
+                { "key": "stock", "label": "Stock", "kind": "number" },
+                { "key": "status", "label": "Status", "kind": "status" },
+                { "key": "category", "label": "Category", "kind": "text" },
+                { "key": "sales", "label": "Total Sales", "kind": "number" }
+              ],
+              "rows": [
+                {
+                  "id": "prod-1",
+                  "name": "NR-10 Safety Certification Course",
+                  "description": "Complete electrical safety training with official NR-10 certification upon completion.",
+                  "price": "$249.00",
+                  "stock": null,
+                  "status": "Published",
+                  "category": "Safety Training",
+                  "sales": 847,
+                  "image": "/images/placeholder-course.png",
+                  "href": "/store/products/prod-1"
+                },
+                {
+                  "id": "prod-2",
+                  "name": "Leadership & Management Bundle",
+                  "description": "5-course bundle covering leadership fundamentals, team management, and strategic planning.",
+                  "price": "$499.00",
+                  "stock": null,
+                  "status": "Published",
+                  "category": "Management",
+                  "sales": 312,
+                  "image": "/images/placeholder-bundle.png",
+                  "href": "/store/products/prod-2"
+                },
+                {
+                  "id": "prod-3",
+                  "name": "LGPD Compliance Training",
+                  "description": "Brazilian data protection regulation training for all employees. Includes certificate.",
+                  "price": "$129.00",
+                  "stock": null,
+                  "status": "Published",
+                  "category": "Compliance",
+                  "sales": 1203,
+                  "image": "/images/placeholder-compliance.png",
+                  "href": "/store/products/prod-3"
+                },
+                {
+                  "id": "prod-4",
+                  "name": "Excel for Finance Professionals",
+                  "description": "Advanced Excel techniques for financial modeling, pivot tables, and VBA macros.",
+                  "price": "$89.00",
+                  "stock": null,
+                  "status": "Published",
+                  "category": "Technical Skills",
+                  "sales": 567,
+                  "image": "/images/placeholder-excel.png",
+                  "href": "/store/products/prod-4"
+                },
+                {
+                  "id": "prod-5",
+                  "name": "Workplace First Aid Kit",
+                  "description": "Professional first aid kit compliant with workplace safety regulations. Physical product.",
+                  "price": "$45.00",
+                  "stock": 142,
+                  "status": "Published",
+                  "category": "Safety Equipment",
+                  "sales": 89,
+                  "image": "/images/placeholder-kit.png",
+                  "href": "/store/products/prod-5"
+                },
+                {
+                  "id": "prod-6",
+                  "name": "Annual Training Subscription",
+                  "description": "Unlimited access to all courses for one year. Includes new releases and certificates.",
+                  "price": "$1,200.00/year",
+                  "stock": null,
+                  "status": "Published",
+                  "category": "Subscription",
+                  "sales": 156,
+                  "image": "/images/placeholder-subscription.png",
+                  "href": "/store/products/prod-6"
+                },
+                {
+                  "id": "prod-7",
+                  "name": "Custom Onboarding Program",
+                  "description": "Tailored onboarding program for enterprise clients. Contact for pricing.",
+                  "price": "Contact Us",
+                  "stock": null,
+                  "status": "Draft",
+                  "category": "Enterprise",
+                  "sales": 0,
+                  "image": "/images/placeholder-enterprise.png",
+                  "href": "/store/products/prod-7"
+                },
+                {
+                  "id": "prod-8",
+                  "name": "Safety Helmet - Class B",
+                  "description": "ANSI/ISEA Z89.1 compliant safety helmet. Available in white, yellow, and blue.",
+                  "price": "$32.00",
+                  "stock": 0,
+                  "status": "Out of Stock",
+                  "category": "Safety Equipment",
+                  "sales": 423,
+                  "image": "/images/placeholder-helmet.png",
+                  "href": "/store/products/prod-8"
+                }
+              ],
+              "variant": "store",
+              "emptyState": {
+                "icon": "shopping-cart",
+                "title": "No products yet",
+                "description": "Start building your catalog by adding your first product.",
+                "cta": { "label": "Add Product", "href": "/store/products/new" }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

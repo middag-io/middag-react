@@ -1,0 +1,65 @@
+{
+  "description": "MIDDAG React UI -- Example PageContract API Endpoints. These static JSON files demonstrate the exact shape that Moodle and WordPress backends must produce to drive the @middag/react UI. Each file contains a complete PageContract (ADR-807) response with realistic mock data.",
+  "version": "1",
+  "endpoints": [
+    {
+      "path": "/api/example/moodle/get/books.json",
+      "method": "GET",
+      "host": "moodle",
+      "summary": "Books list -- stack layout with dense_table block (sortable columns, pagination, filters, row actions, bulk actions)",
+      "shell": "basic",
+      "layout": "stack",
+      "blocks": ["dense_table"]
+    },
+    {
+      "path": "/api/example/moodle/get/dashboard.json",
+      "method": "GET",
+      "host": "moodle",
+      "summary": "Admin dashboard -- dashboard layout with metric_card blocks + dense_table for recent activity",
+      "shell": "basic",
+      "layout": "dashboard",
+      "blocks": ["metric_card", "dense_table"]
+    },
+    {
+      "path": "/api/example/wordpress/get/products.json",
+      "method": "GET",
+      "host": "wordpress",
+      "summary": "Product catalog -- stack layout with card_grid block using 'store' variant for WooCommerce-style products",
+      "shell": "product",
+      "layout": "stack",
+      "blocks": ["card_grid"]
+    },
+    {
+      "path": "/api/inspector/connectors/{id}.json",
+      "method": "GET",
+      "host": "mock",
+      "summary": "Connector inspector -- sidebar preview panel for a single connector (Moodle, Open edX, Canvas, n8n)",
+      "ids": ["moodle", "open-edx", "canvas", "n8n"]
+    },
+    {
+      "path": "/api/inspector/offerings/{id}.json",
+      "method": "GET",
+      "host": "mock",
+      "summary": "Offering inspector -- sidebar preview panel for a single product/offering",
+      "ids": ["off-1", "off-2", "off-3", "off-4", "off-5", "off-6"]
+    }
+  ],
+  "pageContractSpec": {
+    "reference": "src/contracts/page-contract.ts",
+    "blockDataReference": "src/contracts/block-data.ts",
+    "requiredFields": {
+      "version": "Always '1'",
+      "shell": "Built-in: basic, immersive, auth (Community) + product (Pro). Consumers may register custom shell keys.",
+      "page.key": "Unique page identifier for caching/navigation",
+      "page.title": "Page heading displayed in the shell header",
+      "layout.template": "One of: stack, sidebar, dashboard, wizard",
+      "layout.regions": "Record<string, BlockDescriptor[]> -- region names depend on layout template"
+    },
+    "layoutRegions": {
+      "stack": ["content", "header?", "footer?"],
+      "sidebar": ["main", "aside", "header?"],
+      "dashboard": ["metrics", "content", "aside?", "header?"],
+      "wizard": ["content"]
+    }
+  }
+}

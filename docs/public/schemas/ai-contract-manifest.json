@@ -1,0 +1,1415 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-docs.middag.io/schemas/ai-contract-manifest.json",
+  "name": "@middag-io/react AI Contract Manifest",
+  "version": "1.0.0",
+  "description": "Machine-readable manifest that describes the MIDDAG React UI contract-driven rendering system. Designed for LLMs and AI agents that generate, validate, or adapt PageContract JSON objects consumed by the React frontend. The backend (PHP via Moodle or WordPress) builds PageContracts; the frontend resolves them through registries into a rendered component tree: Shell > Layout > Blocks.",
+
+  "schemaReferences": [
+    {
+      "id": "page-contract",
+      "title": "Page Contract Schema",
+      "url": "https://ui-docs.middag.io/schemas/page-contract.json",
+      "description": "Canonical wire contract for a full page render, generated from the middag-io/ui PHP value objects. Defines PageContract, PageMeta, LayoutDescriptor, BlockDescriptor, Action (with discriminated ActionTarget), Label (string | Translatable), Confirmation, Breadcrumb, and all enums (ActionIntent, HttpMethod, etc.). Source of truth for the TypeScript types and zod schema in @middag-io/react.",
+      "x-ai-purpose": "The authoritative shape for every PageContract field. Read this for the exact Action shape: an action has a required discriminated `target` ({ kind: 'link'|'route'|'request', ... }) and a required `intent` (one of 8 values). There is NO flat `href` or `method` on an action — navigation lives inside `target`. Confirmation uses `message` (not `description`) and a required `variant`."
+    },
+    {
+      "id": "fragment",
+      "title": "Fragment Schema",
+      "url": "https://ui-docs.middag.io/schemas/page-contract.json#/$defs/Fragment",
+      "description": "Partial-render contract returned by action results and partial reloads (kind, payload, notifications, resources, customType). Defined in the page-contract schema's $defs alongside ActionResult and RegionUpdate.",
+      "x-ai-purpose": "Use when generating or validating partial updates (action responses, region patches) rather than full page renders. Fragments carry the same Action/Label/Notification shapes as the full contract."
+    },
+    {
+      "id": "blocks",
+      "title": "Block Types Schema",
+      "url": "https://ui-docs.middag.io/schemas/blocks.json",
+      "description": "All block types with data shapes, layout region compatibility, and customization options.",
+      "x-ai-purpose": "Read this schema to understand the data property shape for each block type when generating PageContracts."
+    },
+    {
+      "id": "components",
+      "title": "ReUI Components Schema",
+      "url": "https://ui-docs.middag.io/schemas/components.json",
+      "description": "All ReUI primitive components (Radix/Base UI atoms) with variants, sizes, and import paths.",
+      "x-ai-purpose": "Use this to understand the visual building blocks available for theme overrides and custom component composition."
+    },
+    {
+      "id": "theme",
+      "title": "Theme JSON Schema",
+      "url": "https://ui-docs.middag.io/schemas/theme.json",
+      "description": "JSON Schema defining the structure of a MIDDAG theme: OKLCH color tokens, spacing, radius, shadows, typography, motion, layout, z-index, component overrides, and block overrides.",
+      "x-ai-purpose": "Validate and generate theme JSON files. Read this to understand every customizable token."
+    },
+    {
+      "id": "theme-defaults",
+      "title": "Theme Defaults",
+      "url": "https://ui-docs.middag.io/schemas/theme-defaults.json",
+      "description": "All default token values for light and dark modes. Shows what a theme inherits when no override is specified.",
+      "x-ai-purpose": "Reference defaults when generating a theme. Only override tokens that differ from these values."
+    },
+    {
+      "id": "manifest",
+      "title": "Discovery Manifest",
+      "url": "https://ui-docs.middag.io/schemas/manifest.json",
+      "description": "Entry point document listing available shells, layouts, themes, i18n config, and schema URLs.",
+      "x-ai-purpose": "Start here to discover what the system offers before diving into specific schemas."
+    },
+    {
+      "id": "navigation",
+      "title": "Navigation Contract",
+      "url": "https://ui-docs.middag.io/schemas/navigation.json",
+      "description": "Sidebar navigation tree contract: NavigationNode, NavigationTreePayload, NavigationEntityType (11 entity types with auto-icon resolution).",
+      "x-ai-purpose": "Understand the sidebar navigation structure. Use entityType for automatic icon resolution instead of hardcoding icon names."
+    },
+    {
+      "id": "shared-props",
+      "title": "Shared Props Contract",
+      "url": "https://ui-docs.middag.io/schemas/shared-props.json",
+      "description": "Inertia shared props sent on every request: auth (user + capabilities), theme (strings + appearance), flash (toast messages), scope (extension data), locale, version.",
+      "x-ai-purpose": "Global data available on every page. AI agents can assume these props exist when generating pages. Auth capabilities drive <Can>/<Cannot> gates."
+    },
+    {
+      "id": "connectors",
+      "title": "Connectors Contract",
+      "url": "https://ui-docs.middag.io/schemas/connectors.json",
+      "description": "Connector management types: ConnectorStatus (5 lifecycle states), CredentialField (form schema), HealthCheckResult, ConnectorListItem, ConnectorDetail, ConnectorTypeInfo.",
+      "x-ai-purpose": "Use when building connector management pages. ConnectorStatus maps to semantic colors for badges. CredentialField drives dynamic configuration forms."
+    }
+  ],
+
+  "systemOverview": {
+    "description": "MIDDAG React is a contract-driven UI library. The backend (PHP) builds a PageContract JSON object that fully describes a page. The frontend resolves the contract through 6 registries into a rendered React component tree.",
+    "renderingHierarchy": [
+      "PageContract (JSON from backend via Inertia.js)",
+      "  Shell (application frame — sidebar, header, toaster)",
+      "    Layout (content area arrangement — named regions)",
+      "      Block (data-driven component bound to a typed contract)",
+      "        Partial (reusable internal UI — DataTable, FormSection)",
+      "          ReUI (Radix/Base UI atoms — read-only primitives)"
+    ],
+    "dependencyRule": "Each layer only imports from layers below it. Never upward.",
+    "dataFlow": "Backend builds PageContract → Inertia serializes to JSON → ContractPage receives as prop → Shell registry resolves shell → Layout registry resolves layout → Block registry resolves each BlockDescriptor → React renders the tree.",
+    "contractImmutability": "The contract is read-only once it reaches the frontend. All mutations happen on the backend, which sends a new contract via Inertia partial reload.",
+    "contractVersion": "1"
+  },
+
+  "registries": [
+    {
+      "name": "Shell Registry",
+      "description": "Maps shell type strings to React shell components. Shells provide the page chrome (sidebar, header, toaster).",
+      "api": {
+        "register": "registerShell(key: string, component: ComponentType<ShellProps>)",
+        "resolve": "resolveShell(key: string): ComponentType<ShellProps> | undefined"
+      },
+      "builtIn": ["product", "immersive"],
+      "extensible": true,
+      "sourceFile": "src/app/registries.ts"
+    },
+    {
+      "name": "Layout Registry",
+      "description": "Maps layout template strings to React layout components. Layouts arrange named regions within the shell content area.",
+      "api": {
+        "register": "registerLayout(key: string, component: ComponentType<LayoutProps>)",
+        "resolve": "resolveLayout(key: string): ComponentType<LayoutProps> | undefined"
+      },
+      "builtIn": ["stack", "sidebar", "dashboard", "wizard"],
+      "extensible": true,
+      "sourceFile": "src/app/registries.ts"
+    },
+    {
+      "name": "Block Registry",
+      "description": "Maps block type strings to React block components. Blocks are the atomic rendering units placed in layout regions.",
+      "api": {
+        "register": "registerBlock(key: string, component: ComponentType<BlockProps<TData>>)",
+        "resolve": "resolveBlock(key: string): ComponentType<BlockProps> | undefined"
+      },
+      "builtIn": 19,
+      "extensible": true,
+      "sourceFile": "src/app/registries.ts"
+    },
+    {
+      "name": "Field Registry",
+      "description": "Maps form field component type strings to React field components. Used by FormPanelBlock to resolve input components.",
+      "api": {
+        "register": "registerFieldComponent(type: string, component: ComponentType<FieldComponentProps>)",
+        "resolve": "resolveFieldComponent(type: string): ComponentType<FieldComponentProps> | undefined"
+      },
+      "builtIn": 28,
+      "extensible": true,
+      "sourceFile": "src/base/form/fields/field-registry.ts"
+    },
+    {
+      "name": "Icon Registry",
+      "description": "Maps icon names (kebab-case) and entity types to SVG icon elements. Used by navigation, blocks, and actions.",
+      "api": {
+        "registerIcon": "registerIcon(name: string, icon: IconSvgElement)",
+        "resolveIcon": "resolveIcon(name: string): IconSvgElement | undefined",
+        "registerEntityIcon": "registerEntityIcon(entityType: string, icon: IconSvgElement)",
+        "resolveEntityIcon": "resolveEntityIcon(entityType: string): IconSvgElement | undefined"
+      },
+      "builtIn": "66 icons + 11 entity icons",
+      "extensible": true,
+      "sourceFile": "src/base/utils/icon-registry.ts"
+    },
+    {
+      "name": "Cell Registry",
+      "description": "Maps DataTable column variant strings to cell renderer components. Extends DenseTable with custom column types.",
+      "api": {
+        "register": "registerCellRenderer(type: string, component: ComponentType<CellRendererProps>)",
+        "resolve": "resolveCellRenderer(type: string): ComponentType<CellRendererProps> | undefined"
+      },
+      "builtIn": "8 cell types (text, status, badge, boolean, timestamp, link, rich_status, html, link_group, annotated)",
+      "extensible": true,
+      "sourceFile": "src/base/partials/DataTable/cell-registry.ts"
+    }
+  ],
+
+  "platforms": [
+    {
+      "name": "Moodle",
+      "description": "Primary host. Plugin local_middag uses Inertia.js adapter for Moodle. ESM build consumed via npm package.",
+      "buildTarget": "ESM (dist-lib/)",
+      "registration": "Call registerDefaults() once at entry point to register all standard blocks, fields, icons, and cells.",
+      "hostDetection": "Detected via version.php in parent directory",
+      "cssIsolation": "Scoped via .middag-root container. Host CSS does not leak into MIDDAG components.",
+      "hostHeaderHeight": "--host-header-height CSS custom property set by initHostHeaderHeight()",
+      "devServerPort": 5174,
+      "x-ai-platform-notes": "Moodle pages use product shell almost exclusively. Immersive shell only for wizards and flow editors. Navigation comes from Moodle's course/admin sidebar."
+    },
+    {
+      "name": "WordPress",
+      "description": "Secondary host. IIFE consumers should NOT call registerDefaults(). Import individual blocks selectively to avoid bundling heavy dependencies.",
+      "buildTarget": "IIFE (bundled per-page)",
+      "registration": "Import blocks individually: import { DenseTableBlock } from '@middag-io/react'; registerBlock('dense_table', DenseTableBlock);",
+      "hostDetection": "Detected via wp-config.php in parent directory",
+      "cssIsolation": "Same .middag-root scoping. WordPress admin bar height compensated via --host-header-height.",
+      "devServerPort": 5175,
+      "x-ai-platform-notes": "WordPress builds are IIFE — every import is inlined. Never call registerDefaults() as it bundles ALL blocks including heavy lazy-loaded ones. Only import what you need."
+    },
+    {
+      "name": "Custom Host",
+      "description": "Any React SPA or SSR app. Use ESM build with selective registration.",
+      "buildTarget": "ESM (dist-lib/)",
+      "registration": "Either registerDefaults() (full) or selective registerBlock/registerLayout/registerShell calls.",
+      "devServerPort": 5176,
+      "x-ai-platform-notes": "Custom hosts must provide their own Inertia adapter or mock the page contract resolution."
+    }
+  ],
+
+  "generationRules": {
+    "description": "Rules for AI agents generating valid PageContract JSON objects.",
+    "steps": [
+      "1. Choose a shell: 'product' (most pages) or 'immersive' (wizards, focused tasks).",
+      "2. Choose a layout template based on the page purpose (see layouts section).",
+      "3. For the chosen layout, populate the correct regions with BlockDescriptor arrays.",
+      "4. Each BlockDescriptor must have: type (registered block key), key (unique per page), data (typed payload).",
+      "5. For heavy data, defer loading via the block descriptor: deferred: true uses Inertia <Deferred> (auto-fetch after mount); meta.whenVisible: true with meta.lazyProp uses Inertia <WhenVisible> (fetch when scrolled into view). meta.lazyProp names the top-level page prop that carries the deferred data.",
+      "6. Add page metadata: key, title, breadcrumbs (each { label, href? }), and actions (Action[]).",
+      "7. Each Action needs: id, label (string | Translatable), a required discriminated `target` ({ kind: 'link', href } | { kind: 'route', route, params? } | { kind: 'request', endpoint, method }), and a required `intent` (primary | secondary | danger | success | warning | info | link | ghost). Use `display: 'overflow'` to push an action into the kebab/overflow menu. There is NO flat `href`/`method` on an action — navigation lives in `target`.",
+      "8. Set version to '1'.",
+      "9. Validate with validatePageContract() before sending."
+    ],
+    "constraints": [
+      "Every page must have exactly one shell and one layout.",
+      "Block keys must be unique within the entire page (not just within a region).",
+      "Layout regions must match the chosen template (e.g., dashboard has 'metrics', 'content', 'aside?'; stack has 'content').",
+      "Wizard layout requires meta.steps (array of step labels) and meta.actions (submit/cancel buttons).",
+      "Immersive shell has no sidebar — navigation blocks are meaningless here.",
+      "Every Action has a required `intent` (one of 8: primary, secondary, danger, success, warning, info, link, ghost) and a required discriminated `target`. There is no `intent: 'menu'` — to render an action in the overflow/kebab menu set `display: 'overflow'` instead.",
+      "form_panel blocks should be alone in a region or in a sidebar layout's 'main' region — avoid putting forms in dashboard 'metrics' region."
+    ],
+    "regionCompatibility": {
+      "stack": {
+        "content": "Any block type. Primary region.",
+        "header": "Optional. Typically status_strip or metric_card.",
+        "footer": "Optional. Typically action_grid or link_list."
+      },
+      "sidebar": {
+        "main": "Primary content blocks (dense_table, form_panel, etc.).",
+        "aside": "Supporting info (detail_panel, link_list, activity_timeline, metric_card).",
+        "header": "Optional. Typically status_strip."
+      },
+      "dashboard": {
+        "metrics": "metric_card blocks only. Renders as responsive grid. No per-block padding.",
+        "content": "Any block type. Primary body area.",
+        "aside": "Optional. Same as sidebar aside.",
+        "header": "Optional. Typically status_strip."
+      },
+      "wizard": {
+        "content": "Typically one form_panel block per step. Blocks change as user advances steps."
+      }
+    }
+  },
+
+  "validationRules": {
+    "zodSchema": "pageContractSchema — validates structure (version, shell, page, layout). Block data is typed but not deeply validated to allow custom block types.",
+    "validateFunction": "validatePageContract(contract: unknown): PageContractValidationError[] | null",
+    "importPath": "import { validatePageContract } from '@middag-io/react'",
+    "structuralChecks": [
+      "version must be literal '1'",
+      "shell must be a non-empty string",
+      "page.key must be a non-empty string",
+      "page.title must be a non-empty string",
+      "layout.template must be a non-empty string",
+      "layout.regions must be a Record<string, BlockDescriptor[]>",
+      "Each block must have type (string) and key (string) and data (object)"
+    ],
+    "semanticChecks": [
+      "Block type must be registered in the block registry (registerDefaults() or custom)",
+      "Layout template must be registered in the layout registry",
+      "Shell must be registered in the shell registry",
+      "Block keys must be unique across all regions",
+      "Every Action (page actions, block actions, rowActions, bulkActions, notification action) must have id, label (string | Translatable), a discriminated `target` ({ kind: 'link'|'route'|'request', ... }), and an `intent` (one of the 8 values). Reject flat `href`/`method` on an action and reject `intent: 'menu'` (use `display: 'overflow'`).",
+      "Confirmation objects must use `message` (not `description`) and include a `variant` (e.g. 'danger' for destructive, 'default' otherwise).",
+      "form_panel data must include action (string), method (post|put|patch), schema (FormSchemaNode[]), values (object), errors (object)",
+      "dense_table data must include columns (array) and rows (array)"
+    ]
+  },
+
+  "shells": [
+    {
+      "key": "product",
+      "description": "Full application shell with collapsible sidebar navigation, top header with breadcrumbs, toaster, command palette (Cmd+K), and contextual help panel.",
+      "chrome": "Offcanvas sidebar + top header + breadcrumbs + optional admin tabs + optional filter tabs",
+      "contentPadding": "Zero padding on content area — layouts and blocks control all spacing.",
+      "x-ai-purpose": "Use for standard application pages: lists, details, dashboards, settings.",
+      "x-ai-use-when": "The user needs navigation context (sidebar), breadcrumbs, and page-level actions.",
+      "x-ai-avoid-when": "Building wizards, onboarding flows, or full-screen editors where sidebar would distract."
+    },
+    {
+      "key": "immersive",
+      "description": "Minimal chrome shell for focused, distraction-free experiences. Top bar with title and close button only.",
+      "chrome": "Minimal top bar with close button",
+      "contentPadding": "Zero padding. Full viewport available.",
+      "x-ai-purpose": "Use for wizard flows, flow editors, onboarding, and any task requiring full attention.",
+      "x-ai-use-when": "Building multi-step wizards (pair with wizard layout), visual editors (flow_editor), or immersive creation experiences.",
+      "x-ai-avoid-when": "Pages that need navigation context, breadcrumbs, or sidebar."
+    },
+    {
+      "key": "auth",
+      "description": "Chromeless guest shell for authentication pages — a centered card with no sidebar, header, or navigation. Renders outside the authenticated app frame.",
+      "chrome": "None — centered card on a plain background",
+      "contentPadding": "Centered card; the layout/blocks control inner spacing.",
+      "x-ai-purpose": "Use for login, password reset, and other pre-authentication pages.",
+      "x-ai-use-when": "The user is not yet authenticated and only needs to submit credentials (pair with a stack layout + a single form_panel).",
+      "x-ai-avoid-when": "Any authenticated page — those need the product shell for navigation context."
+    },
+    {
+      "key": "basic",
+      "description": "Minimal built-in engine shell — a titled header + content area with no sidebar. The free-engine fallback when the react-pro product shell is not registered.",
+      "chrome": "Simple header + content; no sidebar or command palette",
+      "contentPadding": "Zero padding; layouts and blocks control spacing.",
+      "x-ai-purpose": "Standalone or free-engine pages that need a titled frame without react-pro's product chrome.",
+      "x-ai-use-when": "Apps that ship only @middag-io/react (no react-pro) but still want a page header.",
+      "x-ai-avoid-when": "Apps that register react-pro — prefer the richer product shell for navigation context."
+    }
+  ],
+
+  "layouts": [
+    {
+      "key": "stack",
+      "description": "Single column with blocks stacked vertically. Simplest and most common layout.",
+      "regions": {
+        "content": { "required": true, "description": "Main content area. Any block types." },
+        "header": { "required": false, "description": "Optional header region above content." },
+        "footer": { "required": false, "description": "Optional footer region below content." }
+      },
+      "x-ai-use-when": "Simple pages: single table, single form, content display, empty states.",
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "key": "sidebar",
+      "description": "Two-column layout: main content + 320px fixed aside panel.",
+      "regions": {
+        "main": { "required": true, "description": "Primary content (left). Tables, forms, timelines." },
+        "aside": { "required": true, "description": "320px side panel (right). Detail panels, link lists, metrics." },
+        "header": { "required": false, "description": "Optional header spanning full width." }
+      },
+      "x-ai-use-when": "Detail pages with supplementary info, entity views with sidebar metadata.",
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "key": "dashboard",
+      "description": "KPI overview with metrics row at top and content + optional aside below.",
+      "regions": {
+        "metrics": { "required": true, "description": "Responsive grid of metric_card blocks. No per-block padding — fills grid cells directly." },
+        "content": { "required": true, "description": "Main body area below metrics." },
+        "aside": { "required": false, "description": "Optional side panel." },
+        "header": { "required": false, "description": "Optional header above metrics." }
+      },
+      "x-ai-use-when": "Dashboard pages with KPIs, overview pages, analytics.",
+      "x-ai-avoid-when": "Only metric_card blocks should go in the metrics region.",
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "key": "wizard",
+      "description": "Multi-step form with progress indicator and action footer. Pair with immersive shell.",
+      "regions": {
+        "content": { "required": true, "description": "One form_panel block per step. Changes as user advances." }
+      },
+      "metaRequired": {
+        "steps": "Array of step labels for the progress indicator",
+        "actions": "Submit and cancel action buttons"
+      },
+      "x-ai-use-when": "Multi-step forms, onboarding flows, setup wizards.",
+      "x-ai-avoid-when": "Simple single-form pages (use stack instead).",
+      "x-ai-generation-priority": "low"
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "dense_table",
+      "tier": "community",
+      "category": "Data Display",
+      "description": "Sortable, filterable data table with pagination, row actions, bulk selection, and column variants.",
+      "dataInterface": "DenseTableBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Primary block for tabular data display. Supports sorting, filtering, pagination, row actions (edit/delete), bulk actions, and rich column variants (status badges, links, timestamps, progress bars). Columns can be hidden via the toolbar (hideable/visible); timestamp columns accept timestampFormat (relative|datetime|date|time|iso). Set the block descriptor's remember: true to persist column visibility and row density across Inertia history navigation.",
+      "x-ai-use-when": "Displaying lists of entities (users, orders, invoices). Any data that benefits from sorting/filtering/pagination.",
+      "x-ai-avoid-when": "Small datasets (<5 items) where a card_grid or link_list would be simpler.",
+      "x-ai-generation-priority": "high",
+      "x-ai-validation-hints": "columns[] and rows[] are required. Each column needs key and label. rows are flat objects (Record<string, unknown>), NOT nested {id, cells} objects. For variant=progress, the cell value is { value, max?, label?, appearance? } (a bare number is treated as a percent)."
+    },
+    {
+      "type": "detail_panel",
+      "tier": "community",
+      "category": "Data Display",
+      "description": "Key-value detail view organized in collapsible sections.",
+      "dataInterface": "DetailPanelBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Show entity details in a structured key-value format. Supports sections, field kinds (text, status, timestamp, boolean, link, code, email), and copyable values.",
+      "x-ai-use-when": "Entity detail pages, record summaries, configuration overviews.",
+      "x-ai-avoid-when": "Editable data (use form_panel instead).",
+      "x-ai-generation-priority": "high",
+      "x-ai-validation-hints": "sections[] required. Each section needs id, title, fields[]. Fields need key, label, value."
+    },
+    {
+      "type": "card_grid",
+      "tier": "community",
+      "category": "Data Display",
+      "description": "Responsive grid of cards with metadata columns and status badges.",
+      "dataInterface": "CardGridBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Display entities as visual cards instead of table rows. Good for browsable collections.",
+      "x-ai-use-when": "Store items, connectors, templates, or any collection that benefits from visual browsing.",
+      "x-ai-avoid-when": "Data that needs sorting/filtering (use dense_table instead).",
+      "x-ai-generation-priority": "medium",
+      "x-ai-validation-hints": "columns[] and rows[] required. variant can be 'default', 'store', or 'connector'."
+    },
+    {
+      "type": "link_list",
+      "tier": "community",
+      "category": "Data Display",
+      "description": "Simple list of labeled links with optional icons and descriptions.",
+      "dataInterface": "LinkListBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Quick navigation or reference links. Good for sidebar aside regions.",
+      "x-ai-use-when": "Related resources, documentation links, quick actions that navigate.",
+      "x-ai-avoid-when": "Actions that trigger server mutations (use action_grid instead).",
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "type": "status_strip",
+      "tier": "community",
+      "category": "Data Display",
+      "description": "Horizontal strip of status/metric badges with semantic colors.",
+      "dataInterface": "StatusStripBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Show a horizontal row of status indicators or small metrics. Often used in header regions.",
+      "x-ai-use-when": "Page-level status summary, health indicators, quick stats above main content.",
+      "x-ai-avoid-when": "Rich KPI display (use metric_card in dashboard layout instead).",
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "type": "activity_timeline",
+      "tier": "community",
+      "category": "Data Display",
+      "description": "Chronological event list grouped by time period.",
+      "dataInterface": "ActivityTimelineBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Show audit logs, activity history, change events. Supports load-more pagination.",
+      "x-ai-use-when": "Entity activity history, audit trails, event logs.",
+      "x-ai-avoid-when": "Non-chronological data.",
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "type": "metric_card",
+      "tier": "community",
+      "category": "Visualization",
+      "description": "Single KPI display with value, label, trend delta, and optional navigation.",
+      "dataInterface": "MetricCardBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Display a single key performance indicator. Place in dashboard layout's metrics region for a responsive KPI grid.",
+      "x-ai-use-when": "KPI dashboards, summary metrics. Multiple metric_cards in a dashboard metrics region.",
+      "x-ai-avoid-when": "Inline status badges (use status_strip instead).",
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "type": "empty_state",
+      "tier": "community",
+      "category": "Content",
+      "description": "Placeholder for empty datasets with icon/animation, description, and call-to-action.",
+      "dataInterface": "EmptyStateBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Show friendly empty states. Supports Lottie animations, 4 variants (first-use, no-results, error, permission), and primary/secondary CTAs.",
+      "x-ai-use-when": "No data to show, first-use experience, error states, permission denied.",
+      "x-ai-avoid-when": "There IS data to display.",
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "type": "markdown_panel",
+      "tier": "community",
+      "category": "Content",
+      "description": "Rendered markdown content block with optional max height and scroll.",
+      "dataInterface": "MarkdownPanelBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Display rich text content from the backend. Renders standard markdown to HTML.",
+      "x-ai-use-when": "Help text, descriptions, documentation, announcements.",
+      "x-ai-avoid-when": "Structured data (use detail_panel) or forms (use form_panel).",
+      "x-ai-generation-priority": "low"
+    },
+    {
+      "type": "tabbed_panel",
+      "tier": "community",
+      "category": "Content",
+      "description": "Tab container with nested BlockDescriptor arrays per tab. Radix Tabs unmounts inactive content.",
+      "dataInterface": "TabbedPanelBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Organize related content into tabs. Each tab contains its own blocks. Combines well with lazy loading (meta.lazyProp) to defer inactive tab data.",
+      "x-ai-use-when": "Entity pages with multiple views (overview, history, settings). Complex pages that benefit from tabbed organization.",
+      "x-ai-avoid-when": "Simple pages with only one view.",
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "type": "action_grid",
+      "tier": "community",
+      "category": "Content",
+      "description": "Grid of action cards with icon, title, description, and navigation/mutation.",
+      "dataInterface": "ActionGridBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Quick action menu, settings shortcuts, feature cards. Each card carries an Action with a discriminated `target`: { kind: 'link' } to navigate or { kind: 'request', method } to trigger a server mutation (pair with a `confirmation` for destructive ones).",
+      "x-ai-use-when": "Settings pages, admin dashboards, quick action hubs.",
+      "x-ai-avoid-when": "Simple link navigation (use link_list instead).",
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "type": "workflow_progress",
+      "tier": "community",
+      "category": "Data Display",
+      "description": "Linear stepper showing workflow states with timestamps for past/current states.",
+      "dataInterface": "WorkflowProgressBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Visualize a linear workflow (draft → active → expired). Shows which state is current and when past states were reached.",
+      "x-ai-use-when": "Entity lifecycle visualization, approval workflows, order status tracking.",
+      "x-ai-avoid-when": "Non-linear workflows (use flow_editor instead).",
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "type": "form_panel",
+      "tier": "community",
+      "category": "Forms",
+      "description": "Schema-driven dynamic form with field groups, sections, validation, and submission.",
+      "dataInterface": "FormPanelBlockData",
+      "lazyLoaded": true,
+      "heavyDependencies": ["react-hook-form (~45KB)", "zod (~55KB)"],
+      "x-ai-purpose": "The primary form block. Backend defines the form schema (fields, sections, groups); frontend renders it automatically. Supports the full FormFieldNode field catalog, client+server validation, conditional visibility, and multi-step mode.",
+      "x-ai-use-when": "Any data entry: create, edit, settings, onboarding forms.",
+      "x-ai-avoid-when": "Read-only data display (use detail_panel instead).",
+      "x-ai-generation-priority": "high",
+      "x-ai-validation-hints": "action (string URL), method (post|put|patch), schema (FormSchemaNode[]), values (Record<string,unknown>), errors (Record<string,string>) are all required. Schema nodes are: FormFieldNode (kind:'field'), FormSectionNode (kind:'section'), FormGroupNode (kind:'group'), FormHeaderNode (kind:'header')."
+    },
+    {
+      "type": "form_builder",
+      "tier": "pro",
+      "category": "Forms",
+      "description": "Drag-and-drop form field designer for end-user form creation.",
+      "dataInterface": "FormBuilderBlockData",
+      "lazyLoaded": true,
+      "heavyDependencies": ["@dnd-kit (~15KB)"],
+      "x-ai-purpose": "Let end users visually design forms by dragging field types onto a canvas.",
+      "x-ai-use-when": "Form designer tools, custom field configuration, survey builders.",
+      "x-ai-avoid-when": "Standard data entry forms (use form_panel instead).",
+      "x-ai-generation-priority": "low"
+    },
+    {
+      "type": "sentence_builder",
+      "tier": "pro",
+      "category": "Forms",
+      "description": "Natural language rule composer with groups, connectors, and audience estimation.",
+      "dataInterface": "SentenceBuilderBlockData",
+      "lazyLoaded": true,
+      "x-ai-purpose": "Build rules in a human-readable sentence format. Groups connected by AND/OR with field-operator-value rules.",
+      "x-ai-use-when": "Audience targeting, notification rules, segment builders.",
+      "x-ai-avoid-when": "Complex nested logic (use condition_tree instead).",
+      "x-ai-generation-priority": "low"
+    },
+    {
+      "type": "condition_tree",
+      "tier": "pro",
+      "category": "Forms",
+      "description": "Nested AND/OR condition tree editor for complex rule building.",
+      "dataInterface": "ConditionTreeBlockData",
+      "lazyLoaded": true,
+      "x-ai-purpose": "Build deeply nested conditional logic trees with AND/OR groups and field-operator-value rules.",
+      "x-ai-use-when": "Complex business rules, advanced filtering, workflow conditions.",
+      "x-ai-avoid-when": "Simple rules (use sentence_builder for readable format).",
+      "x-ai-generation-priority": "low"
+    },
+    {
+      "type": "flow_editor",
+      "tier": "pro",
+      "category": "Visualization",
+      "description": "Visual workflow/node graph editor with trigger, condition, and action nodes.",
+      "dataInterface": "FlowEditorBlockData",
+      "lazyLoaded": true,
+      "heavyDependencies": ["@xyflow/react (~200KB)"],
+      "x-ai-purpose": "Visual workflow builder with draggable nodes and edges. Supports trigger, condition, and action node types.",
+      "x-ai-use-when": "Workflow automation, process design, integration pipelines.",
+      "x-ai-avoid-when": "Linear workflows (use workflow_progress instead).",
+      "x-ai-generation-priority": "low",
+      "x-ai-platform-notes": "Best paired with immersive shell for full-screen editing experience."
+    },
+    {
+      "type": "chart_panel",
+      "tier": "pro",
+      "category": "Visualization",
+      "description": "Multi-series chart supporting bar, line, area, and pie chart types via Recharts.",
+      "dataInterface": "ChartPanelBlockData",
+      "lazyLoaded": true,
+      "heavyDependencies": ["recharts (~555KB)"],
+      "x-ai-purpose": "Data visualization with charts. Supports multiple series, configurable chart types per series, grid lines, and legends. Uses --chart-1 through --chart-5 CSS tokens for colors.",
+      "x-ai-use-when": "Analytics dashboards, trend visualization, data comparison. Place in dashboard content or sidebar main region.",
+      "x-ai-avoid-when": "Simple numeric KPIs (use metric_card instead).",
+      "x-ai-generation-priority": "medium",
+      "x-ai-validation-hints": "chartType (bar|line|area|pie), data[] (array of objects), series[] (key, label, color?, type?), categoryKey (string matching a key in data objects). Each series.key must match a numeric field in data objects."
+    },
+    {
+      "type": "kanban_board",
+      "tier": "pro",
+      "category": "Interactive",
+      "description": "Drag-and-drop kanban board with columns and cards. Supports card move operations via Inertia endpoint.",
+      "dataInterface": "KanbanBoardBlockData",
+      "lazyLoaded": true,
+      "heavyDependencies": ["@dnd-kit (~15KB)"],
+      "x-ai-purpose": "Visual task/card management with drag-and-drop between columns. Cards show title, description, status badge, assignee avatar, and due date.",
+      "x-ai-use-when": "Task management, pipeline views, status boards, project tracking.",
+      "x-ai-avoid-when": "Simple lists (use dense_table) or non-draggable status views (use card_grid with variant).",
+      "x-ai-generation-priority": "medium",
+      "x-ai-validation-hints": "columns[] required, each with id, title, and cards[]. Each card needs id and title. moveEndpoint is the Inertia POST URL called when a card is dragged to a new column."
+    },
+    {
+      "type": "gradebook",
+      "tier": "pro",
+      "category": "Interactive",
+      "description": "Editable row × column data matrix (virtualized grid) with batch save and optimistic-concurrency revision.",
+      "dataInterface": "GradebookBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Bulk-editable data grid: frozen header + first column, per-cell editing bound to an externalized edit store, quick filter, TSV paste, optional add/remove of rows and columns. Edits persist via an explicit Save (Inertia POST of the changed cells + the optimistic-concurrency revision); a conflict prompts a reload.",
+      "x-ai-use-when": "Grading sheets, bulk attribute editing, any tabular data the user edits in place and saves as a batch.",
+      "x-ai-avoid-when": "Read-only tabular data (use dense_table) or single-record editing (use form_panel).",
+      "x-ai-generation-priority": "medium",
+      "x-ai-validation-hints": "columns[] (id, label, type, editable), rows[] (id, label), cells[] (rowId, columnId, value) and revision (string) are required. saveEndpoint enables Save; editableStructure allows add/remove of rows and columns. aggregations[] are optional footer totals."
+    },
+    {
+      "type": "report_composer",
+      "tier": "pro",
+      "category": "Interactive",
+      "description": "Drag-drop canvas of chart | metric | table widgets on a fixed column grid, persisted as a full snapshot.",
+      "dataInterface": "ReportComposerBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Build a dashboard-style report by placing/moving/resizing widgets on a grid. Each widget is a chart, metric, or table config. Layout persists via an explicit Save (Inertia POST of the full { revision, widgets } snapshot); a conflict prompts a reload. editable:false renders a static report.",
+      "x-ai-use-when": "User-composable report/dashboard builders where the layout itself is the editable artifact.",
+      "x-ai-avoid-when": "Fixed dashboards (use the dashboard layout with metric_card + chart_panel blocks directly).",
+      "x-ai-generation-priority": "low",
+      "x-ai-validation-hints": "widgets[] and revision (string) are required. Each widget needs id, type (chart|metric|table), layout { x, y, w, h } and the matching config (chart|metric|table). columns defaults to 12. saveEndpoint enables Save."
+    },
+    {
+      "type": "rich_document",
+      "tier": "pro",
+      "category": "Interactive",
+      "description": "Lexical WYSIWYG document editor; content is opaque serialized editor state (the client never emits HTML).",
+      "dataInterface": "RichDocumentBlockData",
+      "lazyLoaded": true,
+      "heavyDependencies": ["lexical (~300KB)"],
+      "x-ai-purpose": "Rich-text document authoring. content is the serialized Lexical state (opaque to the page). Editing persists via an explicit Save (Inertia POST of { revision, content }); a conflict prompts a reload. previewEndpoint adds a Write/Preview tab pair (server-rendered HTML round-trip); mergeTags expose insertable placeholders.",
+      "x-ai-use-when": "Email/letter templates, articles, any long-form rich text authored in place.",
+      "x-ai-avoid-when": "Plain markdown display (use markdown_panel) or short single-line text (use form_panel).",
+      "x-ai-generation-priority": "low",
+      "x-ai-validation-hints": "content (object — serialized Lexical state) and revision (string) are required. saveEndpoint enables Save; previewEndpoint enables the Write/Preview tabs; mergeTags[] (key, label, sample?) are optional insertable placeholders."
+    },
+    {
+      "type": "scheduler",
+      "tier": "pro",
+      "category": "Interactive",
+      "description": "Event calendar across month, week, agenda and resource-lane views with save-on-drop persistence.",
+      "dataInterface": "SchedulerBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Calendar/scheduling surface. Every drag/resize/create/delete applies optimistically and POSTs immediately with the optimistic-concurrency revision (no Save button). Capability is endpoint-gated: moveEndpoint enables drag, createEndpoint the add dialog + empty-slot clicks, deleteEndpoint the per-event remove.",
+      "x-ai-use-when": "Calendars, room/resource booking, shift scheduling, any time-based event management.",
+      "x-ai-avoid-when": "A simple list of dated items (use dense_table with a timestamp column) or a linear status timeline (use activity_timeline).",
+      "x-ai-generation-priority": "low",
+      "x-ai-validation-hints": "events[] and revision (string) are required. Each event needs id, title, start, end (ISO strings). resources[] enable the resource-lanes view; view (month|week|agenda|resources) sets the initial view. moveEndpoint/createEndpoint/updateEndpoint/deleteEndpoint gate the respective interactions."
+    }
+  ],
+
+  "fields": [
+    {
+      "component": "text",
+      "valueType": "string",
+      "description": "Single-line text input.",
+      "unionType": "SimpleFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "component": "textarea",
+      "valueType": "string",
+      "description": "Multi-line text area. Supports rows prop for height.",
+      "unionType": "TextareaFormField",
+      "extraProps": ["rows"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "component": "email",
+      "valueType": "string",
+      "description": "Email input with browser validation.",
+      "unionType": "SimpleFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "component": "password",
+      "valueType": "string",
+      "description": "Password input with masked characters.",
+      "unionType": "SimpleFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "url",
+      "valueType": "string",
+      "description": "URL input with browser validation.",
+      "unionType": "SimpleFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "int",
+      "valueType": "number",
+      "description": "Integer input. Supports min, max, step.",
+      "unionType": "NumericFormField",
+      "extraProps": ["min", "max", "step"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "component": "float",
+      "valueType": "number",
+      "description": "Decimal number input. Supports min, max, step.",
+      "unionType": "NumericFormField",
+      "extraProps": ["min", "max", "step"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "currency",
+      "valueType": "number",
+      "description": "Locale-aware currency input with symbol prefix via InputGroup. Props: currency (ISO 4217), currencyLocale.",
+      "unionType": "CurrencyFormField",
+      "extraProps": ["currency", "currencyLocale"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "select",
+      "valueType": "string",
+      "description": "Dropdown select. Requires options array.",
+      "unionType": "SelectFormField",
+      "extraProps": ["options"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "component": "multiselect",
+      "valueType": "string[]",
+      "description": "Searchable multi-select with chips (>8 options) or checkboxes (<=8).",
+      "unionType": "MultiSelectFormField",
+      "extraProps": ["options"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "component": "radio",
+      "valueType": "string",
+      "description": "Radio button group. Requires options array.",
+      "unionType": "SelectFormField",
+      "extraProps": ["options"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "checkbox",
+      "valueType": "boolean",
+      "description": "Single checkbox toggle.",
+      "unionType": "BooleanFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "component": "switch",
+      "valueType": "boolean",
+      "description": "Toggle switch control.",
+      "unionType": "BooleanFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "date",
+      "valueType": "string",
+      "description": "Calendar popover date picker (YYYY-MM-DD).",
+      "unionType": "DateFormField",
+      "lazyLoaded": true,
+      "heavyDependencies": ["date-fns (~60KB)", "react-day-picker (~55KB)"],
+      "x-ai-generation-priority": "high"
+    },
+    {
+      "component": "datetime",
+      "valueType": "string",
+      "description": "Calendar + time picker (YYYY-MM-DDTHH:mm).",
+      "unionType": "DateFormField",
+      "lazyLoaded": true,
+      "heavyDependencies": ["date-fns (~60KB)", "react-day-picker (~55KB)"],
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "duration",
+      "valueType": "number",
+      "description": "Duration input in seconds.",
+      "unionType": "DurationFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "low"
+    },
+    {
+      "component": "file",
+      "valueType": "File | File[]",
+      "description": "File upload with drag-drop, previews, and validation. Supports accept filter, multiple files, maxFiles, maxSize.",
+      "unionType": "FileFormField",
+      "extraProps": ["accept", "multiple", "maxFiles", "maxSize"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium",
+      "x-ai-validation-hints": "accept is MIME type or extension (e.g. 'image/*', '.pdf,.docx'). maxSize is in bytes."
+    },
+    {
+      "component": "entity_picker",
+      "valueType": "string",
+      "description": "Searchable entity selection with avatar, subtitle, and async autocomplete.",
+      "unionType": "EntityPickerFormField",
+      "extraProps": ["autocompleteHref", "autocompleteMinChars", "entityDisplayField", "entitySubtitleField", "entityAvatarField"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "phone",
+      "valueType": "string",
+      "description": "International phone input (E.164 format) with country selector and flags.",
+      "unionType": "PhoneFormField",
+      "extraProps": ["defaultCountry", "fixedCountry"],
+      "lazyLoaded": true,
+      "heavyDependencies": ["libphonenumber-js (~40KB)"],
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "document",
+      "valueType": "string",
+      "description": "Country-aware document input (CPF, CNPJ, SSN, etc.) with locale-based validation and masking.",
+      "unionType": "DocumentFormField",
+      "extraProps": ["documentType", "documentScope", "documentMasks"],
+      "lazyLoaded": true,
+      "heavyDependencies": ["validator.js (~28KB)"],
+      "x-ai-generation-priority": "medium",
+      "x-ai-validation-hints": "documentScope: 'person' (CPF), 'company' (CNPJ), 'any' (either). documentType is a validator.js locale key."
+    },
+    {
+      "component": "color",
+      "valueType": "string",
+      "description": "Color picker + hex input.",
+      "unionType": "SimpleFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "low"
+    },
+    {
+      "component": "slug",
+      "valueType": "string",
+      "description": "URL-friendly slug with auto-generation from source field and URL prefix display via InputGroup.",
+      "unionType": "SlugFormField",
+      "extraProps": ["sourceField", "prefix"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "tags",
+      "valueType": "string[]",
+      "description": "Chip-based tag input with optional max limit.",
+      "unionType": "TagsFormField",
+      "extraProps": ["maxTags"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "rating",
+      "valueType": "number",
+      "description": "Star rating input via ReUI Rating component.",
+      "unionType": "RatingFormField",
+      "extraProps": ["maxRating"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium",
+      "x-ai-validation-hints": "maxRating defaults to 5. Value is 0 to maxRating."
+    },
+    {
+      "component": "slider",
+      "valueType": "number",
+      "description": "Range slider via ReUI Slider. Single thumb by default; set multiple for a two-thumb range.",
+      "unionType": "SliderFormField",
+      "extraProps": ["min", "max", "step", "multiple"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "low",
+      "x-ai-validation-hints": "min/max/step bound the range. When multiple is true the value becomes a [from, to] tuple."
+    },
+    {
+      "component": "otp",
+      "valueType": "string",
+      "description": "One-time-code input via ReUI InputOTP, rendered as grouped slots.",
+      "unionType": "OtpFormField",
+      "extraProps": ["maxLength", "pattern", "groupSize"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "low",
+      "x-ai-validation-hints": "maxLength is the slot count (default 6). pattern: 'digits' (default) or 'alphanumeric'. groupSize inserts a visual separator every N slots."
+    },
+    {
+      "component": "native_select",
+      "valueType": "string",
+      "description": "Native HTML <select> dropdown. Requires an options array; safe fallback for iframe/Moodle contexts where the styled Select misbehaves.",
+      "unionType": "NativeSelectFormField",
+      "extraProps": ["options"],
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium",
+      "x-ai-validation-hints": "Requires options array (value/label). Prefer over 'select' only when native rendering is required."
+    },
+    {
+      "component": "date_range",
+      "valueType": "string[]",
+      "description": "Date range selector with filter operators and presets via ReUI DateSelector.",
+      "unionType": "DateRangeFormField",
+      "extraProps": ["operator"],
+      "lazyLoaded": true,
+      "x-ai-generation-priority": "medium",
+      "x-ai-validation-hints": "operator preset: 'is', 'before', 'after', 'between'. Value is array of date strings."
+    },
+    {
+      "component": "hidden",
+      "valueType": "string",
+      "description": "Hidden field — not rendered visually. Carries data in form submission.",
+      "unionType": "HiddenFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "medium"
+    },
+    {
+      "component": "static",
+      "valueType": "string",
+      "description": "Read-only display value (not editable). Shows label and value but does not allow input.",
+      "unionType": "StaticFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "low"
+    },
+    {
+      "component": "header",
+      "valueType": "n/a",
+      "description": "Visual section header label inside a form group. Non-interactive — only has label prop, not FieldPropsBase.",
+      "unionType": "HeaderFormField",
+      "lazyLoaded": false,
+      "x-ai-generation-priority": "low"
+    }
+  ],
+
+  "themeGuidance": {
+    "colorSpace": "OKLCH (oklch(lightness chroma hue))",
+    "colorFormat": "oklch(L C H) where L=0-1, C=0-0.4, H=0-360",
+    "builtInThemes": [
+      {
+        "id": "classic",
+        "displayName": "Classic (Maia)",
+        "description": "Default. Warm neutral base, dark blue-charcoal primary, generous radii, comfortable density.",
+        "primaryHue": 264
+      },
+      {
+        "id": "enterprise",
+        "displayName": "Enterprise",
+        "description": "Issue-tracker style. Cool corporate blue primary, tighter spacing, smaller radii, denser tables.",
+        "primaryHue": 255
+      },
+      {
+        "id": "soft",
+        "displayName": "Soft",
+        "description": "Warm, approachable. Rose/pink primary, larger radii, spacious density, warm cream surfaces.",
+        "primaryHue": 330
+      },
+      {
+        "id": "midnight",
+        "displayName": "Midnight",
+        "description": "Dark-first, high-contrast. Deep indigo primary, tight radii, compact density, dev-tools aesthetic.",
+        "primaryHue": 220
+      }
+    ],
+    "customThemes": {
+      "howTo": "Create a CSS class .theme-{name} with token overrides. Register via ThemeProvider.",
+      "tokenCategories": [
+        "colors (40+ tokens: primary, secondary, destructive, success, warning, info, neutral, canvas, sidebar, chart, invert)",
+        "colorsDark (separate dark mode overrides)",
+        "spacing (8px base grid: space0=0px to space20=80px)",
+        "radius (base, sm, md, lg, xl, xxl, full)",
+        "shadows (xs, sm, md, lg, xl, xxl)",
+        "typography (fontSans: Figtree, fontMono)",
+        "motion (duration + easing)",
+        "layout (sidebarWidth, contentMaxWidth, headerHeight)",
+        "zIndex (base=0, sticky=10, dropdown=20, overlay=30, popover=40, modal=50, toast=60, command=100)"
+      ]
+    },
+    "darkMode": {
+      "selector": ":root.dark .theme-{name}",
+      "strategy": "Separate colorsDark token set. Dark mode auto-switches based on system preference or manual toggle.",
+      "functions": ["getStoredAppearance()", "setAppearance()", "cycleAppearance()", "onSystemThemeChange()"]
+    },
+    "chartColors": "Use --chart-1 through --chart-5 CSS tokens for chart series colors. These are theme-aware.",
+    "x-ai-purpose": "When generating a custom theme, start from theme-defaults.json and only override tokens that differ. Use OKLCH format for all colors. The 8px grid applies to spacing tokens."
+  },
+
+  "componentGuidance": {
+    "description": "ReUI components are Radix/Base UI atoms shared across all blocks. They are read-only primitives — never modified by consumers.",
+    "importPattern": "import { Button } from '@middag-io/react/reui/button'",
+    "integrated": 52,
+    "partial": 3,
+    "planned": 10,
+    "keyComponents": [
+      "Button (5 variants: default, secondary, destructive, outline, ghost × 4 sizes)",
+      "Badge (5 variants × 3 sizes)",
+      "Alert (4 variants: default, destructive, success, warning)",
+      "Dialog (modal with overlay)",
+      "DropdownMenu (Radix dropdown with keyboard nav)",
+      "Tabs (Radix tabs — used by TabbedPanelBlock)",
+      "Input, Select, Checkbox, Switch (form primitives)",
+      "Sidebar (collapsible navigation sidebar)",
+      "Tooltip, Popover (overlays)"
+    ],
+    "x-ai-purpose": "Reference components.json schema for full list with variants and sizes. Consumers building custom blocks or shells can import ReUI primitives directly."
+  },
+
+  "antiPatterns": [
+    {
+      "id": "AP-01",
+      "name": "metric_card outside dashboard metrics region",
+      "description": "Placing metric_card blocks in non-metrics regions of a dashboard layout. The metrics region provides the responsive grid — other regions render cards as single blocks.",
+      "fix": "Always place metric_card blocks in the 'metrics' region of a dashboard layout."
+    },
+    {
+      "id": "AP-02",
+      "name": "Nested rows format in dense_table",
+      "description": "Using { id: '1', cells: { name: 'Alice' } } format for table rows. This is the WRONG format.",
+      "fix": "Use flat rows: { id: '1', name: 'Alice', email: 'alice@example.com' }. Rows are Record<string, unknown>[], not nested objects."
+    },
+    {
+      "id": "AP-03",
+      "name": "registerDefaults() in WordPress IIFE build",
+      "description": "Calling registerDefaults() in a WordPress IIFE consumer bundles ALL blocks including heavy lazy-loaded ones (Recharts 555KB, @xyflow 200KB, etc.).",
+      "fix": "Import blocks individually and call registerBlock() selectively. Only register the blocks each page actually uses."
+    },
+    {
+      "id": "AP-04",
+      "name": "form_panel in dashboard metrics region",
+      "description": "Placing a form_panel block in the metrics region of a dashboard layout. Forms need full width and the metrics region is a tight grid.",
+      "fix": "Place form_panel in the content region, or use a stack/sidebar layout instead."
+    },
+    {
+      "id": "AP-05",
+      "name": "Duplicate block keys",
+      "description": "Using the same key for multiple blocks across regions. Keys must be globally unique within a page.",
+      "fix": "Prefix block keys with region or purpose: 'main-users-table', 'aside-recent-activity'."
+    },
+    {
+      "id": "AP-06",
+      "name": "wizard layout without meta.steps",
+      "description": "Using the wizard layout without setting meta.steps and meta.actions. The wizard needs step labels for the progress indicator.",
+      "fix": "Always set layout.meta.steps (string[]) and layout.meta.actions when using wizard template."
+    },
+    {
+      "id": "AP-07",
+      "name": "Raw color values in themes",
+      "description": "Using hex (#FF0000), rgb(), or hsl() values in theme tokens instead of OKLCH.",
+      "fix": "Always use oklch(L C H) format. Example: oklch(0.637 0.237 25.331) for a red."
+    },
+    {
+      "id": "AP-08",
+      "name": "Mutating contract on frontend",
+      "description": "Attempting to modify the PageContract object on the frontend. Contracts are immutable — all changes happen on the backend.",
+      "fix": "Send mutations to the backend via Inertia POST/PUT/DELETE. The backend returns a new contract via partial reload."
+    },
+    {
+      "id": "AP-09",
+      "name": "Missing version field",
+      "description": "Omitting version: '1' from the PageContract. The Zod validation will reject it.",
+      "fix": "Always set version: '1' at the top level of every PageContract."
+    },
+    {
+      "id": "AP-10",
+      "name": "sidebar navigation in immersive shell",
+      "description": "Expecting sidebar navigation in the immersive shell. Immersive has no sidebar — only a minimal top bar.",
+      "fix": "Use the product shell when navigation context is needed."
+    },
+    {
+      "id": "AP-11",
+      "name": "Flat href/method on an action",
+      "description": "Putting `href` and/or `method` directly on an action object (e.g. { id, label, intent, href, method }). This is the LEGACY action shape and is no longer valid — actions carry navigation in a discriminated `target`.",
+      "fix": "Use a `target`: link → { \"kind\": \"link\", \"href\": \"/path\", \"external\"?: true }; route → { \"kind\": \"route\", \"route\": \"name\", \"params\"?: {} }; mutation → { \"kind\": \"request\", \"endpoint\": \"/path\", \"method\": \"post\"|\"get\"|\"put\"|\"patch\"|\"delete\" }. (Note: breadcrumbs still keep a flat `href` — only actions changed.)"
+    },
+    {
+      "id": "AP-12",
+      "name": "intent: 'menu' on an action",
+      "description": "Using `intent: 'menu'` to push an action into the overflow/kebab menu. The `menu` intent is GONE — `intent` is now strictly one of 8 styling values (primary, secondary, danger, success, warning, info, link, ghost).",
+      "fix": "Set a real styling `intent` (e.g. 'secondary') and control placement with `display: 'overflow'` (vs the default `display: 'inline'`)."
+    },
+    {
+      "id": "AP-13",
+      "name": "confirmation.description instead of message",
+      "description": "Using `description` for an action's confirmation body text. The canonical Confirmation field is `message`, and `variant` is required.",
+      "fix": "Use { title, message, variant, confirmLabel?, cancelLabel? }. Set variant: 'danger' for destructive confirmations, otherwise 'default'."
+    }
+  ],
+
+  "examples": [
+    {
+      "id": "EX-01",
+      "title": "Moodle course page with dense_table + metric_cards",
+      "description": "A dashboard page showing course metrics (enrollment, completion) and a table of enrolled students.",
+      "platform": "Moodle",
+      "contract": {
+        "version": "1",
+        "shell": "product",
+        "page": {
+          "key": "course-overview",
+          "title": "Introduction to Biology",
+          "subtitle": "COURSE-2024-101",
+          "icon": "graduation-cap",
+          "breadcrumbs": [
+            { "label": "Courses", "href": "/courses" },
+            { "label": "Introduction to Biology" }
+          ],
+          "actions": [
+            { "id": "edit", "label": "Edit Course", "intent": "secondary", "target": { "kind": "link", "href": "/courses/101/edit" } },
+            { "id": "archive", "label": "Archive", "intent": "danger", "target": { "kind": "request", "endpoint": "/courses/101/archive", "method": "post" }, "confirmation": { "title": "Archive Course?", "message": "Students will lose access.", "variant": "danger", "confirmLabel": "Archive" } }
+          ]
+        },
+        "layout": {
+          "template": "dashboard",
+          "regions": {
+            "metrics": [
+              { "type": "metric_card", "key": "enrolled", "data": { "label": "Enrolled", "value": 142, "delta": "+12", "deltaDirection": "positive", "icon": "users" } },
+              { "type": "metric_card", "key": "completion", "data": { "label": "Completion Rate", "value": "78%", "delta": "+5%", "deltaDirection": "positive", "icon": "check-circle" } },
+              { "type": "metric_card", "key": "avg-score", "data": { "label": "Avg Score", "value": "8.4", "deltaDirection": "neutral", "icon": "star" } }
+            ],
+            "content": [
+              {
+                "type": "dense_table",
+                "key": "students-table",
+                "title": "Enrolled Students",
+                "data": {
+                  "columns": [
+                    { "key": "name", "label": "Student", "sortable": true },
+                    { "key": "email", "label": "Email" },
+                    { "key": "progress", "label": "Progress", "variant": "badge" },
+                    { "key": "lastAccess", "label": "Last Access", "variant": "timestamp" }
+                  ],
+                  "rows": [
+                    { "id": "1", "name": "Maria Silva", "email": "maria@example.com", "progress": "75%", "lastAccess": 1714838400 },
+                    { "id": "2", "name": "João Santos", "email": "joao@example.com", "progress": "92%", "lastAccess": 1714752000 }
+                  ],
+                  "pagination": { "page": 1, "perPage": 25, "total": 142, "lastPage": 6 },
+                  "sort": { "column": "name", "direction": "asc" },
+                  "filters": { "available": [], "applied": {} },
+                  "rowActions": [
+                    { "id": "view", "label": "View Profile", "intent": "secondary", "target": { "kind": "link", "href": "/students/{id}" } }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "EX-02",
+      "title": "WordPress settings page adapted from Moodle layout",
+      "description": "A settings form using sidebar layout for WordPress. Note: no registerDefaults() — selective registration only.",
+      "platform": "WordPress",
+      "registrationNote": "WordPress IIFE: import { FormPanelBlock, DetailPanelBlock, registerBlock } individually.",
+      "contract": {
+        "version": "1",
+        "shell": "product",
+        "page": {
+          "key": "plugin-settings",
+          "title": "MIDDAG Settings",
+          "breadcrumbs": [
+            { "label": "Dashboard", "href": "/wp-admin" },
+            { "label": "MIDDAG Settings" }
+          ]
+        },
+        "layout": {
+          "template": "sidebar",
+          "regions": {
+            "main": [
+              {
+                "type": "form_panel",
+                "key": "settings-form",
+                "title": "General Settings",
+                "data": {
+                  "action": "/wp-admin/admin-ajax.php?action=middag_settings",
+                  "method": "post",
+                  "schema": [
+                    {
+                      "kind": "section",
+                      "id": "general",
+                      "label": "General",
+                      "children": [
+                        { "kind": "field", "key": "site_name", "component": "text", "props": { "label": "Site Name", "required": true } },
+                        { "kind": "field", "key": "locale", "component": "select", "props": { "label": "Language", "options": [{ "value": "en", "label": "English" }, { "value": "pt-BR", "label": "Português" }] } },
+                        { "kind": "field", "key": "notifications", "component": "switch", "props": { "label": "Enable Notifications" } }
+                      ]
+                    }
+                  ],
+                  "values": { "site_name": "My Site", "locale": "en", "notifications": true },
+                  "errors": {},
+                  "meta": { "submitLabel": "Save Settings", "cancelHref": "/wp-admin" }
+                }
+              }
+            ],
+            "aside": [
+              {
+                "type": "detail_panel",
+                "key": "license-info",
+                "title": "License",
+                "data": {
+                  "sections": [
+                    {
+                      "id": "license",
+                      "title": "Subscription",
+                      "fields": [
+                        { "key": "plan", "label": "Plan", "value": "Pro", "kind": "status" },
+                        { "key": "expires", "label": "Expires", "value": "2026-12-31", "kind": "timestamp" }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "EX-03",
+      "title": "Custom dark mode theme tokens",
+      "description": "Theme token suggestions for a dark-first analytics product. Override only what differs from midnight theme defaults.",
+      "themeOverrides": {
+        "colors": {
+          "canvasBase": "oklch(0.15 0.01 260)",
+          "canvasOverlay": "oklch(0.18 0.01 260)",
+          "primary": "oklch(0.7 0.15 200)",
+          "primaryFg": "oklch(0.98 0.005 200)"
+        },
+        "colorsDark": {
+          "canvasBase": "oklch(0.12 0.01 260)",
+          "canvasOverlay": "oklch(0.16 0.01 260)"
+        },
+        "radius": {
+          "base": "4px"
+        },
+        "typography": {
+          "fontSans": "JetBrains Mono, Figtree, system-ui, sans-serif"
+        }
+      },
+      "x-ai-purpose": "Shows how to create a custom dark theme. Start from midnight defaults, override only differing tokens. Always use oklch() format."
+    },
+    {
+      "id": "EX-04",
+      "title": "Validate a form_panel contract",
+      "description": "How to validate a contract with form_panel before rendering. Shows both structural (Zod) and semantic validation.",
+      "code": "import { validatePageContract } from '@middag-io/react';\n\nconst contract = { /* ... PageContract with form_panel ... */ };\nconst errors = validatePageContract(contract);\nif (errors) {\n  console.error('Invalid contract:', errors);\n  // errors: [{ field: 'layout.regions.content.0.data.action', message: 'Required' }]\n} else {\n  // Safe to render\n}",
+      "semanticChecks": [
+        "form_panel.data.action must be a valid URL string",
+        "form_panel.data.method must be 'post', 'put', or 'patch'",
+        "form_panel.data.schema must be a non-empty array of FormSchemaNode",
+        "Every FormFieldNode must have kind:'field', key (unique), component (valid type), and props",
+        "form_panel.data.values and errors must be objects (can be empty)"
+      ]
+    },
+    {
+      "id": "EX-05",
+      "title": "Kanban board with drag-and-drop",
+      "description": "A task management kanban board with 3 columns and move endpoint.",
+      "contract": {
+        "version": "1",
+        "shell": "product",
+        "page": {
+          "key": "project-tasks",
+          "title": "Sprint 14 — Tasks",
+          "breadcrumbs": [
+            { "label": "Projects", "href": "/projects" },
+            { "label": "MIDDAG Core", "href": "/projects/1" },
+            { "label": "Sprint 14" }
+          ],
+          "actions": [
+            { "id": "add-task", "label": "New Task", "intent": "primary", "target": { "kind": "link", "href": "/tasks/create" } }
+          ]
+        },
+        "layout": {
+          "template": "stack",
+          "regions": {
+            "content": [
+              {
+                "type": "kanban_board",
+                "key": "sprint-board",
+                "data": {
+                  "columns": [
+                    {
+                      "id": "todo",
+                      "title": "To Do",
+                      "cards": [
+                        { "id": "t-1", "title": "Fix login redirect", "status": "bug", "statusIntent": "destructive", "assignee": "Maria", "dueDate": "2026-05-10" },
+                        { "id": "t-2", "title": "Add dark mode toggle", "description": "User preference stored in localStorage", "assignee": "João" }
+                      ]
+                    },
+                    {
+                      "id": "in-progress",
+                      "title": "In Progress",
+                      "cards": [
+                        { "id": "t-3", "title": "Refactor auth middleware", "status": "in-progress", "statusIntent": "warning", "assignee": "Paulo" }
+                      ]
+                    },
+                    {
+                      "id": "done",
+                      "title": "Done",
+                      "cards": [
+                        { "id": "t-4", "title": "Update API docs", "status": "complete", "statusIntent": "success" }
+                      ]
+                    }
+                  ],
+                  "moveEndpoint": "/api/tasks/move"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "EX-06",
+      "title": "Chart panel with multiple series",
+      "description": "Analytics dashboard with a multi-series bar/line chart showing revenue and user trends.",
+      "contract": {
+        "version": "1",
+        "shell": "product",
+        "page": {
+          "key": "analytics",
+          "title": "Revenue Analytics",
+          "breadcrumbs": [
+            { "label": "Dashboard", "href": "/" },
+            { "label": "Analytics" }
+          ]
+        },
+        "layout": {
+          "template": "dashboard",
+          "regions": {
+            "metrics": [
+              { "type": "metric_card", "key": "total-revenue", "data": { "label": "Total Revenue", "value": "R$ 142.500", "delta": "+18%", "deltaDirection": "positive", "icon": "dollar-sign" } },
+              { "type": "metric_card", "key": "active-users", "data": { "label": "Active Users", "value": 3420, "delta": "+230", "deltaDirection": "positive", "icon": "users" } }
+            ],
+            "content": [
+              {
+                "type": "chart_panel",
+                "key": "revenue-chart",
+                "title": "Revenue vs Users (6 months)",
+                "data": {
+                  "chartType": "bar",
+                  "categoryKey": "month",
+                  "series": [
+                    { "key": "revenue", "label": "Revenue (R$)", "color": "var(--chart-1)", "type": "bar" },
+                    { "key": "users", "label": "Active Users", "color": "var(--chart-2)", "type": "line" }
+                  ],
+                  "data": [
+                    { "month": "Nov", "revenue": 18500, "users": 2100 },
+                    { "month": "Dec", "revenue": 22000, "users": 2400 },
+                    { "month": "Jan", "revenue": 19800, "users": 2600 },
+                    { "month": "Feb", "revenue": 24500, "users": 2900 },
+                    { "month": "Mar", "revenue": 28000, "users": 3100 },
+                    { "month": "Apr", "revenue": 29700, "users": 3420 }
+                  ],
+                  "showGrid": true,
+                  "showLegend": true
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+
+  "agentCapabilities": {
+    "description": "What an AI agent can do with this manifest and the referenced schemas.",
+    "capabilities": [
+      {
+        "id": "generate-contract",
+        "name": "Generate PageContract",
+        "description": "Create a complete, valid PageContract JSON for a given page description. Choose appropriate shell, layout, blocks, and field types.",
+        "requiredSchemas": ["blocks", "theme"],
+        "workflow": "Read systemOverview → choose shell and layout → populate regions with blocks → validate with pageContractSchema"
+      },
+      {
+        "id": "validate-contract",
+        "name": "Validate PageContract",
+        "description": "Check a PageContract for structural and semantic validity.",
+        "requiredSchemas": ["blocks"],
+        "workflow": "Run validatePageContract() → check block types exist in registry → verify region compatibility → check for anti-patterns"
+      },
+      {
+        "id": "generate-theme",
+        "name": "Generate Custom Theme",
+        "description": "Create a custom theme by overriding tokens from the defaults.",
+        "requiredSchemas": ["theme", "theme-defaults"],
+        "workflow": "Read theme-defaults.json → identify tokens to override → generate OKLCH values → validate against theme.json schema"
+      },
+      {
+        "id": "adapt-platform",
+        "name": "Adapt for Platform",
+        "description": "Adjust a contract or integration code for Moodle, WordPress, or custom host.",
+        "requiredSchemas": ["manifest"],
+        "workflow": "Check platform → apply registration strategy (registerDefaults vs selective) → set host header height → configure CSS isolation"
+      },
+      {
+        "id": "suggest-block",
+        "name": "Recommend Block Type",
+        "description": "Given a use case description, recommend the most appropriate block type and data shape.",
+        "requiredSchemas": ["blocks"],
+        "workflow": "Read blocks section → match x-ai-use-when to user description → check x-ai-avoid-when for exclusions → return block type + data template"
+      },
+      {
+        "id": "generate-form",
+        "name": "Generate Form Schema",
+        "description": "Create a FormPanelBlockData schema from a form description.",
+        "requiredSchemas": ["blocks"],
+        "workflow": "Read fields section → choose field components → organize into sections/groups → set validation rules → output FormSchemaNode[]"
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+name: CI
+
+# PR gate. publish.yml runs on push to main and gates only `tsc` + contract
+# drift before publishing — it skips test/lint/build. This workflow is the
+# pre-merge gate: every pull request targeting main must pass the same checks
+# the local git hooks enforce, so a clone without hooks (or a fork) can't land
+# a broken tree.
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: check + drift + test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      # typecheck + typecheck:tests + typecheck:demo + lint + format:check
+      # (same as the pre-commit/pre-push hooks).
+      - name: Static checks
+        run: npm run check
+
+      # Generated contracts must stay in sync with the php-ui schema mirror
+      # committed in docs/public/schemas/.
+      - name: Contracts drift gate
+        run: npm run gen:contracts:check
+
+      # Runs the full suite once WITH coverage so the regression floor
+      # (vitest.config.ts coverage.thresholds ≈ baseline − 2pp) gates the PR.
+      # A drop below the floor fails here; raise the floor as coverage grows.
+      - name: Unit tests + coverage gate
+        run: npm run test:coverage
+
+  build:
+    name: build (lib + docs payload)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      - name: Build @middag-io/react (dist-lib)
+        run: npm run build
+
+      # The docs payload build runs the FREE-only deny-list verification
+      # (scripts/verify-docs-payload.mjs) — catches internal material leaking
+      # into the public docs payload before it ever reaches a release.
+      - name: Build + verify docs payload
+        run: npm run docs:build

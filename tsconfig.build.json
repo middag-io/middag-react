@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "noEmit": false,
+        "noCheck": true,
+        "declaration": true,
+        "declarationMap": true,
+        "emitDeclarationOnly": true,
+        "outDir": "dist-lib",
+        "rootDir": "src"
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "src/components/examples", "**/__tests__", "mock"]
+}

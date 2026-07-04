@@ -1,0 +1,16 @@
+{
+    // Type-checks the library test suite (tests/**) against the same strict
+    // options as src. NOT yet wired into `npm run check`: the suite carries a
+    // pre-existing backlog of fixture drift (legacy action shapes missing
+    // target/intent, contract-shapes fixture gaps).
+    // Run `npm run typecheck:tests` to burn it down; gate it in `check` once 0.
+    "extends": "./tsconfig.json",
+    "include": ["src", "tests", "vitest.setup.ts"],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "src/components/examples",
+        "src/components/reui",
+        "tests/test-helpers.tsx"
+    ]
+}

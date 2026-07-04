@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-docs.middag.io/schemas/navigation.json",
+  "title": "MIDDAG Navigation Contract",
+  "description": "TypeScript contract for the sidebar navigation tree. Serialized from PHP navigation_registry during boot(). Consumed by ProductShell's SidebarNav component via usePage().props.navigation.",
+
+  "types": {
+    "NavigationEntityType": {
+      "type": "string",
+      "enum": [
+        "connector", "workflow", "segment", "instancegroup", "condition",
+        "compliance", "offering", "order", "course", "form", "certificate"
+      ],
+      "description": "Entity types for automatic icon resolution. When a NavigationNode has entityType set but no explicit icon, the Icon Registry resolves the icon from registerEntityIcon() mappings.",
+      "x-ai-purpose": "Use entityType instead of icon when the node represents a known entity. The icon registry will automatically resolve the correct icon, ensuring visual consistency across the app."
+    },
+    "NavigationNode": {
+      "type": "object",
+      "description": "A single node in the navigation tree. Can be a leaf (link) or a branch (group with children).",
+      "properties": {
+        "key": { "type": "string", "description": "Unique identifier within the tree." },
+        "label": { "type": "string", "description": "Display text." },
+        "icon": { "type": "string", "description": "Lucide icon name (kebab-case, e.g. 'graduation-cap'). Optional if entityType is set." },
+        "entityType": { "$ref": "#/types/NavigationEntityType", "description": "Entity type for automatic icon resolution via Icon Registry." },
+        "href": { "type": "string", "description": "Navigation URL. Omit for non-navigable group headers." },
+        "badge": { "type": ["string", "number"], "description": "Badge content (count or text)." },
+        "badgeVariant": {
+          "type": "string",
+          "enum": ["count", "alert"],
+          "description": "'count' shows muted text (default). 'alert' shows a red pill badge."
+        },
+        "active": { "type": "boolean", "description": "Whether this node is the current page." },
+        "drilldown": { "type": "boolean", "description": "When true, clicking replaces sidebar with this node's children + back button." },
+        "collapsible": { "type": "boolean", "description": "When true, group renders with expand/collapse toggle." },
+        "defaultOpen": { "type": "boolean", "description": "Whether a collapsible group starts expanded (default: false)." },
+        "statusColor": { "type": "string", "description": "CSS color for status dot next to drilldown title (e.g. 'var(--success)')." },
+        "target": { "type": "string", "description": "Link target attribute. External URLs (http/https) auto-detect '_blank'." },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/types/NavigationNode" },
+          "description": "Child nodes (subtree)."
+        }
+      },
+      "required": ["key", "label"]
+    },
+    "NavigationTreePayload": {
+      "type": "object",
+      "description": "The complete navigation payload sent via Inertia shared props. Contains the tree, active node key, drilldown state, and persistent footer items.",
+      "properties": {
+        "tree": {
+          "type": "array",
+          "items": { "$ref": "#/types/NavigationNode" },
+          "description": "Root-level navigation nodes (sidebar sections)."
+        },
+        "activeKey": { "type": "string", "description": "Key of the currently active navigation node." },
+        "drilldownStack": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Stack of drilled-down node keys for back navigation."
+        },
+        "footer": {
+          "type": "array",
+          "items": { "$ref": "#/types/NavigationNode" },
+          "description": "Persistent footer items (Settings, Help) always visible at sidebar bottom."
+        }
+      },
+      "required": ["tree", "activeKey", "footer"]
+    }
+  },
+
+  "x-ai-purpose": "These types describe the sidebar navigation structure. The tree is built server-side (PHP navigation_registry) and sent to the frontend via Inertia shared props. AI agents should understand this tree structure when generating pages that include navigation context. The Icon Registry (registerEntityIcon) auto-resolves icons for known entity types."
+}

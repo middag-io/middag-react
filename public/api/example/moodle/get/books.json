@@ -1,0 +1,212 @@
+{
+  "description": "Example: GET /api/example/moodle/get/books.json -- Books list for a Moodle host. Demonstrates the `stack` layout with a dense_table block (sortable columns, pagination, filters, row actions, bulk actions). Actions use the current target/intent hierarchy. Shape validated (see tests/fixtures/public-api-contracts.test.ts).",
+  "host": "moodle",
+  "method": "GET",
+  "contract": {
+    "version": "1",
+    "shell": "basic",
+    "page": {
+      "key": "books-list",
+      "title": "Books",
+      "breadcrumbs": [
+        { "label": "Site Administration", "href": "/admin" },
+        { "label": "Plugins", "href": "/admin/plugins" },
+        { "label": "Books" }
+      ],
+      "actions": [
+        {
+          "id": "add-book",
+          "label": "Add Book",
+          "intent": "primary",
+          "icon": "plus",
+          "target": { "kind": "link", "href": "/admin/books/new" }
+        }
+      ],
+      "filterTabs": [
+        { "key": "all", "label": "All", "badge": 12 },
+        { "key": "published", "label": "Published", "badge": 9 },
+        { "key": "draft", "label": "Draft", "badge": 2 },
+        { "key": "archived", "label": "Archived", "badge": 1 }
+      ]
+    },
+    "layout": {
+      "template": "stack",
+      "meta": { "fullBleed": true },
+      "regions": {
+        "content": [
+          {
+            "type": "dense_table",
+            "key": "books-table",
+            "data": {
+              "columns": [
+                { "key": "title", "label": "Title", "variant": "text", "sortable": true, "searchable": true },
+                { "key": "author", "label": "Author", "variant": "text", "sortable": true },
+                { "key": "course", "label": "Course", "variant": "text", "sortable": true },
+                { "key": "chapters", "label": "Chapters", "variant": "text", "sortable": true },
+                { "key": "status", "label": "Status", "variant": "status", "sortable": true },
+                { "key": "updated_at", "label": "Last Updated", "variant": "timestamp", "sortable": true }
+              ],
+              "rows": [
+                {
+                  "id": "book-1",
+                  "title": "Introduction to Machine Learning",
+                  "author": "Dr. Sarah Chen",
+                  "course": "CS 301 - Artificial Intelligence",
+                  "chapters": "14",
+                  "status": "Published",
+                  "updated_at": 1746057600,
+                  "href": "/admin/books/book-1"
+                },
+                {
+                  "id": "book-2",
+                  "title": "Workplace Safety Handbook",
+                  "author": "Mark Johnson",
+                  "course": "NR-10 Safety Compliance",
+                  "chapters": "8",
+                  "status": "Published",
+                  "updated_at": 1745971200,
+                  "href": "/admin/books/book-2"
+                },
+                {
+                  "id": "book-3",
+                  "title": "Data Privacy & LGPD Guide",
+                  "author": "Ana Costa",
+                  "course": "Compliance Training",
+                  "chapters": "11",
+                  "status": "Published",
+                  "updated_at": 1745884800,
+                  "href": "/admin/books/book-3"
+                },
+                {
+                  "id": "book-4",
+                  "title": "Leadership Fundamentals",
+                  "author": "Carlos Mendes",
+                  "course": "Management Track",
+                  "chapters": "6",
+                  "status": "Draft",
+                  "updated_at": 1745798400,
+                  "href": "/admin/books/book-4"
+                },
+                {
+                  "id": "book-5",
+                  "title": "Onboarding Procedures v2",
+                  "author": "HR Team",
+                  "course": "Employee Onboarding",
+                  "chapters": "5",
+                  "status": "Draft",
+                  "updated_at": 1745712000,
+                  "href": "/admin/books/book-5"
+                },
+                {
+                  "id": "book-6",
+                  "title": "Advanced Excel for Finance",
+                  "author": "Julia Ferreira",
+                  "course": "Finance Skills",
+                  "chapters": "18",
+                  "status": "Published",
+                  "updated_at": 1745625600,
+                  "href": "/admin/books/book-6"
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "perPage": 20,
+                "total": 12,
+                "lastPage": 1
+              },
+              "sort": {
+                "column": "title",
+                "direction": "asc"
+              },
+              "filters": {
+                "available": [
+                  {
+                    "key": "status",
+                    "label": "Status",
+                    "type": "select",
+                    "options": [
+                      { "value": "Published", "label": "Published" },
+                      { "value": "Draft", "label": "Draft" },
+                      { "value": "Archived", "label": "Archived" }
+                    ]
+                  },
+                  {
+                    "key": "course",
+                    "label": "Course",
+                    "type": "select",
+                    "options": [
+                      { "value": "cs301", "label": "CS 301 - Artificial Intelligence" },
+                      { "value": "nr10", "label": "NR-10 Safety Compliance" },
+                      { "value": "compliance", "label": "Compliance Training" },
+                      { "value": "management", "label": "Management Track" }
+                    ]
+                  }
+                ],
+                "applied": {}
+              },
+              "rowActions": [
+                {
+                  "id": "edit",
+                  "label": "Edit",
+                  "icon": "edit",
+                  "intent": "secondary",
+                  "target": { "kind": "link", "href": "/admin/books/${id}/edit" }
+                },
+                {
+                  "id": "duplicate",
+                  "label": "Duplicate",
+                  "icon": "copy",
+                  "intent": "secondary",
+                  "target": { "kind": "request", "endpoint": "/admin/books/${id}/duplicate", "method": "post" },
+                  "confirmation": {
+                    "title": "Duplicate Book",
+                    "message": "A copy of this book will be created as a draft. Continue?",
+                    "variant": "default",
+                    "confirmLabel": "Duplicate",
+                    "cancelLabel": "Cancel"
+                  }
+                },
+                {
+                  "id": "delete",
+                  "label": "Delete",
+                  "icon": "trash",
+                  "intent": "danger",
+                  "target": { "kind": "request", "endpoint": "/admin/books/${id}", "method": "delete" },
+                  "confirmation": {
+                    "title": "Delete Book",
+                    "message": "This will permanently delete the book and all its chapters. This action cannot be undone.",
+                    "variant": "destructive",
+                    "confirmLabel": "Delete",
+                    "cancelLabel": "Cancel"
+                  }
+                }
+              ],
+              "bulkActions": [
+                {
+                  "id": "publish",
+                  "label": "Publish Selected",
+                  "intent": "primary",
+                  "target": { "kind": "request", "endpoint": "/admin/books/bulk/publish", "method": "post" }
+                },
+                {
+                  "id": "archive",
+                  "label": "Archive Selected",
+                  "intent": "danger",
+                  "target": { "kind": "request", "endpoint": "/admin/books/bulk/archive", "method": "post" },
+                  "confirmation": {
+                    "title": "Archive Selected",
+                    "message": "Archive all selected books? They will no longer be visible to students.",
+                    "variant": "destructive",
+                    "confirmLabel": "Archive",
+                    "cancelLabel": "Cancel"
+                  }
+                }
+              ],
+              "searchPlaceholder": "Search books by title or author..."
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,93 @@
+import { Button } from "@/components/reui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/reui/field";
+import { Input } from "@/components/reui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/reui/input-group";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { MailIcon, SquareLock01Icon } from "@hugeicons/core-free-icons";
+
+export function Pattern() {
+  return (
+    <div className="mx-auto w-full max-w-xs">
+      <FieldGroup>
+        <Field data-invalid>
+          <FieldLabel htmlFor="val-email">
+            Email <span className="text-destructive">*</span>
+          </FieldLabel>
+          <InputGroup>
+            <InputGroupAddon>
+              <HugeiconsIcon
+                icon={MailIcon}
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+            </InputGroupAddon>
+            <InputGroupInput
+              id="val-email"
+              type="email"
+              defaultValue="invalid-email"
+              placeholder="you@example.com"
+            />
+          </InputGroup>
+          <FieldError>Please enter a valid email address.</FieldError>
+        </Field>
+        <Field data-invalid>
+          <FieldLabel htmlFor="val-password">
+            Password <span className="text-destructive">*</span>
+          </FieldLabel>
+          <InputGroup>
+            <InputGroupAddon>
+              <HugeiconsIcon
+                icon={SquareLock01Icon}
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+            </InputGroupAddon>
+            <InputGroupInput
+              id="val-password"
+              type="password"
+              defaultValue="short"
+              placeholder="Enter password"
+            />
+          </InputGroup>
+          <FieldError
+            errors={[
+              { message: "Must be at least 8 characters." },
+              { message: "Must contain at least one number." },
+            ]}
+          />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="val-confirm">Confirm Password</FieldLabel>
+          <InputGroup>
+            <InputGroupAddon>
+              <HugeiconsIcon
+                icon={SquareLock01Icon}
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+            </InputGroupAddon>
+            <InputGroupInput
+              id="val-confirm"
+              type="password"
+              placeholder="Repeat password"
+            />
+          </InputGroup>
+          <FieldDescription>
+            Re-enter your password to confirm.
+          </FieldDescription>
+        </Field>
+        <Button className="w-full">Create Account</Button>
+      </FieldGroup>
+    </div>
+  );
+}

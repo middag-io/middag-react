@@ -1,0 +1,21 @@
+#!/bin/sh
+# pre-commit — typecheck + lint staged files before commit
+
+echo "[pre-commit] Running typecheck..."
+npx tsc --noEmit
+if [ $? -ne 0 ]; then
+    echo "[pre-commit] BLOCKED: TypeScript errors found. Fix before committing."
+    exit 1
+fi
+
+echo "[pre-commit] Running lint on staged files..."
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(ts|tsx)$')
+if [ -n "$STAGED" ]; then
+    npx eslint $STAGED
+    if [ $? -ne 0 ]; then
+        echo "[pre-commit] BLOCKED: Lint errors found. Run 'npm run lint:fix' and re-stage."
+        exit 1
+    fi
+fi
+
+echo "[pre-commit] OK"

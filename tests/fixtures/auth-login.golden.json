@@ -1,0 +1,73 @@
+{
+  "component": "Page",
+  "props": {
+    "auth": null,
+    "navigation": {
+      "tree": [],
+      "activeKey": "",
+      "footer": []
+    },
+    "version": "demo-0.5",
+    "locale": "en",
+    "theme": {
+      "appearance": "light"
+    },
+    "flash": [],
+    "errors": [],
+    "csrf_token": "dev-csrf-token",
+    "contract": {
+      "version": "1",
+      "shell": "auth",
+      "page": {
+        "key": "demo.login",
+        "title": "Sign in",
+        "subtitle": ""
+      },
+      "layout": {
+        "template": "stack",
+        "regions": {
+          "content": [
+            {
+              "type": "form_panel",
+              "key": "login",
+              "data": {
+                "action": "/login",
+                "method": "post",
+                "schema": [
+                  {
+                    "kind": "field",
+                    "key": "email",
+                    "component": "email",
+                    "props": {
+                      "label": "Email",
+                      "required": true
+                    }
+                  },
+                  {
+                    "kind": "field",
+                    "key": "password",
+                    "component": "password",
+                    "props": {
+                      "label": "Password",
+                      "required": true
+                    }
+                  }
+                ],
+                "values": [],
+                "errors": [],
+                "meta": {
+                  "validation": "both",
+                  "submitLabel": "Sign in",
+                  "cancelLabel": "Reset",
+                  "cancelHref": "/login"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "url": "/login",
+  "version": "demo-0.5"
+}

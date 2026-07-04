@@ -1,0 +1,168 @@
+{
+  "description": "Example: GET /api/example/moodle/get/dashboard.json -- Admin dashboard for a Moodle host. Demonstrates the `dashboard` layout: metric_card blocks in the `metrics` region + a dense_table in the `content` region. Shape validated against the current PageContract schema (see tests/fixtures/public-api-contracts.test.ts).",
+  "host": "moodle",
+  "method": "GET",
+  "contract": {
+    "version": "1",
+    "shell": "basic",
+    "page": {
+      "key": "admin-dashboard",
+      "title": "Dashboard",
+      "breadcrumbs": [{ "label": "Site Administration" }]
+    },
+    "layout": {
+      "template": "dashboard",
+      "regions": {
+        "metrics": [
+          {
+            "type": "metric_card",
+            "key": "metric-active-users",
+            "data": {
+              "value": 3842,
+              "delta": "+12% this month",
+              "deltaDirection": "positive",
+              "label": "Active Users",
+              "icon": "users",
+              "href": "/admin/users"
+            }
+          },
+          {
+            "type": "metric_card",
+            "key": "metric-courses",
+            "data": {
+              "value": 127,
+              "delta": "+5 new",
+              "deltaDirection": "positive",
+              "label": "Active Courses",
+              "icon": "graduation-cap",
+              "href": "/admin/courses"
+            }
+          },
+          {
+            "type": "metric_card",
+            "key": "metric-completions",
+            "data": {
+              "value": 1893,
+              "delta": "+8% vs last month",
+              "deltaDirection": "positive",
+              "label": "Course Completions",
+              "icon": "chart",
+              "href": "/admin/reports/completions"
+            }
+          },
+          {
+            "type": "metric_card",
+            "key": "metric-storage",
+            "data": {
+              "value": "42.7 GB",
+              "delta": "68% of quota",
+              "deltaDirection": "neutral",
+              "label": "Storage Used",
+              "icon": "hard-drive"
+            }
+          },
+          {
+            "type": "metric_card",
+            "key": "metric-enrollments",
+            "data": {
+              "value": 562,
+              "delta": "+89 this week",
+              "deltaDirection": "positive",
+              "label": "New Enrollments",
+              "icon": "user-plus",
+              "href": "/admin/enrolments"
+            }
+          },
+          {
+            "type": "metric_card",
+            "key": "metric-compliance",
+            "data": {
+              "value": "91.3%",
+              "delta": "-0.5%",
+              "deltaDirection": "negative",
+              "label": "Compliance Rate",
+              "icon": "shield",
+              "href": "/admin/compliance"
+            }
+          }
+        ],
+        "content": [
+          {
+            "type": "dense_table",
+            "key": "recent-activity-table",
+            "title": "Recent Activity",
+            "data": {
+              "columns": [
+                { "key": "user", "label": "User", "variant": "text", "searchable": true },
+                { "key": "action", "label": "Action", "variant": "text" },
+                { "key": "target", "label": "Target", "variant": "text" },
+                { "key": "status", "label": "Status", "variant": "status" },
+                { "key": "timestamp", "label": "When", "variant": "timestamp", "sortable": true }
+              ],
+              "rows": [
+                {
+                  "id": "act-1",
+                  "user": "Maria Santos",
+                  "action": "Completed course",
+                  "target": "NR-10 Safety Compliance",
+                  "status": "Success",
+                  "timestamp": 1746057600
+                },
+                {
+                  "id": "act-2",
+                  "user": "System (Cron)",
+                  "action": "Backup completed",
+                  "target": "Full site backup",
+                  "status": "Success",
+                  "timestamp": 1746054000
+                },
+                {
+                  "id": "act-3",
+                  "user": "Pedro Oliveira",
+                  "action": "Enrolled in course",
+                  "target": "Leadership Fundamentals",
+                  "status": "Pending",
+                  "timestamp": 1746050400
+                },
+                {
+                  "id": "act-4",
+                  "user": "SAP Connector",
+                  "action": "User sync failed",
+                  "target": "SAP SuccessFactors",
+                  "status": "Error",
+                  "timestamp": 1746046800
+                },
+                {
+                  "id": "act-5",
+                  "user": "Admin",
+                  "action": "Published course",
+                  "target": "Data Privacy & LGPD Guide",
+                  "status": "Success",
+                  "timestamp": 1746043200
+                }
+              ],
+              "pagination": { "page": 1, "perPage": 10, "total": 48, "lastPage": 5 },
+              "sort": { "column": "timestamp", "direction": "desc" },
+              "filters": {
+                "available": [
+                  {
+                    "key": "status",
+                    "label": "Status",
+                    "type": "select",
+                    "options": [
+                      { "value": "Success", "label": "Success" },
+                      { "value": "Pending", "label": "Pending" },
+                      { "value": "Error", "label": "Error" }
+                    ]
+                  }
+                ],
+                "applied": {}
+              },
+              "searchPlaceholder": "Search activity..."
+            }
+          }
+        ]
+      }
+    }
+  }
+}

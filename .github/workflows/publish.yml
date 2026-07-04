@@ -1,0 +1,263 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      published: ${{ steps.release.outputs.release_created }}
+    steps:
+      # release-please owns versioning: it scans Conventional Commits on main,
+      # opens/updates the release PR (root package.json + CHANGELOG.md) and, on
+      # merge, cuts the vX.Y.Z tag + GitHub release. Commit types decide the
+      # bump (0.x rule: feat/breaking = minor, fix = patch — see
+      # release-please-config.json). Root-only: this repository holds a single
+      # publishable package, no lockstep sync needed.
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    name: Publish @middag-io/react
+    needs: release
+    # workflow_dispatch keeps a manual heal path: every publish step below is
+    # idempotent (skips when the version is already on the registry), so a
+    # partially failed publish can be re-run without a new release.
+    if: ${{ needs.release.outputs.published == 'true' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - name: Contracts drift gate (generated TS/zod + wire schemas in sync with php-ui mirror)
+        run: npm run gen:contracts:check
+      - name: Build
+        run: npm run build
+
+      # NOTE (first publish from this repository): the @middag-io/react package
+      # on GitHub Packages is linked to the repository that first published it.
+      # Before the FIRST publish from this repo succeeds, an org admin must
+      # grant this repository access under the package's "Manage Actions
+      # access" settings — otherwise GITHUB_TOKEN gets a 403 here.
+      - name: Publish to GitHub Packages if changed
+        run: |
+          LOCAL_VERSION=$(node -e "console.log(require('./package.json').version)")
+          GH_VERSION=$(npm view @middag-io/react version 2>/dev/null || echo "0.0.0")
+          echo "Local: $LOCAL_VERSION, GitHub Packages: $GH_VERSION"
+          if [ "$LOCAL_VERSION" = "$GH_VERSION" ]; then
+            echo "Version $LOCAL_VERSION already on GitHub Packages, skipping."
+          else
+            npm publish
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Publish compiled-only to public npm (idempotent — skips if version already exists)
+      - name: Publish compiled-only to public npm
+        run: |
+          LOCAL_VERSION=$(node -e "console.log(require('./package.json').version)")
+
+          # Query public npm directly (the runner .npmrc routes @middag-io to GitHub Packages)
+          NPM_VERSION=$(curl -sf "https://registry.npmjs.org/@middag-io%2freact" | node -e "
+            let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{
+              try{console.log(JSON.parse(d)['dist-tags']['latest'])}catch{console.log('0.0.0')}
+            })
+          ")
+          echo "Local: $LOCAL_VERSION, npm: $NPM_VERSION"
+
+          if [ "$LOCAL_VERSION" = "$NPM_VERSION" ]; then
+            echo "Version $LOCAL_VERSION already on npm, skipping."
+            exit 0
+          fi
+
+          echo "Publishing $LOCAL_VERSION to npm (current: $NPM_VERSION)"
+
+          TEMP_DIR=$(mktemp -d)
+
+          # Copy package.json and modify for compiled-only publish
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+            pkg.files = ['dist-lib', 'bin'];
+            delete pkg.publishConfig;
+            delete pkg.scripts;
+            delete pkg.dependencies;
+            delete pkg.devDependencies;
+            fs.writeFileSync('$TEMP_DIR/package.json', JSON.stringify(pkg, null, 2));
+          "
+
+          # Copy compiled artifacts + README + LICENSE
+          cp -r dist-lib "$TEMP_DIR/"
+          cp -r bin "$TEMP_DIR/"
+          cp README.md "$TEMP_DIR/"
+          cp LICENSE "$TEMP_DIR/"
+
+          # Override scoped registry to point to public npm
+          echo "@middag-io:registry=https://registry.npmjs.org" > "$TEMP_DIR/.npmrc"
+          echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" >> "$TEMP_DIR/.npmrc"
+
+          # Publish to public npm (treat "already published" as success)
+          cd "$TEMP_DIR"
+          npm publish --access public 2>&1 | tee /tmp/npm-publish.log
+          EXIT_CODE=${PIPESTATUS[0]}
+          if [ $EXIT_CODE -ne 0 ]; then
+            if grep -q "cannot publish over the previously published" /tmp/npm-publish.log; then
+              echo "Version $LOCAL_VERSION already on npm (race condition), skipping."
+              exit 0
+            fi
+            exit $EXIT_CODE
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # ADR-016: after a real publish, build the versioned docs payload and sync it
+  # to Cloudflare R2. Gated on a confirmed release so it runs exactly once per
+  # released version (immutability is enforced inline below).
+  build-docs:
+    name: Build docs payload
+    needs: [release, publish]
+    if: ${{ needs.release.outputs.published == 'true' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build documentation payload (.docs-dist/)
+        run: npm run docs:build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: docs-dist
+          path: .docs-dist
+          # .docs-dist is a dot-dir; upload-artifact@v4+ excludes hidden paths by default.
+          include-hidden-files: true
+
+  # Inline R2 sync (ADR-016 Build-Time Aggregation via Edge Storage). This
+  # repository is public, so it cannot call the private reusable workflow in
+  # middag-io/.github-private — the same logic runs inline here instead:
+  # credentials from 1Password at run time (org secret OP_SERVICE_ACCOUNT_TOKEN
+  # must be made available to this repo), per-version immutability enforced
+  # before publishing, additive sync (never --delete).
+  sync-docs:
+    name: Publish docs to R2
+    needs: build-docs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      BUCKET: middag-docs-public
+      PACKAGE_NAME: middag-react
+      # Cloudflare R2 + aws-cli v2 (>= 2.23) integrity-checksum compatibility.
+      # Newer aws-cli sends CRC32 checksums with aws-chunked encoding by default,
+      # which the R2 S3 API rejects. Restrict checksum behaviour to when_required.
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+    steps:
+      - name: Download docs payload
+        uses: actions/download-artifact@v7
+        with:
+          name: docs-dist
+          path: ./.docs-payload
+
+      - name: Load R2 credentials
+        uses: 1password/load-secrets-action@v4
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          AWS_ACCESS_KEY_ID: "op://CI-SHARED/CLOUDFLARE-R2-middag-docs/S3 Credentials/Access Key ID"
+          AWS_SECRET_ACCESS_KEY: "op://CI-SHARED/CLOUDFLARE-R2-middag-docs/S3 Credentials/Secret Access Key"
+          AWS_ENDPOINT_URL: "op://CI-SHARED/CLOUDFLARE-R2-middag-docs/S3 Credentials/Default ENDPOINT"
+
+      - name: Verify R2 credentials loaded
+        run: |
+          set -euo pipefail
+          : "${AWS_ACCESS_KEY_ID:?R2 access key not loaded — check OP_SERVICE_ACCOUNT_TOKEN org secret availability for this repo}"
+          : "${AWS_SECRET_ACCESS_KEY:?R2 secret key not loaded — check 1Password item field labels}"
+          : "${AWS_ENDPOINT_URL:?R2 endpoint not loaded — check 1Password item field label 'S3 Credentials/Default ENDPOINT'}"
+          echo "R2 credentials present."
+
+      - name: Enforce version immutability
+        run: |
+          set -euo pipefail
+          MANIFEST="./.docs-payload/manifest.json"
+          # The version being published is owned by the artifact: read it from
+          # manifest.json (.latest).
+          if [ ! -f "${MANIFEST}" ]; then
+            echo "::error::manifest.json not found in artifact at: ${MANIFEST}"
+            exit 1
+          fi
+          VERSION=$(jq -r '.latest // empty' "${MANIFEST}")
+          case "${VERSION}" in
+            ""|*[!a-zA-Z0-9._-]*)
+              echo "::error::manifest .latest is missing or invalid: '${VERSION}'"
+              exit 1
+              ;;
+          esac
+          echo "Manifest version (.latest): ${VERSION}"
+          # A published {version} is immutable: refuse if it already exists under
+          # any kind. Fail CLOSED — list-objects-v2 exits non-zero only on a real
+          # error (auth/endpoint/network), never merely because the prefix is empty.
+          for KIND in docs xref schemas; do
+            PREFIX="${PACKAGE_NAME}/${KIND}/${VERSION}/"
+            DEST="s3://${BUCKET}/${PREFIX}"
+            if ! COUNT=$(aws s3api list-objects-v2 \
+                  --bucket "${BUCKET}" \
+                  --prefix "${PREFIX}" \
+                  --max-items 1 \
+                  --endpoint-url "${AWS_ENDPOINT_URL}" \
+                  --region auto \
+                  --query 'length(Contents || `[]`)' \
+                  --output text); then
+              echo "::error::Could not verify destination state — refusing to publish to protect immutability: ${DEST}"
+              exit 1
+            fi
+            if [ "${COUNT}" != "None" ] && [ "${COUNT}" != "0" ]; then
+              echo "::error::Version already published and is immutable: ${DEST}"
+              echo "::error::Ship a new version instead."
+              exit 1
+            fi
+          done
+          echo "Version ${VERSION} not yet published — OK to publish."
+
+      - name: Sync payload to R2
+        run: |
+          set -euo pipefail
+          SRC="./.docs-payload"
+          DEST="s3://${BUCKET}/${PACKAGE_NAME}/"
+          if [ -z "$(ls -A "${SRC}" 2>/dev/null)" ]; then
+            echo "::error::Source directory is empty, nothing to publish: ${SRC}"
+            exit 1
+          fi
+          echo "Syncing ${SRC} -> ${DEST}"
+          # NO --delete. The payload carries only the current release's version
+          # directories, so deleting at the package root would erase previously
+          # published, immutable versions. Additive sync preserves history;
+          # per-version immutability is enforced above; manifest.json (the
+          # mutable 'latest' pointer) is intentionally overwritten each release.
+          aws s3 sync "${SRC}" "${DEST}" \
+            --endpoint-url "${AWS_ENDPOINT_URL}" \
+            --region auto \
+            --no-progress
+          echo "Published ${PACKAGE_NAME} payload to ${BUCKET}"

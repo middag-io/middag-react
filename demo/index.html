@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>MIDDAG React UI — FREE demo</title>
+    </head>
+    <body>
+        <!--
+      DEV ONLY — served by `npm run dev` (Vite dev server, repo root).
+      In production, the host platform (Moodle/WordPress/custom) serves its
+      own HTML and loads the UI via Inertia.js. This file is never deployed.
+
+      middag-root    — Required class for MIDDAG CSS tokens to apply.
+      middag-portals — Container for floating UI (modals, dropdowns, toasts).
+    -->
+        <div id="root" class="middag-root"></div>
+        <div id="middag-portals" class="middag-root"></div>
+        <script>
+            window.__MIDDAG_MOCK_NAVIGATE__ = true;
+        </script>
+        <script type="module" src="/main.tsx"></script>
+    </body>
+</html>

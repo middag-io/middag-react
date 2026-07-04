@@ -1,0 +1,13 @@
+{
+  "validation.not_blank": "Este valor não deve estar em branco.",
+  "validation.required": "Este campo é obrigatório.",
+  "validation.type": "Este valor não é válido.",
+  "validation.email": "Este valor não é um endereço de e-mail válido.",
+  "validation.length.too_short": "Este valor é muito curto. Deve ter {limit} caracteres ou mais.",
+  "validation.length.too_long": "Este valor é muito longo. Deve ter {limit} caracteres ou menos.",
+  "validation.range.too_low": "Este valor deve ser {limit} ou mais.",
+  "validation.range.too_high": "Este valor deve ser {limit} ou menos.",
+  "validation.choice.invalid": "O valor selecionado não é uma opção válida.",
+  "validation.regex": "Este valor não está no formato esperado.",
+  "validation.unique": "Este valor já está em uso."
+}

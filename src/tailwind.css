@@ -1,0 +1,233 @@
+/*
+ * CSS Isolation Strategy (ADR-807)
+ *
+ * Bidirectional isolation between MIDDAG React and Moodle host page:
+ *
+ * OUTWARD (MIDDAG → Moodle):
+ *   Tailwind's preflight (box-sizing, margin reset) applies globally but is
+ *   compatible with Moodle's Bootstrap base. Utility classes only match elements
+ *   that carry them — since only our React components use Tailwind classes,
+ *   utilities don't leak outward.
+ *
+ * INWARD (Moodle → MIDDAG):
+ *   `all: initial` on .middag-root blocks ALL inherited Moodle/Bootstrap styles.
+ *   Our scoped reset then re-establishes the expected baseline for React.
+ *
+ * PORTALS:
+ *   Modals, popovers, toasts render in #middag-portals (also .middag-root),
+ *   keeping them inside the isolation boundary.
+ */
+/* source("../src") pins Tailwind's automatic content detection to the engine
+   sources: the shipped stylesheet must never bake utilities scanned from
+   demo/, tests/ or packages/ (react-pro ships its own layer — E1.8). Dev
+   entries that re-import this file (demo/, react-demo mock) add their own
+   @source directives on top. */
+@import "tailwindcss" source("../src");
+@import "./base/theme/tokens.css";
+@import "./base/theme/theme-bridge.css";
+/* Compile-time utility→token mapping, shared with the react-pro CSS build
+   (@middag-io/react-pro/style.css). See the contract header for why. */
+@import "./base/theme/tailwind-theme.css";
+
+/* Force Tailwind to scan all component sources for utility classes.
+   Some components (sidebar, sheet) use dynamic cn() class construction
+   that the Vite plugin misses during automatic content detection. */
+@source "../src/components/reui";
+@source "../src/base/shell";
+@source "../src/base/blocks";
+@source "../src/base/partials";
+@source "../src/base/form";
+/* Safelist for dynamic classes that Tailwind can't extract from JSX */
+@source "../src/base/theme/sidebar-safelist.txt";
+/* Premium utilities are NOT baked in here (E1.8 / D-F2-1:A): react-pro ships
+   its own compiled utilities layer (@middag-io/react-pro/style.css), built
+   from the same theme contract above. Hosts using PRO import BOTH styles. */
+
+@layer base {
+  .product-shell__content {
+    border-top: 1px solid var(--border);
+  }
+
+  :root.dark .product-shell__content {
+    border-top: 1px solid oklch(0.3 0.005 286.32);
+  }
+
+  /* NProgress bar — uses --primary color, z-toast layer */
+  #nprogress {
+    pointer-events: none;
+  }
+
+  #nprogress .bar {
+    background: var(--primary);
+    position: fixed;
+    z-index: var(--z-toast);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+  }
+
+  #nprogress .peg {
+    display: block;
+    position: absolute;
+    right: 0;
+    width: 100px;
+    height: 100%;
+    box-shadow:
+      0 0 10px var(--primary),
+      0 0 5px var(--primary);
+    opacity: 1;
+    transform: rotate(3deg) translate(0px, -4px);
+  }
+
+  /* Respect reduced-motion — instant transitions */
+  @media (prefers-reduced-motion: reduce) {
+    #nprogress .bar {
+      transition: none !important;
+    }
+  }
+
+  /* InspectorPanel — overrides Sheet defaults for drawer-style inspector */
+  .inspector-panel {
+    max-width: var(--inspector-width, 440px) !important;
+    width: var(--inspector-width, 440px) !important;
+    transition-duration: 220ms !important;
+    transition-timing-function: cubic-bezier(0.2, 0, 0, 1) !important;
+  }
+
+  /* Lighter overlay for inspector (bg-black/20 instead of default bg-black/50) */
+  :has(> .inspector-panel) > [data-slot="sheet-overlay"] {
+    --tw-bg-opacity: 0.2 !important;
+  }
+
+  /* Sidebar scrollbar — discreet, stable gutter reserves space to prevent content shift */
+  .sidebar-scroll {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0 0 0 / 0.08) transparent;
+  }
+
+  :root.dark .sidebar-scroll {
+    scrollbar-color: oklch(1 0 0 / 0.08) transparent;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-thumb {
+    background: oklch(0 0 0 / 0.08);
+    border-radius: 3px;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+    background: oklch(0 0 0 / 0.15);
+  }
+
+  :root.dark .sidebar-scroll::-webkit-scrollbar-thumb {
+    background: oklch(1 0 0 / 0.08);
+  }
+
+  :root.dark .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+    background: oklch(1 0 0 / 0.15);
+  }
+}
+
+/*
+ * Sidebar icon-collapse mode — OUTSIDE @layer base so these rules
+ * override Tailwind utility classes (which live in @layer utilities).
+ */
+[data-collapsible="icon"] .sidebar-quick-find,
+[data-collapsible="icon"] .sidebar-group-label,
+[data-collapsible="icon"] .sidebar-drilldown-header,
+[data-collapsible="icon"] .sidebar-drilldown-detail,
+[data-collapsible="icon"] .sidebar-children,
+[data-collapsible="icon"] .sidebar-expand-btn,
+[data-collapsible="icon"] [data-slot="sidebar-header"] p,
+[data-collapsible="icon"] [data-slot="sidebar-header"] button {
+  display: none !important;
+}
+
+[data-collapsible="icon"] .sidebar-scroll {
+  overflow: hidden !important;
+}
+
+[data-collapsible="icon"] .sidebar-scroll a,
+[data-collapsible="icon"] .sidebar-scroll button {
+  justify-content: center;
+  padding: 8px 0 !important;
+  gap: 0;
+}
+
+[data-collapsible="icon"] .sidebar-scroll span {
+  display: none !important;
+}
+
+:root {
+  --destructive-foreground: var(--color-red-800);
+  --success: var(--color-emerald-500);
+  --success-foreground: var(--color-emerald-900);
+  --info: var(--color-violet-500);
+  --info-foreground: var(--color-violet-900);
+  --warning: var(--color-yellow-500);
+  --warning-foreground: var(--color-yellow-900);
+  --invert: var(--color-zinc-900);
+  --invert-foreground: var(--color-zinc-50);
+}
+
+.dark {
+  --destructive-foreground: var(--color-red-600);
+  --success: var(--color-emerald-500);
+  --success-foreground: var(--color-emerald-600);
+  --info: var(--color-violet-500);
+  --info-foreground: var(--color-violet-600);
+  --warning: var(--color-yellow-500);
+  --warning-foreground: var(--color-yellow-600);
+  --invert: var(--color-zinc-700);
+  --invert-foreground: var(--color-zinc-50);
+}
+
+/*
+ * OUTWARD ISOLATION — Tailwind utility class name collisions
+ *
+ * This file is compiled into `local/middag/styles.css` by Vite and
+ * Moodle auto-loads that file on EVERY page via theme compilation.
+ * Therefore any Tailwind utility emitted here leaks onto every Moodle
+ * page, including ones that don't render the React app.
+ *
+ * For each known collision we neutralize the Tailwind rule OUTSIDE the
+ * React tree (.middag-root). React components keep Tailwind semantics
+ * intact inside .middag-root.
+ *
+ * Known collisions:
+ *   .collapse — Bootstrap's collapsible forms (Moodle fieldsets, modules,
+ *               dashboards) rely on display:none/block driven by `.show`.
+ *               Tailwind emits `.collapse { visibility: collapse }`, which
+ *               keeps the element invisible even after Bootstrap expands
+ *               it. React code does not use this utility.
+ *
+ * Add new entries here as collisions are discovered (candidates to watch:
+ * .container, .table, .fixed, .block).
+ */
+.collapse:not(.middag-root .collapse, .middag-root.collapse) {
+  visibility: visible !important;
+}
+
+/* ── Host compatibility ──────────────────────────────────────────────────
+ * Unlayered CSS to override host platform styles that conflict with
+ * Tailwind @layer utilities. Scoped to .middag-root.
+ * @see ADR-807 CSS isolation strategy
+ */
+@media (min-width: 48rem) {
+  .middag-root [data-slot="sidebar-container"] {
+    display: flex;
+  }
+  .middag-root .group.peer[data-state] {
+    display: block;
+  }
+}

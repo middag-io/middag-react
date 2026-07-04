@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "useDefineForClassFields": true,
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "jsx": "react-jsx",
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "skipLibCheck": true,
+        "allowImportingTsExtensions": false,
+        "noEmit": true,
+        "paths": {
+            "@/*": ["./src/*"],
+            "@middag-io/react/reui/*": ["./src/components/reui/*"],
+            "@middag-io/react/i18n/*": ["./src/i18n/*"],
+            "@middag-io/react/form/*": ["./src/base/form/*"],
+            "@middag-io/react/partials/*": ["./src/base/partials/*"],
+            "@middag-io/react/lib/*": ["./src/lib/*"],
+            "@middag-io/react/shell/*": ["./src/base/shell/*"],
+            "@middag-io/react/utils/*": ["./src/base/utils/*"],
+            "@middag-io/react/theme/*": ["./src/base/theme/*"],
+            "@middag-io/react/schemas/*": ["./docs/public/schemas/*"],
+            "@middag-io/react": ["./src/index.ts"]
+        }
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "dist", "src/components/examples", "src/components/reui", "**/__tests__"]
+}

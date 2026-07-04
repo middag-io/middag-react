@@ -1,0 +1,174 @@
+/* =============================================================================
+ * MIDDAG React — Theme: classic (Maia)
+ * -----------------------------------------------------------------------------
+ * The default MIDDAG design language. Warm neutral base (hue 286), dark
+ * blue-charcoal primary, generous radii, comfortable density.
+ *
+ * This file exists for symmetry with other named themes (enterprise, soft).
+ * It re-declares the token values from tokens.css so that consumers can
+ * apply `.theme-classic` alongside other theme classes for explicit switching.
+ *
+ * If no theme class is applied, the app renders with these same values
+ * because tokens.css sets them on :root.
+ *
+ * Usage:
+ *   import "@middag-io/react/style.css";
+ *   import "@middag-io/react/themes/classic.css";
+ *
+ *   <div className="theme-classic">...</div>
+ *
+ * ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+ * LIGHT MODE
+ * ------------------------------------------------------------------------- */
+.theme-classic {
+  /* --- Colors: brand & accents ------------------------------------------- */
+  --primary: oklch(0.21 0.034 264.06);
+  --primary-foreground: oklch(0.98 0 0);
+  --primary-subtle: oklch(0.95 0.012 264.06);
+  --primary-muted: oklch(0.88 0.02 264.06);
+
+  --secondary: oklch(0.97 0.001 286);
+  --secondary-foreground: oklch(0.45 0.01 286);
+
+  --accent: oklch(0.97 0.001 286);
+  --accent-foreground: oklch(0.21 0.014 285.82);
+
+  /* --- Colors: status ---------------------------------------------------- */
+  --success: oklch(0.55 0.17 155);
+  --success-foreground: oklch(0.98 0 0);
+  --success-subtle: oklch(0.95 0.04 155);
+  --success-muted: oklch(0.88 0.06 155);
+
+  --warning: oklch(0.75 0.18 75);
+  --warning-foreground: oklch(0.18 0.02 75);
+  --warning-subtle: oklch(0.96 0.04 75);
+  --warning-muted: oklch(0.9 0.06 75);
+
+  --destructive: oklch(0.577 0.245 27.33);
+  --destructive-foreground: oklch(0.98 0 0);
+  --destructive-subtle: oklch(0.95 0.05 27.33);
+  --destructive-muted: oklch(0.88 0.08 27.33);
+
+  --info: oklch(0.58 0.16 250);
+  --info-foreground: oklch(0.98 0 0);
+  --info-subtle: oklch(0.95 0.04 250);
+  --info-muted: oklch(0.88 0.06 250);
+
+  /* --- Colors: surfaces & neutrals (warm) -------------------------------- */
+  --background: oklch(0.99 0.001 286);
+  --foreground: oklch(0.17 0.01 286);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.014 285.82);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.014 285.82);
+  --muted: oklch(0.97 0.001 286);
+  --muted-foreground: oklch(0.58 0.008 286);
+
+  --border: oklch(0.975 0.001 286);
+  --input: oklch(0.89 0.004 286);
+  --ring: oklch(0.708 0.028 256.85);
+
+  /* --- Colors: sidebar --------------------------------------------------- */
+  --sidebar: oklch(0.975 0.002 286);
+  --sidebar-foreground: oklch(0.45 0.01 286);
+  --sidebar-primary: oklch(0.21 0.034 264.06);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.93 0.012 264);
+  --sidebar-accent-foreground: oklch(0.21 0.014 285.82);
+  --sidebar-hover: oklch(0.955 0.003 286);
+  --sidebar-border: oklch(0.91 0.005 286);
+
+  /* --- Colors: chart palette --------------------------------------------- */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.714);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  /* --- Radii (Maia — generous) ------------------------------------------- */
+  --radius: 0.625rem;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+
+  /* --- Layout ------------------------------------------------------------- */
+  --sidebar-width: 260px;
+  --sidebar-width-collapsed: 60px;
+  --sidebar-width-mobile: 300px;
+
+  /* --- Component sizing -------------------------------------------------- */
+  --size-table-row: 48px;
+  --size-sidebar-item: 40px;
+  --size-button-md: 36px;
+  --size-button-sm: 32px;
+  --size-input: 36px;
+}
+
+/* ---------------------------------------------------------------------------
+ * DARK MODE
+ * ------------------------------------------------------------------------- */
+:root.dark .theme-classic,
+[data-theme="dark"] .theme-classic {
+  --primary: oklch(0.6 0.06 264.06);
+  --primary-foreground: oklch(0.1 0.01 264.06);
+  --primary-subtle: oklch(0.22 0.03 264.06);
+  --primary-muted: oklch(0.28 0.04 264.06);
+
+  --secondary: oklch(0.2 0.005 286.38);
+  --secondary-foreground: oklch(0.9 0.005 285.82);
+
+  --accent: oklch(0.22 0.005 286.38);
+  --accent-foreground: oklch(0.9 0.005 285.82);
+
+  --success: oklch(0.62 0.17 155);
+  --success-foreground: oklch(0.1 0.01 155);
+  --success-subtle: oklch(0.2 0.04 155);
+  --success-muted: oklch(0.26 0.06 155);
+
+  --warning: oklch(0.78 0.18 75);
+  --warning-foreground: oklch(0.15 0.02 75);
+  --warning-subtle: oklch(0.22 0.04 75);
+  --warning-muted: oklch(0.28 0.06 75);
+
+  --destructive: oklch(0.63 0.24 27.33);
+  --destructive-foreground: oklch(0.1 0.01 27.33);
+  --destructive-subtle: oklch(0.22 0.06 27.33);
+  --destructive-muted: oklch(0.28 0.08 27.33);
+
+  --info: oklch(0.65 0.16 250);
+  --info-foreground: oklch(0.1 0.01 250);
+  --info-subtle: oklch(0.2 0.04 250);
+  --info-muted: oklch(0.26 0.06 250);
+
+  --background: oklch(0.13 0.01 285.82);
+  --foreground: oklch(0.93 0.005 285.82);
+  --card: oklch(0.17 0.008 285.82);
+  --card-foreground: oklch(0.93 0.005 285.82);
+  --popover: oklch(0.18 0.008 285.82);
+  --popover-foreground: oklch(0.93 0.005 285.82);
+  --muted: oklch(0.2 0.005 286.38);
+  --muted-foreground: oklch(0.6 0.01 285.82);
+
+  --border: oklch(0.24 0.004 286.32);
+  --input: oklch(0.32 0.005 286.32);
+  --ring: oklch(0.55 0.04 256.85);
+
+  --sidebar: oklch(0.12 0.008 285.82);
+  --sidebar-foreground: oklch(0.7 0.01 264.06);
+  --sidebar-primary: oklch(0.6 0.06 264.06);
+  --sidebar-primary-foreground: oklch(0.1 0.01 264.06);
+  --sidebar-accent: oklch(0.22 0.02 264.06);
+  --sidebar-accent-foreground: oklch(0.9 0.005 285.82);
+  --sidebar-hover: oklch(0.185 0.006 286);
+  --sidebar-border: oklch(0.25 0.005 286.32);
+
+  --chart-1: oklch(0.7 0.2 41.116);
+  --chart-2: oklch(0.65 0.12 184.714);
+  --chart-3: oklch(0.5 0.07 227.392);
+  --chart-4: oklch(0.85 0.17 84.429);
+  --chart-5: oklch(0.8 0.17 70.08);
+}

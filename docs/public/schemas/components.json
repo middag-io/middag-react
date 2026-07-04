@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui-docs.middag.io/schemas/components.json",
+  "title": "MIDDAG React Components",
+  "description": "Schema describing all ReUI components, their variants, sizes, and customization options. Used by AI to generate themed UIs.",
+  "type": "object",
+  "properties": {
+    "components": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ComponentDefinition" }
+    }
+  },
+  "$defs": {
+    "ComponentDefinition": {
+      "type": "object",
+      "required": ["name", "variants"],
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "importPath": { "type": "string", "description": "Import from @middag-io/react" },
+        "variants": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "sizes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "defaultVariant": { "type": "string" },
+        "defaultSize": { "type": "string" },
+        "props": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  },
+  "const": {
+    "components": [
+      {
+        "name": "Button",
+        "description": "Primary action trigger with multiple intents and sizes.",
+        "importPath": "@/components/reui/button",
+        "variants": ["default", "destructive", "outline", "secondary", "ghost", "link"],
+        "sizes": ["default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"],
+        "defaultVariant": "default",
+        "defaultSize": "default",
+        "props": {
+          "asChild": "boolean — render as child element (Slot pattern)",
+          "disabled": "boolean"
+        }
+      },
+      {
+        "name": "Badge",
+        "description": "Status indicator with semantic color variants.",
+        "importPath": "@/components/reui/badge",
+        "variants": [
+          "default", "outline", "secondary",
+          "info", "success", "warning", "destructive", "invert",
+          "info-light", "success-light", "warning-light", "destructive-light", "invert-light",
+          "info-outline", "success-outline", "warning-outline", "destructive-outline"
+        ],
+        "sizes": ["xs", "sm", "default", "lg", "xl"],
+        "defaultVariant": "default",
+        "defaultSize": "default",
+        "props": {
+          "radius": "default | full — pill shape vs. default rounding"
+        }
+      },
+      {
+        "name": "Alert",
+        "description": "Contextual feedback banner.",
+        "importPath": "@/components/reui/alert",
+        "variants": ["default", "destructive", "info", "success", "warning", "invert"],
+        "defaultVariant": "default"
+      },
+      {
+        "name": "Toggle",
+        "description": "On/off toggle button (toolbar actions).",
+        "importPath": "@/components/reui/toggle",
+        "variants": ["default", "outline"],
+        "sizes": ["default", "sm", "lg"],
+        "defaultVariant": "default",
+        "defaultSize": "default"
+      },
+      {
+        "name": "Tabs / TabsList",
+        "description": "Tab container with switchable content panels.",
+        "importPath": "@/components/reui/tabs",
+        "variants": ["default", "line"],
+        "defaultVariant": "default"
+      },
+      {
+        "name": "Frame",
+        "description": "Content container with header, title, and panel areas.",
+        "importPath": "@/components/reui/frame",
+        "variants": ["default", "inverse", "ghost"],
+        "defaultVariant": "default",
+        "props": {
+          "spacing": "xs | sm | default | lg",
+          "stacked": "boolean — stack children vertically",
+          "dense": "boolean — reduce internal padding"
+        }
+      },
+      {
+        "name": "Input",
+        "description": "Text input field.",
+        "importPath": "@/components/reui/input"
+      },
+      {
+        "name": "Select",
+        "description": "Dropdown select (Radix). Components: Select, SelectTrigger, SelectValue, SelectContent, SelectItem.",
+        "importPath": "@/components/reui/select"
+      },
+      {
+        "name": "Checkbox",
+        "description": "Checkbox input (Radix).",
+        "importPath": "@/components/reui/checkbox"
+      },
+      {
+        "name": "Switch",
+        "description": "Toggle switch (Radix).",
+        "importPath": "@/components/reui/switch"
+      },
+      {
+        "name": "Skeleton",
+        "description": "Loading placeholder with pulse animation.",
+        "importPath": "@/components/reui/skeleton"
+      },
+      {
+        "name": "Sidebar",
+        "description": "Collapsible sidebar container. Components: Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuItem.",
+        "importPath": "@/components/reui/sidebar",
+        "props": {
+          "collapsible": "offcanvas | icon | none",
+          "side": "left | right"
+        }
+      },
+      {
+        "name": "DropdownMenu",
+        "description": "Context menu (Radix). Components: DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem.",
+        "importPath": "@/components/reui/dropdown-menu"
+      },
+      {
+        "name": "Dialog",
+        "description": "Modal dialog (Radix). Components: Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter.",
+        "importPath": "@/components/reui/dialog"
+      },
+      {
+        "name": "Popover",
+        "description": "Floating panel (Radix). Components: Popover, PopoverTrigger, PopoverContent.",
+        "importPath": "@/components/reui/popover"
+      },
+      {
+        "name": "Tooltip",
+        "description": "Hover tooltip (Radix). Components: TooltipProvider, Tooltip, TooltipTrigger, TooltipContent.",
+        "importPath": "@/components/reui/tooltip"
+      },
+      {
+        "name": "Label",
+        "description": "Form label (Radix).",
+        "importPath": "@/components/reui/label"
+      }
+    ]
+  }
+}

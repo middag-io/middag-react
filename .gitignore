@@ -1,0 +1,21 @@
+node_modules/
+dist/
+dist-lib/
+dist-mock/
+# Stray declaration files emitted into src/ by IDE/tsc runs (real .d.ts go to dist-lib/)
+src/**/*.d.ts
+!src/vite-env.d.ts
+!src/@types/*.d.ts
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+
+.docs-dist/
+*.log
+.vite/
+.idea/
+.DS_Store
+.env
+.env.*
+
+# Vitest coverage output (html/json reporters)
+coverage/
