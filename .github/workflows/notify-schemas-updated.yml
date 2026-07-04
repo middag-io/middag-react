@@ -8,16 +8,18 @@ name: Notify schemas updated
 #
 # This workflow fires a repository_dispatch to middag-react-pro whenever a
 # schema lands on main. The PRO repo's deploy-mcp.yml listens for the
-# `schemas-updated` event and redeploys the Worker.
+# `schemas-updated` event, overlays the schemas from the source SHA we send,
+# and redeploys the Worker.
 #
-# Auth: GitHub App installation token (no PATs). Requires two secrets on this
-# repository (or org-level):
-#   SCHEMAS_APP_ID          — the GitHub App's numeric App ID
-#   SCHEMAS_APP_PRIVATE_KEY — the App's PEM private key
-# The App must be installed on middag-io with access to middag-react-pro and
-# hold Repository permission "Contents: Read and write" (repository_dispatch
-# requires contents write). GITHUB_TOKEN cannot dispatch cross-repo. Until the
-# secrets are provisioned, the job no-ops with a notice instead of failing.
+# Auth: GitHub App installation token (no PATs), via the org-level dispatch
+# bot app:
+#   vars.MIDDAG_DISPATCH_BOT_APP_ID       — the GitHub App's numeric App ID
+#   secrets.MIDDAG_DISPATCH_BOT_PRIVATE_KEY — the App's PEM private key
+# The App is installed on middag-io with access to middag-react-pro and holds
+# Repository permission "Contents: Read and write" (repository_dispatch
+# requires contents write). GITHUB_TOKEN cannot dispatch cross-repo. If the
+# var/secret are not visible to this repo, the job no-ops with a notice
+# instead of failing.
 
 on:
   push:
@@ -34,11 +36,11 @@ jobs:
       - name: Check App credentials
         id: creds
         env:
-          APP_ID: ${{ secrets.SCHEMAS_APP_ID }}
-          APP_KEY: ${{ secrets.SCHEMAS_APP_PRIVATE_KEY }}
+          APP_ID: ${{ vars.MIDDAG_DISPATCH_BOT_APP_ID }}
+          APP_KEY: ${{ secrets.MIDDAG_DISPATCH_BOT_PRIVATE_KEY }}
         run: |
           if [ -z "${APP_ID}" ] || [ -z "${APP_KEY}" ]; then
-            echo "::notice::SCHEMAS_APP_ID / SCHEMAS_APP_PRIVATE_KEY not provisioned — skipping dispatch (MCP Worker may go stale until they are)."
+            echo "::notice::MIDDAG_DISPATCH_BOT_APP_ID / MIDDAG_DISPATCH_BOT_PRIVATE_KEY not visible to this repo — skipping dispatch (MCP Worker may go stale until they are)."
             echo "present=false" >> "$GITHUB_OUTPUT"
           else
             echo "present=true" >> "$GITHUB_OUTPUT"
@@ -49,8 +51,8 @@ jobs:
         if: steps.creds.outputs.present == 'true'
         uses: actions/create-github-app-token@v2
         with:
-          app-id: ${{ secrets.SCHEMAS_APP_ID }}
-          private-key: ${{ secrets.SCHEMAS_APP_PRIVATE_KEY }}
+          app-id: ${{ vars.MIDDAG_DISPATCH_BOT_APP_ID }}
+          private-key: ${{ secrets.MIDDAG_DISPATCH_BOT_PRIVATE_KEY }}
           owner: middag-io
           repositories: middag-react-pro
 
