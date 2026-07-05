@@ -9,7 +9,7 @@
  *
  * @source middag-php-ui/schema/{page-contract,fragment}.json
  * @contract-version 1
- * @hash f84f88b8bbb7e582
+ * @hash 79af531307021a11
  */
 export type Label = string | Translatable;
 export type ActionTarget =
@@ -527,7 +527,7 @@ export interface TableConfig {
   filters?: FilterDefinition[];
   rowActions?: Action[];
   bulkActions?: Action[];
-  options: TableOptions;
+  options: TableDisplayOptions;
 }
 export interface Column {
   key: string;
@@ -553,7 +553,7 @@ export interface FilterDefinition {
   placeholder?: Label;
   default?: unknown;
 }
-export interface TableOptions {
+export interface TableDisplayOptions {
   perPage: number;
   sortDirection: string;
   selectable: boolean;
