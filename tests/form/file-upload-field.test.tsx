@@ -13,7 +13,7 @@ function wrap(ui: ReactElement) {
 
 const noop = () => {};
 
-describe("FileUploadField controlled value (F-23)", () => {
+describe("FileUploadField controlled value", () => {
   afterEach(() => cleanup());
 
   it("shows an existing file from an object value (edit mode)", () => {
@@ -75,7 +75,7 @@ describe("FileUploadField controlled value (F-23)", () => {
     expect(screen.getAllByRole("button")).toHaveLength(1);
   });
 
-  // ── Locked behavior: multi-file edit-mode residual (see ADR-F23-multifile) ──
+  // ── Locked behavior: multi-file edit-mode residual ──
   // onChange only reports new browser File instances; existing FileMetadata is
   // filtered out. So removing one existing file from a multi-file list drops the
   // kept existing refs and emits []. This test LOCKS that known limitation: any
@@ -99,7 +99,7 @@ describe("FileUploadField controlled value (F-23)", () => {
     fireEvent.click(screen.getAllByRole("button")[0]);
 
     // b.pdf is still displayed, but it is FileMetadata so it is filtered out of
-    // the emitted value — the residual documented in ADR-F23-multifile.
+    // the emitted value — the known residual this test deliberately locks.
     expect(screen.getByText("b.pdf")).toBeInTheDocument();
     expect(onChange).toHaveBeenCalledWith([]);
   });

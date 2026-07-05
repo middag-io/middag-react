@@ -2,7 +2,7 @@
  * reui barrel — primitive UI surface for host-runtime consumers.
  *
  * Re-exports the reui primitives promoted to the package root barrel so
- * consumers import them from "@middag-io/react" (D-03 barrel-root only) instead
+ *  * consumers import them from "@middag-io/react" (root barrel only) instead
  * of deep "/reui/*" subpaths. Re-exported by ../../index.ts via
  * `export * from "@/components/reui"`. The curated reui pieces already exported
  * directly by the root barrel (sidebar, sonner, tooltip, dropdown-menu) stay

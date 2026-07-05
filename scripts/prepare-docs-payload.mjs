@@ -10,7 +10,7 @@
  * This script only builds the payload locally into `.docs-dist/`; it performs
  * NO upload.
  *
- * FREE/PRO policy (E1.6): the payload is PUBLIC — FREE content only. Internal
+ * FREE/PRO policy: the payload is PUBLIC — FREE content only. Internal — FREE content only. Internal
  * material under docs/ is excluded at copy time (see INTERNAL_DOCS below) and
  * the final payload is re-scanned by verify-docs-payload.mjs, which fails the
  * build if anything internal slips through.

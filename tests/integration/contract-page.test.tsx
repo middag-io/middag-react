@@ -334,7 +334,7 @@ describe("ContractPage integration", () => {
   });
 
   // --------------------------------------------------------------------------
-  // 5b. Auth shell — chromeless centered card for guest entry points (E1.2)
+  // 5b. Auth shell — chromeless centered card for guest entry points
   // --------------------------------------------------------------------------
 
   it("renders the built-in auth shell as a chromeless centered card", async () => {
@@ -461,7 +461,7 @@ describe("ContractPage integration", () => {
       </I18nProvider>,
     );
 
-    // Should show the translated, accessible validation diagnostic (E5.1).
+    // Should show the translated, accessible validation diagnostic.
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent("Invalid page contract.");
   });

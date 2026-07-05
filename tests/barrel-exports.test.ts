@@ -25,7 +25,7 @@ import * as lib from "@/index";
  * Input, Empty, Select, Card, Progress, Alert, AlertDialog, Combobox, Switch,
  * Textarea, Dialog, Collapsible, Spinner, Label — full surface per module) plus
  * `cn` are re-exported via `export * from "@/components/reui"` (see
- * src/components/reui/index.ts, D-03 barrel-root only) and appear here.
+ * src/components/reui/index.ts, root barrel only) and appear here.
  * Update this list when intentionally adding/removing exports.
  */
 const EXPECTED_EXPORTS = [

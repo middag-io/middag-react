@@ -398,10 +398,10 @@ describe("FormPanelBlock", () => {
     expect(screen.getByLabelText("Name")).toHaveValue("Edited");
   });
 
-  // Locks the F-23 "untouched existing file is preserved" guarantee: when a file
+  // Locks the "untouched existing file is preserved" guarantee: when a file
   // field is not touched, FileUploadField never fires onChange, so RHF keeps the
   // server-provided value and the submit payload sends it back verbatim. See
-  // ADR-F23-multifile for why the wire shape is intentionally frozen.
+  // the locked multi-file residual test in tests/form/file-upload-field.test.tsx for why the wire shape is intentionally frozen.
   it("submits an untouched existing file value unchanged", async () => {
     const { FormPanelBlock } = await import("@/base/blocks/FormPanelBlock");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
@@ -429,7 +429,7 @@ describe("FormPanelBlock", () => {
       </I18nProvider>,
     );
 
-    // Existing file is shown (F-23 display) without any interaction.
+    // Existing file is shown without any interaction.
     expect(screen.getByText("doc.pdf")).toBeInTheDocument();
 
     fireEvent.submit(screen.getByRole("form"));
@@ -442,7 +442,7 @@ describe("FormPanelBlock", () => {
     );
   });
 
-  // ── F-31: form-level / non-field / dotted errors surfaced, not swallowed ──
+  // ── Form-level / non-field / dotted errors surfaced, not swallowed ──
 
   const twoFieldSchema: FormSchemaNode[] = [
     { kind: "field", key: "name", component: "text", props: { label: "Name" } },

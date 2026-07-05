@@ -39,7 +39,7 @@ const rows: Row[] = [
   { id: "u2", name: "Bob", email: "bob@example.com" },
 ];
 
-describe("DataTable mobile card view (F-28)", () => {
+describe("DataTable mobile card view", () => {
   beforeEach(() => setMatchMedia(true));
   afterEach(() => cleanup());
 
@@ -93,7 +93,7 @@ describe("DataTable mobile card view (F-28)", () => {
   });
 });
 
-describe("DataTable toolbar controls (F-30)", () => {
+describe("DataTable toolbar controls", () => {
   beforeEach(() => setMatchMedia(false));
   afterEach(() => cleanup());
 
@@ -155,7 +155,7 @@ describe("DataTable toolbar controls (F-30)", () => {
   });
 });
 
-describe("DataTable server param changes (F-29)", () => {
+describe("DataTable server param changes", () => {
   beforeEach(() => setMatchMedia(false));
   afterEach(() => cleanup());
 

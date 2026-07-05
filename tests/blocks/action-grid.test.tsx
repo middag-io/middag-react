@@ -87,7 +87,7 @@ describe("ActionGridBlock", () => {
     expect(document.querySelector('[role="alert"]')).toBeNull();
   });
 
-  it("re-shows the alert when a new flash arrives after dismissal (F-33)", async () => {
+  it("re-shows the alert when a new flash arrives after dismissal", async () => {
     const { ActionGridBlock } = await import("@/base/blocks/ActionGridBlock");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
     const base = actionGridData();

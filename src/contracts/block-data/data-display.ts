@@ -211,7 +211,7 @@ export interface ActivityTimelineEntry {
   color: "success" | "info" | "warning" | "destructive" | "neutral";
   timestamp: number;
   /**
-   * Optional read/acknowledge affordance (E2.4). When `markReadHref` is present
+   * Optional read/acknowledge affordance. When `markReadHref` is present
    * the block renders a "mark as read" action that POSTs to it; `read` reflects
    * the current acknowledged state (a read entry hides the action / dims). Both
    * are additive and optional — entries without them render unchanged.

@@ -43,7 +43,7 @@ describe("LinkListBlock", () => {
     expect(container.innerHTML).toBe("");
   });
 
-  it("renders duplicate labels without React key collisions (F-33)", async () => {
+  it("renders duplicate labels without React key collisions", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const { LinkListBlock } = await import("@/base/blocks/LinkListBlock");
     const data = {

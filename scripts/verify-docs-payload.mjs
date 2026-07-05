@@ -3,7 +3,7 @@
 /**
  * verify-docs-payload.mjs — deny-scan of the public docs payload (.docs-dist/).
  *
- * FREE/PRO docs policy (E1.6): everything under docs/ that reaches the public
+ * FREE/PRO docs policy: everything under docs/ that reaches the public that reaches the public
  * R2 bucket (`middag-docs-public`, ADR-016) is FREE content. Internal material
  * (agent instructions, dev plans, planning artifacts) must never ship there.
  * prepare-docs-payload.mjs excludes those paths at copy time; this script is
@@ -61,7 +61,7 @@ export function verifyDocsPayload(dist) {
   }
 }
 
-// realpath both sides so symlinked invocations still run (see the E1.4 gate).
+// realpath both sides so symlinked invocations are still detected as direct CLI runs.
 let isCli = false;
 if (process.argv[1]) {
   try {

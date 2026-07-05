@@ -68,7 +68,7 @@ describe("TabbedPanelBlock", () => {
     expect(container.querySelector("[role='tablist']")).toBeNull();
   });
 
-  it("renders a localized, token-styled fallback for unknown inner blocks (F-33)", async () => {
+  it("renders a localized, token-styled fallback for unknown inner blocks", async () => {
     const { TabbedPanelBlock } = await import("@/base/blocks/TabbedPanelBlock");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
     const descriptor = block("tabbed_panel", "test-tabs-unknown", tabbedPanelData());

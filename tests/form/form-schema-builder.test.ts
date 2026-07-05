@@ -55,7 +55,7 @@ describe("buildFormSchema", () => {
     ]);
     expect(optional.safeParse({ age: null, ratio: null }).success).toBe(true);
     expect(optional.safeParse({ age: 30, ratio: 1.5 }).success).toBe(true);
-    // Empty string is neither a number nor null — the F-15 default-typing fix
+    // Empty string is neither a number nor null — the default-typing fix
     // means optional numerics arrive as null, never "".
     expect(optional.safeParse({ age: "", ratio: null }).success).toBe(false);
 
@@ -120,7 +120,7 @@ describe("buildFormSchema", () => {
   });
 
   // Document validation is lazily imported (validator.js stays out of the form
-  // chunk — F-24), so the refine is async and must be parsed with safeParseAsync.
+  // chunk), so the refine is async and must be parsed with safeParseAsync.
   it("rejects an invalid document via the lazily-loaded validator", async () => {
     const schema = buildShape([
       {

@@ -353,7 +353,7 @@ export {
 } from "@/components/reui/dropdown-menu";
 
 // ── reui primitives (host-runtime barrel surface) ───────────────────────────
-// Surface lives in its own reui index module (D-03 barrel-root only).
+// Surface lives in its own reui index module (exposed through the root barrel only).
 export * from "@/components/reui";
 
 // ── Utils (barrel-root for host-runtime consumers) ──────────────────────────

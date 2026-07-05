@@ -19,7 +19,7 @@
  */
 /* source("../src") pins Tailwind's automatic content detection to the engine
    sources: the shipped stylesheet must never bake utilities scanned from
-   demo/, tests/ or packages/ (react-pro ships its own layer — E1.8). Dev
+      demo/, tests/ or packages/ (react-pro ships its own layer). Dev
    entries that re-import this file (demo/, react-demo mock) add their own
    @source directives on top. */
 @import "tailwindcss" source("../src");
@@ -39,7 +39,7 @@
 @source "../src/base/form";
 /* Safelist for dynamic classes that Tailwind can't extract from JSX */
 @source "../src/base/theme/sidebar-safelist.txt";
-/* Premium utilities are NOT baked in here (E1.8 / D-F2-1:A): react-pro ships
+/* Premium utilities are NOT baked in here: react-pro ships
    its own compiled utilities layer (@middag-io/react-pro/style.css), built
    from the same theme contract above. Hosts using PRO import BOTH styles. */
 

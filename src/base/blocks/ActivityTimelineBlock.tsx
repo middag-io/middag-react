@@ -46,7 +46,7 @@ export function ActivityTimelineBlock({
   const isLoading = meta?.loading === true;
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Optimistic read state (E2.4). Clicking "mark as read" acknowledges the entry
+  // Optimistic read state. Clicking "mark as read" acknowledges the entry
   // locally (so the action flips to a "Read" marker immediately) and POSTs to the
   // entry's markReadHref to persist. Server-confirmed entries arrive with read=true.
   const [ackedIds, setAckedIds] = useState<Set<string>>(new Set());

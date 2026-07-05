@@ -1,6 +1,6 @@
 name: Notify schemas updated
 
-# D-F2-6 (option b): the wire/discovery JSON schemas under docs/public/schemas/
+# The wire/discovery JSON schemas under docs/public/schemas/
 # are canonical in THIS repository, but the MCP server (Cloudflare Worker,
 # packages/mcp-middag-ui) lives in the private middag-react-pro repository and
 # bundles these schemas at build time. Without a bridge, a schema change here

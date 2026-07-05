@@ -1,13 +1,13 @@
 /**
- * Golden PHP-payload fixtures for the PageContract wire schema (F-06/F-07/F-02).
+ * Golden PHP-payload fixtures for the PageContract wire schema.
  *
  * These mirror what middag-php-ui emits end-to-end (envelope + page meta +
  * navigation + multi-block layout) and lock three things the prior suite did
  * not cover:
- *  - F-06: a realistic full contract validates clean (regression anchor).
- *  - F-07: invalid data NESTED inside the layout/blocks is actually rejected,
+ *  - a realistic full contract validates clean (regression anchor).
+ *  - invalid data NESTED inside the layout/blocks is actually rejected,
  *          with the error path pointing at the offending location.
- *  - F-02: parsing preserves the known nested shape (no silent drop/mangle).
+ *  - parsing preserves the known nested shape (no silent drop/mangle).
  */
 
 import { describe, expect, it } from "vitest";
@@ -65,7 +65,7 @@ const goldenContract = {
   },
 };
 
-describe("PageContract golden fixtures (F-06)", () => {
+describe("PageContract golden fixtures", () => {
   it("validates a full PHP-shaped contract clean", () => {
     expect(validatePageContract(goldenContract)).toBeNull();
   });
@@ -79,7 +79,7 @@ describe("PageContract golden fixtures (F-06)", () => {
   });
 });
 
-describe("PageContract nested rejection (F-07)", () => {
+describe("PageContract nested rejection", () => {
   it("rejects a block descriptor missing its key, pointing at the layout path", () => {
     const contract = {
       ...goldenContract,
@@ -116,7 +116,7 @@ describe("PageContract nested rejection (F-07)", () => {
               key: "m1",
               data: { value: 1, label: "x" },
               // BlockDescriptor.actions is a typed Action[] (id required) — unlike
-              // `data`, which is an opaque blob on the wire (see F-01/F-23/F-31).
+              // `data`, which is deliberately an opaque blob on the wire.
               actions: [
                 { label: "Broken", target: { kind: "route", name: "x" }, intent: "primary" },
               ],
@@ -129,7 +129,7 @@ describe("PageContract nested rejection (F-07)", () => {
   });
 });
 
-describe("PageContract shape preservation (F-02)", () => {
+describe("PageContract shape preservation", () => {
   it("preserves the nested block tree through parse (no silent drop)", () => {
     const parsed = pageContractSchema.parse(goldenContract) as typeof goldenContract;
     expect(parsed.page.title).toBe("Connectors");

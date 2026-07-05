@@ -31,7 +31,7 @@ export type FormFieldType = FormComponent;
 
 // ── Field node variants (narrowed from the generated `component` union) ───────
 //
-// D-05:A — the per-variant interfaces stay part of the public API as `Extract`
+// The per-variant interfaces stay part of the public API as `Extract`
 // aliases over the generated union, so consumers importing them keep compiling.
 // Each constraint matches exactly one generated branch's `component` literals.
 

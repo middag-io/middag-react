@@ -1,5 +1,5 @@
 /**
- * FREE/PRO docs-policy gate (E1.6).
+ * FREE/PRO docs-policy gate.
  *
  * The public docs payload (.docs-dist/) is uploaded verbatim to the public R2
  * bucket, so anything internal that survives prepare-docs-payload's copy

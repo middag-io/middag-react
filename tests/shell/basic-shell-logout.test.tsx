@@ -1,5 +1,5 @@
 /**
- * BasicShell logout wiring (E1.3) — the header user menu POSTs to the logout
+ * BasicShell logout wiring — the header user menu POSTs to the logout
  * endpoint. Canonical source is `auth.logoutUrl`; a top-level `logoutUrl` shared
  * prop is only a fallback, so when both are present `auth.logoutUrl` wins.
  */

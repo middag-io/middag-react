@@ -24,7 +24,7 @@ export default defineConfig({
     // Do NOT copy public/ into the library bundle. public/api/ holds demo
     // fixtures (example PageContracts + inspector data) that must never ship
     // in the published npm tarball. The demo serves them via its own
-    // publicDir; the lib build only emits the ESM bundle. (E2.9a)
+    // publicDir; the lib build only emits the ESM bundle.
     copyPublicDir: false,
     lib: {
       entry: path.resolve(__dirname, "./src/index.ts"),

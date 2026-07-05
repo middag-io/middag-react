@@ -38,7 +38,7 @@ describe("resolveFieldError", () => {
     expect(resolveFieldError(e, i18n.t)).toBe("Server only message");
   });
 
-  // ── custom / host domain (F-02 residual) ─────────────────────────────────
+  // ── custom / host domain ────────────────────────────────────────────────────────────────────────────
   // `error.domain` is not restricted to "validators": a host (Moodle/WP) can
   // ship its own error namespace. resolveFieldError maps domain -> ns
   // dynamically, so a key registered under an arbitrary namespace resolves,

@@ -7,7 +7,7 @@ import { StatusBar } from "@/base/partials/StatusBar";
 import { StatusIndicator } from "@/base/partials/StatusIndicator";
 import { I18nProvider } from "@/i18n/I18nProvider";
 
-describe("StatusBar (F-27)", () => {
+describe("StatusBar", () => {
   afterEach(() => cleanup());
 
   it("localizes the appearance enum in item aria-labels", () => {
@@ -35,7 +35,7 @@ describe("StatusBar (F-27)", () => {
   });
 });
 
-describe("StatusIndicator (F-27)", () => {
+describe("StatusIndicator", () => {
   afterEach(() => cleanup());
 
   it("builds a localized aria-label with the label text", () => {

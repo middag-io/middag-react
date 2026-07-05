@@ -1,5 +1,5 @@
 /**
- * E2.9b guard — the static PageContract fixtures under public/api/example/
+ * Fixture-freshness guard — the static PageContract fixtures under public/api/example/
  * must validate against the CURRENT contract schema (the same Zod validator
  * ContractPage runs at runtime). This is the anti-drift gate: any fixture that
  * falls behind the contracts fails here instead of silently shipping a stale

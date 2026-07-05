@@ -37,7 +37,7 @@ export interface FileUploadFieldProps {
 /** Server-provided shape for an already-uploaded file (edit mode). */
 // The object form of a wire file value (the bare-URL string shorthand is
 // handled separately). Derived from the generated FileValue contract so the
-// field's parser tracks the PHP source of truth (closes F-23).
+// field's parser tracks the PHP source of truth.
 type ExistingFileValue = Exclude<FileValue, string>;
 
 /** Derive a display name from a URL (strips query/hash and directories). */

@@ -1,5 +1,5 @@
 /**
- * ContractPage diagnostics (E5.1 / F-08). The shell → layout → block fallbacks
+ * ContractPage diagnostics. The shell → layout → block fallbacks
  * render an accessible, translated diagnostic instead of a hardcoded-English
  * panel or a white screen. Each diagnostic carries role="alert" and its message
  * comes from the `ui` i18n bundle (asserted in EN + PT-BR). The verbose detail

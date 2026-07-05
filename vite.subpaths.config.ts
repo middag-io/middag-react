@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
 
 /**
- * Vite config for the deep-subpath ESM build (D-08:B).
+ *  * Vite config for the deep-subpath ESM build.
  *
  * The package exports wildcard subpath families (./reui/*, ./shell/*, ./lib/*,
  * ./utils/*, ./theme/*, ./i18n/*) that historically resolved to raw src/*.tsx —
@@ -97,7 +97,8 @@ export default defineConfig({
       // Externalize every bare specifier: same semantics raw src had — deps
       // resolve from this package's dependencies at consumer build time.
       // "@/" is the internal alias (resolved above), never external.
-      external: (id) => !id.startsWith(".") && !path.isAbsolute(id) && !id.startsWith("@/") && !id.startsWith("\0"),
+      external: (id) =>
+        !id.startsWith(".") && !path.isAbsolute(id) && !id.startsWith("@/") && !id.startsWith("\0"),
       output: {
         chunkFileNames: "chunks/subpath-[hash].js",
         assetFileNames: "assets/[name]-[hash][extname]",

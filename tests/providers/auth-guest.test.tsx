@@ -1,5 +1,5 @@
 /**
- * AuthProvider guest tolerance (E1.1) — the provider must not crash when the
+ * AuthProvider guest tolerance — the provider must not crash when the
  * `auth` shared prop is null or absent (guest-facing pages like login). In that
  * state: user is null, isAuthenticated is false, every capability check returns
  * false, <Can> renders nothing and <Cannot> renders its children.

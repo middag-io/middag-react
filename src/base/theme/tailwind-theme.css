@@ -1,5 +1,5 @@
 /*
- * Tailwind THEME CONTRACT — compile-time utility→token mapping (E1.8).
+ * Tailwind THEME CONTRACT — compile-time utility→token mapping.
  *
  * Single source of truth for how Tailwind utility classes resolve to the
  * MIDDAG runtime tokens (tokens.css / theme-bridge.css). Imported by TWO

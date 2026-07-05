@@ -68,18 +68,18 @@ describe("NativeSelectField", () => {
     expect(screen.getByRole("option", { name: "Alpha" })).toBeDefined();
   });
 
-  it("exposes aria-required when required (F-32)", () => {
+  it("exposes aria-required when required", () => {
     wrap(<NativeSelectField id="sel-req" value="" onChange={vi.fn()} options={options} required />);
     expect(screen.getByRole("combobox").getAttribute("aria-required")).toBe("true");
   });
 
-  it("omits aria-required when not required (F-32)", () => {
+  it("omits aria-required when not required", () => {
     wrap(<NativeSelectField id="sel-opt" value="" onChange={vi.fn()} options={options} />);
     expect(screen.getByRole("combobox").getAttribute("aria-required")).toBeNull();
   });
 });
 
-describe("RatingField (F-32)", () => {
+describe("RatingField", () => {
   afterEach(() => cleanup());
 
   it("marks the radiogroup aria-required when required", () => {
@@ -88,7 +88,7 @@ describe("RatingField (F-32)", () => {
   });
 });
 
-describe("DateRangeField (F-32)", () => {
+describe("DateRangeField", () => {
   afterEach(() => cleanup());
 
   it("marks the wrapper aria-required when required", () => {

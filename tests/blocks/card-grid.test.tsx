@@ -114,7 +114,7 @@ describe("CardGridBlock", () => {
     expect(selected?.textContent).toContain("Item Two");
 
     // Clicking the first card selects with the verbatim string id, not
-    // Number("uuid-1") === NaN (the F-26 regression).
+    // Number("uuid-1") === NaN (the string-id coercion regression).
     fireEvent.click(buttons[0]);
     expect(mockSelect).toHaveBeenCalledWith("uuid-1");
   });
