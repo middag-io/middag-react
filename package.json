@@ -1,6 +1,6 @@
 {
   "name": "@middag-io/react",
-  "version": "0.35.3",
+  "version": "0.36.0",
   "type": "module",
   "description": "MIDDAG shared React UI library for Moodle, WordPress and other Inertia hosts",
   "license": "Apache-2.0",
