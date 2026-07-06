@@ -34,7 +34,27 @@ export default defineConfig({
     },
     cssCodeSplit: false,
     rollupOptions: {
-      external: ["react", "react-dom", "react/jsx-runtime", "@inertiajs/react", "@inertiajs/core"],
+      // i18next / react-i18next / the language detector MUST be external here.
+      // The subpaths build (vite.subpaths.config.ts) already externalizes every
+      // bare specifier, and the raw-src subpaths (./form/*, ./blocks/*, …)
+      // compile react-i18next from the consumer's node_modules. If this main
+      // entry bundles its own copy instead, a consumer that mixes `.` and
+      // subpath imports ends up with TWO react-i18next module instances — two
+      // distinct React contexts. I18nProvider (from `.`) publishes to context
+      // A; a useTranslation resolved through the external copy reads context B,
+      // finds nothing, and — because instance.ts uses createInstance() (no
+      // global default) — throws NO_I18NEXT_INSTANCE. Externalizing dedupes it
+      // to the single node_modules copy shared with the subpaths.
+      external: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "@inertiajs/react",
+        "@inertiajs/core",
+        "i18next",
+        "react-i18next",
+        "i18next-browser-languagedetector",
+      ],
       output: {
         globals: {
           react: "React",
