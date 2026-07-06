@@ -89,6 +89,7 @@
   "scripts": {
     "build": "vite build && npm run build:subpaths && node scripts/patch-esm.mjs && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:subpaths": "vite build --config vite.subpaths.config.ts",
+    "build:watch": "vite build --watch",
     "dev": "vite --config demo/vite.config.ts",
     "typecheck": "tsc --noEmit",
     "typecheck:tests": "tsc -p tsconfig.test.json --noEmit",
