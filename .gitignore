@@ -19,3 +19,4 @@ docs/.vitepress/cache/
 
 # Vitest coverage output (html/json reporters)
 coverage/
+.gstack/
