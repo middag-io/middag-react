@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.36.0](https://github.com/middag-io/middag-react/compare/v0.35.3...v0.36.0) (2026-07-06)
+
+
+### Features
+
+* **app:** add content-only shell mode to ContractPage ([cf291bd](https://github.com/middag-io/middag-react/commit/cf291bd64ef0bcced908ad4cf7793eb43beb273c))
+
 ## [0.35.3](https://github.com/middag-io/middag-react/compare/v0.35.2...v0.35.3) (2026-07-06)
 
 
