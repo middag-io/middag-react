@@ -25,7 +25,11 @@ import { useTranslation } from "@/i18n/useTranslation";
 // Registry-based dynamic component resolution (ADR-807 §6). Shell and Layout are
 // stable singleton references retrieved from the registry — not new components.
 /* eslint-disable react-hooks/static-components */
-export function ContractPage({ contract, overlay }: ContractPageProps): ReactElement {
+export function ContractPage({
+  contract,
+  overlay,
+  shellMode = "full",
+}: ContractPageProps): ReactElement {
   // All hooks called unconditionally before any early returns.
   const { t } = useTranslation();
   const validationErrors = useMemo(() => validatePageContract(contract), [contract]);
@@ -114,23 +118,6 @@ export function ContractPage({ contract, overlay }: ContractPageProps): ReactEle
     );
   }
 
-  if (!Shell) {
-    return (
-      <div
-        role="alert"
-        className="border-destructive/20 bg-destructive/10 text-destructive m-4 rounded-md border p-4 text-sm"
-      >
-        {t("middag.ui.shell.unknown_type")}
-        {import.meta.env.DEV ? (
-          <>
-            {" "}
-            <code>{contract.shell}</code>
-          </>
-        ) : null}
-      </div>
-    );
-  }
-
   if (!Layout) {
     return (
       <div
@@ -148,11 +135,38 @@ export function ContractPage({ contract, overlay }: ContractPageProps): ReactEle
     );
   }
 
+  const layoutEl = <Layout layout={contract.layout} renderBlock={renderBlock} />;
+
+  // Content-only: render EntityRoutesProvider + Layout WITHOUT the shell, so a
+  // host that mounts the shell once (persistent layout route) can swap page
+  // content beneath it without remounting — and re-triggering — the sidebar.
+  if (shellMode === "content-only") {
+    const contentOnly = (
+      <EntityRoutesProvider entities={contract.entities ?? {}}>{layoutEl}</EntityRoutesProvider>
+    );
+    return overlay ? <OverlayScreen>{contentOnly}</OverlayScreen> : contentOnly;
+  }
+
+  if (!Shell) {
+    return (
+      <div
+        role="alert"
+        className="border-destructive/20 bg-destructive/10 text-destructive m-4 rounded-md border p-4 text-sm"
+      >
+        {t("middag.ui.shell.unknown_type")}
+        {import.meta.env.DEV ? (
+          <>
+            {" "}
+            <code>{contract.shell}</code>
+          </>
+        ) : null}
+      </div>
+    );
+  }
+
   const shellContent = (
     <EntityRoutesProvider entities={contract.entities ?? {}}>
-      <Shell>
-        <Layout layout={contract.layout} renderBlock={renderBlock} />
-      </Shell>
+      <Shell>{layoutEl}</Shell>
     </EntityRoutesProvider>
   );
 

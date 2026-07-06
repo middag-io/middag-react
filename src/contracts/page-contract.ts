@@ -66,4 +66,14 @@ export interface ContractPageProps {
   contract: PageContract;
   /** When true, page renders in a full-screen overlay with X close. */
   overlay?: boolean;
+  /**
+   * Shell rendering mode:
+   * - `"full"` (default): resolve and mount the contract's shell around the
+   *   layout — the standalone/self-contained rendering used by Inertia pages.
+   * - `"content-only"`: render only `EntityRoutesProvider + Layout`, WITHOUT
+   *   the shell. For hosts that mount a persistent shell once (e.g. a React
+   *   Router layout route) and swap page content beneath it, avoiding the shell
+   *   remount that flashes the sidebar on every navigation.
+   */
+  shellMode?: "full" | "content-only";
 }
