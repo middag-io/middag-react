@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.35.3](https://github.com/middag-io/middag-react/compare/v0.35.2...v0.35.3) (2026-07-06)
+
+
+### Bug Fixes
+
+* **build:** externalize react-i18next to dedupe consumer copy ([474de60](https://github.com/middag-io/middag-react/commit/474de60e46d28da65d2bf80b2f3b0e673bf18b9f))
+
 ## [0.35.2](https://github.com/middag-io/middag-react/compare/v0.35.1...v0.35.2) (2026-07-05)
 
 
