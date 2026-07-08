@@ -44,6 +44,17 @@
    from the same theme contract above. Hosts using PRO import BOTH styles. */
 
 @layer base {
+  /* Tailwind v4 resets bare `border` to currentColor. Restore the shadcn/ReUI
+     default so every `border` utility uses the semantic token (theme-aware).
+     Scoped to .middag-root (not bare `*`) so it does NOT leak outward onto the
+     Moodle/WP host page — see the outward-isolation strategy above (ADR-807). */
+  .middag-root,
+  .middag-root *,
+  .middag-root ::after,
+  .middag-root ::before {
+    border-color: var(--color-border);
+  }
+
   .product-shell__content {
     border-top: 1px solid var(--border);
   }
