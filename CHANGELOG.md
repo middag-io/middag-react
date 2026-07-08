@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.36.1](https://github.com/middag-io/middag-react/compare/v0.36.0...v0.36.1) (2026-07-08)
+
+
+### Bug Fixes
+
+* **theme:** default bare border utility to --color-border token ([b0fc1f2](https://github.com/middag-io/middag-react/commit/b0fc1f22183a2fa6a5ace2b4d87f40c2cf05567c))
+* **theme:** default bare border utility to --color-border token ([af5ccf4](https://github.com/middag-io/middag-react/commit/af5ccf47d440920e44ec844906de695bbce28f54))
+
 ## [0.36.0](https://github.com/middag-io/middag-react/compare/v0.35.3...v0.36.0) (2026-07-06)
 
 
