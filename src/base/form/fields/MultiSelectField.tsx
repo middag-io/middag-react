@@ -32,6 +32,11 @@ export interface MultiSelectFieldProps {
   error?: string;
   helpTextId?: string;
   errorId?: string;
+  /**
+   * Rendering mode. "auto" (default) uses a checkbox list for small option sets
+   * and the searchable combobox for large ones; "combobox" / "checkbox" force it.
+   */
+  variant?: "auto" | "combobox" | "checkbox";
 }
 
 const CHECKBOX_THRESHOLD = 8;
@@ -47,6 +52,7 @@ export function MultiSelectField({
   error,
   helpTextId,
   errorId,
+  variant = "auto",
 }: MultiSelectFieldProps): ReactElement {
   const { t } = useTranslation();
   const selected = value ?? [];
@@ -54,8 +60,10 @@ export function MultiSelectField({
   const describedBy =
     [error ? errorId : undefined, helpTextId].filter(Boolean).join(" ") || undefined;
 
-  // For small option sets, use checkbox list (simpler UX)
-  if (options.length <= CHECKBOX_THRESHOLD) {
+  // Checkbox list for small sets (auto) or when forced; combobox otherwise.
+  const useCheckbox =
+    variant === "checkbox" || (variant === "auto" && options.length <= CHECKBOX_THRESHOLD);
+  if (useCheckbox) {
     return (
       <CheckboxList
         id={id}
@@ -241,8 +249,9 @@ function ComboboxMultiSelect({
         </div>
       )}
 
-      {/* Search combobox */}
-      <Combobox items={filteredOptions} value={null} onValueChange={handleItemToggle}>
+      {/* Search combobox — filtering is done manually above (filteredOptions),
+          so disable Base UI's built-in filter to keep the empty state in sync. */}
+      <Combobox items={filteredOptions} value={null} onValueChange={handleItemToggle} filter={null}>
         <ComboboxInput
           placeholder={placeholder ?? t("middag.ui.form.multiselect_search")}
           disabled={disabled}
