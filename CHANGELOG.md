@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.36.2](https://github.com/middag-io/middag-react/compare/v0.36.1...v0.36.2) (2026-07-09)
+
+
+### Bug Fixes
+
+* **form:** space collapsible section content and stop toggle submitting ([4688d9e](https://github.com/middag-io/middag-react/commit/4688d9ec3de3f62cfd99a73c0abee128046381af))
+
 ## [0.36.1](https://github.com/middag-io/middag-react/compare/v0.36.0...v0.36.1) (2026-07-08)
 
 
