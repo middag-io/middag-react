@@ -47,6 +47,7 @@ export function FormSection({
         <div className="-mt-2 flex items-center justify-between">
           {isCollapsible ? (
             <Button
+              type="button"
               variant="ghost"
               size="sm"
               onClick={() => !hasErrors && setCollapsed(!collapsed)}
@@ -75,7 +76,7 @@ export function FormSection({
       <div
         id={contentId}
         className={cn(
-          "transition-[opacity,height] duration-200 ease-[var(--ease-default)]",
+          "space-y-5 transition-[opacity,height] duration-200 ease-[var(--ease-default)]",
           expanded ? "opacity-100" : "hidden opacity-0",
         )}
       >
