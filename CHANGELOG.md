@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.37.0](https://github.com/middag-io/middag-react/compare/v0.36.2...v0.37.0) (2026-07-09)
+
+
+### Features
+
+* **form:** export FormField + multiselect combobox variant ([c96018a](https://github.com/middag-io/middag-react/commit/c96018a697eb000975f5594e51ca345b6ed58294))
+* **form:** export FormField and add multiselect combobox variant ([186894c](https://github.com/middag-io/middag-react/commit/186894c1598305bdb84b41967f18e04dcf879e7b))
+
 ## [0.36.2](https://github.com/middag-io/middag-react/compare/v0.36.1...v0.36.2) (2026-07-09)
 
 
