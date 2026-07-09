@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.37.1](https://github.com/middag-io/middag-react/compare/v0.37.0...v0.37.1) (2026-07-09)
+
+
+### Bug Fixes
+
+* **form:** space collapsible section content and stop toggle submitting ([16fcf26](https://github.com/middag-io/middag-react/commit/16fcf26a11d13fed61c485e7f45441cfc4568178))
+* **theme:** default bare border utility to --color-border token ([567907b](https://github.com/middag-io/middag-react/commit/567907b7c22e1116aacca6941da87c8e30ab0428))
+
 ## [0.37.0](https://github.com/middag-io/middag-react/compare/v0.36.2...v0.37.0) (2026-07-09)
 
 
