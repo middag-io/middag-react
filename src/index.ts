@@ -396,6 +396,11 @@ export { WorkflowProgressBlock } from "@/base/blocks/WorkflowProgressBlock";
 // from "@/base/blocks/FormPanelBlock" only if you need it without Suspense.
 export { FormPanelBlockLazy as FormPanelBlock } from "@/base/blocks/FormPanelBlock.lazy";
 
+// FormField — the per-field router used by form_panel. Exported so consumers
+// (and @middag-io/react-pro) can render individual schema fields outside a full
+// form, reusing every registered field component.
+export { FormField, type FormFieldProps } from "@/base/form/FormField";
+
 // The Pro/interactive block components (chart_panel, flow_editor,
 // condition_tree, sentence_builder, form_builder, kanban_board) ship in
 // @middag-io/react-pro, not here. registerDefaults() registers the standard Community

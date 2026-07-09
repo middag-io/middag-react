@@ -341,6 +341,7 @@ function renderField(
           onChange={onChange as (v: string[]) => void}
           options={props.options ?? []}
           placeholder={props.placeholder}
+          variant={(props as { variant?: "auto" | "combobox" | "checkbox" }).variant}
         />
       );
 
