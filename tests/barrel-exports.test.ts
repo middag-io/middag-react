@@ -130,6 +130,7 @@ const EXPECTED_EXPORTS = [
   "ErrorReporterProvider",
   "FilterBar",
   "FlashProvider",
+  "FormField",
   "FormPanelBlock",
   "FormSection",
   "HostSlot",
