@@ -170,8 +170,8 @@ fi
 echo ""
 echo "[7/7] ReUI Examples"
 
-if [ -d "src/components/examples" ]; then
-  EXAMPLE_COUNT=$(find src/components/examples -name "c-*.tsx" -type f 2>/dev/null | wc -l | tr -d ' ')
+if [ -d "examples" ]; then
+  EXAMPLE_COUNT=$(find examples -name "c-*.tsx" -type f 2>/dev/null | wc -l | tr -d ' ')
   if [ "$EXAMPLE_COUNT" -gt 0 ]; then
     pass "Examples: $EXAMPLE_COUNT files"
   else

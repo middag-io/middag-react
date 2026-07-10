@@ -64,7 +64,6 @@ Format: `type(scope): description` or `type: description`
 - `demo/` — dev harness, not published
 - `src/base/` — shells, layouts, blocks, hooks
 - `src/lib/` — utils and generic hooks
-- `src/components/ui/` — custom UI components
 
 ### Modify with care (breaking changes)
 
@@ -75,7 +74,7 @@ Format: `type(scope): description` or `type: description`
 ### Do NOT modify
 
 - `src/components/reui/` — synced from ReUI registry
-- `src/components/examples/` — synced via `npm run sync:examples`
+- `examples/` — synced via `npm run sync:examples` (dev-only gallery, not published)
 - `src/contracts/generated/` — generated from the php-ui JSON schemas
   (`npm run gen:contracts`); never hand-edit
 

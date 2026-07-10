@@ -80,7 +80,6 @@
     "src/engine",
     "src/contracts",
     "src/components/reui",
-    "src/components/ui",
     "src/lib",
     "src/i18n",
     "src/assets",

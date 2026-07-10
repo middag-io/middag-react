@@ -9,7 +9,7 @@
     "exclude": [
         "node_modules",
         "dist",
-        "src/components/examples",
+        "examples",
         "src/components/reui",
         "tests/test-helpers.tsx"
     ]

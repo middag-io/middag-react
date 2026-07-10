@@ -7,7 +7,7 @@
 #   npm run sync:examples -- --check   # Exit 1 if new examples available (for CI)
 #
 # Auto-discovers available examples from the ReUI registry index.
-# Destination: src/components/examples/
+# Destination: examples/
 # Registry: radix-maia via components.json @reui registry
 #
 # This script is the source of truth for ReUI examples in middag-react.
@@ -138,7 +138,7 @@ echo "  Total examples: $TOTAL"
 # ── Check mode: compare with installed ──────────────────────────────────────
 
 if [ "$CHECK_ONLY" = true ]; then
-  INSTALLED=$(ls src/components/examples/c-*.tsx 2>/dev/null | wc -l | tr -d ' ')
+  INSTALLED=$(ls examples/c-*.tsx 2>/dev/null | wc -l | tr -d ' ')
   echo ""
   echo "  Installed: $INSTALLED"
   echo "  Available: $TOTAL"
@@ -246,7 +246,7 @@ PRETTIER="$PROJECT_ROOT/node_modules/.bin/prettier"
 #     from .prettierrc) sorts Tailwind classes. --ignore-path /dev/null bypasses the
 #     examples entry in .prettierignore; --config forces the plugin to load.
 "$PRETTIER" --config "$PROJECT_ROOT/.prettierrc" --ignore-path /dev/null \
-  --write "src/components/examples/c-"'*'".tsx" >/dev/null 2>&1
+  --write "examples/c-"'*'".tsx" >/dev/null 2>&1
 echo "  Prettier + Tailwind class order applied to examples"
 
 # (b) Deterministic import sort — statements + named members. No eslint rule does
@@ -254,7 +254,7 @@ echo "  Prettier + Tailwind class order applied to examples"
 #     every import already terminates in ';' (regex relies on it).
 node -e '
 const fs = require("fs"), path = require("path");
-const dir = "src/components/examples";
+const dir = "examples";
 for (const fn of fs.readdirSync(dir).filter((f) => /^c-.*\.tsx$/.test(f))) {
   const p = path.join(dir, fn);
   let s = fs.readFileSync(p, "utf8");
@@ -278,16 +278,16 @@ echo "  Imports sorted (statements + members)"
 # (c) Second prettier pass — re-wraps any long import the sorter collapsed, so the
 #     final bytes match what prettier would emit for the sorted order (idempotent).
 "$PRETTIER" --config "$PROJECT_ROOT/.prettierrc" --ignore-path /dev/null \
-  --write "src/components/examples/c-"'*'".tsx" >/dev/null 2>&1
+  --write "examples/c-"'*'".tsx" >/dev/null 2>&1
 
 # (d) Format the rest of the repo (examples stay ignored here).
 npm run format
 
 # ── Summary ─────────────────────────────────────────────────────────────────
 
-block_count=$(ls src/components/examples/c-*.tsx 2>/dev/null | wc -l | tr -d ' ')
+block_count=$(ls examples/c-*.tsx 2>/dev/null | wc -l | tr -d ' ')
 
 echo ""
 echo "=== Sync Complete ==="
-echo "Examples in src/components/examples/: $block_count"
+echo "Examples in examples/: $block_count"
 echo "Run 'npm run typecheck' to verify."

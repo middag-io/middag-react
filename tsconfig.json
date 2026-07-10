@@ -31,5 +31,5 @@
         }
     },
     "include": ["src"],
-    "exclude": ["node_modules", "dist", "src/components/examples", "src/components/reui", "**/__tests__"]
+    "exclude": ["node_modules", "dist", "examples", "src/components/reui", "**/__tests__"]
 }

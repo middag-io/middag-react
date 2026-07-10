@@ -209,7 +209,7 @@ The demo harness consumes the engine from `src/` via Vite aliases (instant HMR),
 
 ### ReUI component examples
 
-Examples from the ReUI registry are synced to `src/components/examples/`. They serve as reference for component usage and are excluded from the published NPM package.
+Examples from the ReUI registry are synced to `examples/` (repo root, dev-only). They serve as reference for component usage and are excluded from the published NPM package.
 
 ```bash
 # Sync all examples from ReUI registry (auto-discovers new components)
