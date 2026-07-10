@@ -30,9 +30,9 @@ import { TagsField } from "@/base/form/fields/TagsField";
 import { TextareaField } from "@/base/form/fields/TextareaField";
 import { TextField } from "@/base/form/fields/TextField";
 import { isFieldDisabled, isFieldRequired } from "@/base/form/form-utils";
-import { Label } from "@/components/reui/label";
-import { Skeleton } from "@/components/reui/skeleton";
 import { useTranslation } from "@/i18n/useTranslation";
+import { Label } from "@/primitives/reui/label";
+import { Skeleton } from "@/primitives/reui/skeleton";
 
 /** Lazy-loaded PhoneField — libphonenumber-js (~40KB) loads only when a phone field renders. */
 const LazyPhoneField = lazy(() =>

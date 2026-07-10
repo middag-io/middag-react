@@ -8,7 +8,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/reui/sheet";
+} from "@/primitives/reui/sheet";
 
 interface InspectorPanelProps {
   /** Whether the panel is open. */

@@ -1,0 +1,52 @@
+"use client";
+
+import { useState } from "react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/primitives/reui/dropdown-menu";
+import { Field } from "@/primitives/reui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/primitives/reui/input-group";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
+
+export function Pattern() {
+  const [country, setCountry] = useState("+1");
+
+  return (
+    <Field className="w-full max-w-xs">
+      <InputGroup>
+        <InputGroupAddon>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <InputGroupButton variant="ghost">
+                <span className="tabular-nums">{country}</span>
+                <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={2} />
+              </InputGroupButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="min-w-24">
+              <DropdownMenuItem onClick={() => setCountry("+1")}>
+                +1 (US)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setCountry("+44")}>
+                +44 (UK)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setCountry("+61")}>
+                +61 (AU)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </InputGroupAddon>
+        <InputGroupInput type="tel" placeholder="123 456 7890" />
+      </InputGroup>
+    </Field>
+  );
+}

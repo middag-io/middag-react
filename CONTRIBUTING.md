@@ -73,8 +73,8 @@ Format: `type(scope): description` or `type: description`
 
 ### Do NOT modify
 
-- `src/components/reui/` — synced from ReUI registry
-- `examples/` — synced via `npm run sync:examples` (dev-only gallery, not published)
+- `src/primitives/reui/` — synced from ReUI registry
+- `src/primitives/examples/` — synced via `npm run sync:examples` (dev-only gallery, not published)
 - `src/contracts/generated/` — generated from the php-ui JSON schemas
   (`npm run gen:contracts`); never hand-edit
 

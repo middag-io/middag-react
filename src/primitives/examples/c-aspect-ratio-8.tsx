@@ -1,0 +1,21 @@
+import Image from "next/image";
+
+import { AspectRatio } from "@/primitives/reui/aspect-ratio";
+
+export function Pattern() {
+  return (
+    <div className="w-full max-w-md">
+      <AspectRatio
+        ratio={16 / 10}
+        className="bg-muted rounded-4xl overflow-hidden border"
+      >
+        <Image
+          src="https://picsum.photos/1000/800?grayscale&random=8"
+          alt="16:10"
+          fill
+          className="object-cover"
+        />
+      </AspectRatio>
+    </div>
+  );
+}

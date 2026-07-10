@@ -24,8 +24,8 @@ import * as lib from "@/index";
  * The 17 reui primitives promoted to the barrel root (Badge, Button, Skeleton,
  * Input, Empty, Select, Card, Progress, Alert, AlertDialog, Combobox, Switch,
  * Textarea, Dialog, Collapsible, Spinner, Label — full surface per module) plus
- * `cn` are re-exported via `export * from "@/components/reui"` (see
- * src/components/reui/index.ts, root barrel only) and appear here.
+ * `cn` are re-exported via `export * from "@/primitives/reui"` (see
+ * src/primitives/reui/index.ts, root barrel only) and appear here.
  * Update this list when intentionally adding/removing exports.
  */
 const EXPECTED_EXPORTS = [

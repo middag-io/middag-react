@@ -12,12 +12,12 @@
 import { useCallback, type ReactElement } from "react";
 import { router, usePage } from "@inertiajs/react";
 
-import { Toaster } from "@/components/reui/sonner";
 import type { PageMeta } from "@/contracts/page-contract";
 import type { SharedProps } from "@/contracts/shared-props";
 import type { ShellProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
+import { Toaster } from "@/primitives/reui/sonner";
 
 export function ImmersiveShell({ children }: ShellProps): ReactElement {
   const { t } = useTranslation();

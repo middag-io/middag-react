@@ -12,7 +12,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
-} from "@/components/reui/input-group";
+} from "@/primitives/reui/input-group";
 
 /** Convert a string to a URL-friendly slug. */
 function toSlug(text: string): string {

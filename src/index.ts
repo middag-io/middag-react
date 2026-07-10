@@ -293,7 +293,7 @@ export {
   SidebarMenuItem,
   SidebarRail,
   SidebarTrigger,
-} from "@/components/reui/sidebar";
+} from "@/primitives/reui/sidebar";
 
 // ── Storage ────────────────────────────────────────────────────────────────
 
@@ -326,13 +326,13 @@ export { useInspector, type InspectorResponse } from "@/base/shell/partials/Insp
 // These must be exported from the barrel so dist-mock can externalize them
 // to @middag-io/react — shared React context requires a single module instance.
 
-export { Toaster } from "@/components/reui/sonner";
+export { Toaster } from "@/primitives/reui/sonner";
 export {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/reui/tooltip";
+} from "@/primitives/reui/tooltip";
 export {
   DropdownMenu,
   DropdownMenuContent,
@@ -349,11 +349,11 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
-} from "@/components/reui/dropdown-menu";
+} from "@/primitives/reui/dropdown-menu";
 
 // ── reui primitives (host-runtime barrel surface) ───────────────────────────
 // Surface lives in its own reui index module (exposed through the root barrel only).
-export * from "@/components/reui";
+export * from "@/primitives/reui";
 
 // ── Utils (barrel-root for host-runtime consumers) ──────────────────────────
 export { cn } from "@/lib/utils";

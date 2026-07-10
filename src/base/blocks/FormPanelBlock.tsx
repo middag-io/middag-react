@@ -25,8 +25,14 @@ import { extractFields, isFieldRequired, isFieldVisible } from "@/base/form/form
 import { FormField } from "@/base/form/FormField";
 import { EmptyPlaceholder } from "@/base/partials/EmptyPlaceholder";
 import { FormSection } from "@/base/partials/FormSection";
-import { Alert, AlertDescription, AlertTitle } from "@/components/reui/alert";
-import { Button } from "@/components/reui/button";
+import type { FormErrors, FormPanelBlockData, FormSchemaNode } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
+import { renderLabel } from "@/i18n/render-label";
+import { resolveFieldError } from "@/i18n/resolve-field-error";
+import { useTranslation } from "@/i18n/useTranslation";
+import { cn } from "@/lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@/primitives/reui/alert";
+import { Button } from "@/primitives/reui/button";
 import {
   Dialog,
   DialogContent,
@@ -34,14 +40,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/reui/dialog";
-import { Separator } from "@/components/reui/separator";
-import type { FormErrors, FormPanelBlockData, FormSchemaNode } from "@/contracts/block-data";
-import type { BlockProps } from "@/engine/registries";
-import { renderLabel } from "@/i18n/render-label";
-import { resolveFieldError } from "@/i18n/resolve-field-error";
-import { useTranslation } from "@/i18n/useTranslation";
-import { cn } from "@/lib/utils";
+} from "@/primitives/reui/dialog";
+import { Separator } from "@/primitives/reui/separator";
 
 /** Dynamic form values — keys are server-defined field keys, values are mixed types. */
 type DynamicFormValues = Record<string, unknown>;

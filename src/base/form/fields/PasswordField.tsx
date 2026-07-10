@@ -8,8 +8,8 @@ import { useState, type ReactElement } from "react";
 import { ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-import { Button } from "@/components/reui/button";
-import { Input } from "@/components/reui/input";
+import { Button } from "@/primitives/reui/button";
+import { Input } from "@/primitives/reui/input";
 
 export interface PasswordFieldProps {
   id: string;

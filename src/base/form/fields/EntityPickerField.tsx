@@ -10,7 +10,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/reui/avatar";
+import { useTranslation } from "@/i18n/useTranslation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/primitives/reui/avatar";
 import {
   Combobox,
   ComboboxContent,
@@ -18,8 +19,7 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-} from "@/components/reui/combobox";
-import { useTranslation } from "@/i18n/useTranslation";
+} from "@/primitives/reui/combobox";
 
 export interface EntityOption {
   value: string;

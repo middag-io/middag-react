@@ -32,7 +32,7 @@
 /* Force Tailwind to scan all component sources for utility classes.
    Some components (sidebar, sheet) use dynamic cn() class construction
    that the Vite plugin misses during automatic content detection. */
-@source "../src/components/reui";
+@source "../src/primitives/reui";
 @source "../src/base/shell";
 @source "../src/base/blocks";
 @source "../src/base/partials";

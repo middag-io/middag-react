@@ -16,7 +16,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/reui/sheet";
+} from "@/primitives/reui/sheet";
 
 export interface QuickRecordSheetProps {
   open: boolean;

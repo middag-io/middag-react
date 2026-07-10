@@ -8,7 +8,6 @@ import { useState, type ReactElement } from "react";
 import { Cancel01Icon, FileEmpty02Icon, Upload01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-import { Button } from "@/components/reui/button";
 import type { FileValue } from "@/contracts/generated";
 import { useTranslation } from "@/i18n/useTranslation";
 import {
@@ -18,6 +17,7 @@ import {
   type FileWithPreview,
 } from "@/lib/hooks/use-file-upload";
 import { cn } from "@/lib/utils";
+import { Button } from "@/primitives/reui/button";
 
 export interface FileUploadFieldProps {
   id: string;

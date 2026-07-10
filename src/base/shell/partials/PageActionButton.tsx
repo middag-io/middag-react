@@ -19,11 +19,11 @@ import { router } from "@inertiajs/core";
 import { Link } from "@inertiajs/react";
 
 import { ConfirmationDialog } from "@/base/partials/ConfirmationDialog";
-import { Button } from "@/components/reui/button";
 import type { PageAction } from "@/contracts/page-contract";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 import { resolveActionTarget } from "@/lib/actions/resolve-action-target";
+import { Button } from "@/primitives/reui/button";
 
 type ButtonVariant = "default" | "outline" | "destructive" | "ghost" | "secondary" | "link";
 

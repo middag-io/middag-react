@@ -15,8 +15,6 @@ import type { TFunction } from "i18next";
 
 import { ConfirmationDialog } from "@/base/partials/ConfirmationDialog";
 import { getIcon } from "@/base/utils/icons";
-import { Button } from "@/components/reui/button";
-import { Skeleton } from "@/components/reui/skeleton";
 import type {
   DetailPanelBlockData,
   DetailPanelFieldDef,
@@ -27,6 +25,8 @@ import type { BlockProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 import { resolveActionTarget } from "@/lib/actions/resolve-action-target";
+import { Button } from "@/primitives/reui/button";
+import { Skeleton } from "@/primitives/reui/skeleton";
 
 export function DetailPanelBlock({ block }: BlockProps<DetailPanelBlockData>): ReactElement {
   const { t } = useTranslation();

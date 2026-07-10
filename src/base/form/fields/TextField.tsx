@@ -6,7 +6,7 @@
 
 import type { ReactElement } from "react";
 
-import { Input } from "@/components/reui/input";
+import { Input } from "@/primitives/reui/input";
 
 export interface TextFieldProps {
   id: string;

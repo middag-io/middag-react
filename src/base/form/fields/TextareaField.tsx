@@ -6,7 +6,7 @@
 
 import type { ReactElement } from "react";
 
-import { Textarea } from "@/components/reui/textarea";
+import { Textarea } from "@/primitives/reui/textarea";
 
 export interface TextareaFieldProps {
   id: string;

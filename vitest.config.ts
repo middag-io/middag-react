@@ -8,7 +8,7 @@ export default defineConfig({
     alias: [
       {
         find: /^@middag-io\/react\/reui\/(.*)$/,
-        replacement: path.resolve(__dirname, "./src/components/reui/$1"),
+        replacement: path.resolve(__dirname, "./src/primitives/reui/$1"),
       },
       {
         find: /^@middag-io\/react\/form\/(.*)$/,
@@ -60,7 +60,7 @@ export default defineConfig({
       // carry no testable logic and would only skew the ratio.
       include: ["src/**/*.{ts,tsx}"],
       exclude: [
-        "src/components/reui/**",
+        "src/primitives/reui/**",
         "src/contracts/generated/**",
         "src/**/*.d.ts",
         "src/**/index.ts",

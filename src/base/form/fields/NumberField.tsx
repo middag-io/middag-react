@@ -12,7 +12,7 @@ import {
   NumberFieldIncrement,
   NumberFieldInput,
   NumberField as NumberFieldPrimitive,
-} from "@/components/reui/number-field";
+} from "@/primitives/reui/number-field";
 
 export interface NumberFieldProps {
   id: string;

@@ -18,7 +18,7 @@
         "noEmit": true,
         "paths": {
             "@/*": ["./src/*"],
-            "@middag-io/react/reui/*": ["./src/components/reui/*"],
+            "@middag-io/react/reui/*": ["./src/primitives/reui/*"],
             "@middag-io/react/i18n/*": ["./src/i18n/*"],
             "@middag-io/react/form/*": ["./src/base/form/*"],
             "@middag-io/react/partials/*": ["./src/base/partials/*"],
@@ -31,5 +31,5 @@
         }
     },
     "include": ["src"],
-    "exclude": ["node_modules", "dist", "examples", "src/components/reui", "**/__tests__"]
+    "exclude": ["node_modules", "dist", "src/primitives/examples", "src/primitives/reui", "**/__tests__"]
 }

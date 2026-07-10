@@ -15,7 +15,6 @@ import { router } from "@inertiajs/core";
 
 import { getIcon } from "@/base/utils/icons";
 import { formatTimestamp } from "@/base/utils/time";
-import { Button } from "@/components/reui/button";
 import type {
   AnnotatedValue,
   LinkGroupItem,
@@ -25,6 +24,7 @@ import type {
 import { EntityLink } from "@/engine/EntityRoutes";
 import { useTranslation } from "@/i18n/useTranslation";
 import { cn } from "@/lib/utils";
+import { Button } from "@/primitives/reui/button";
 
 import type { CellRendererProps } from "./cell-registry";
 

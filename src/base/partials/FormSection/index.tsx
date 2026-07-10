@@ -10,9 +10,9 @@ import { useState, type ReactElement, type ReactNode } from "react";
 import { ArrowDown01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-import { Button } from "@/components/reui/button";
 import { useTranslation } from "@/i18n/useTranslation";
 import { cn } from "@/lib/utils";
+import { Button } from "@/primitives/reui/button";
 
 export interface FormSectionProps {
   id: string;

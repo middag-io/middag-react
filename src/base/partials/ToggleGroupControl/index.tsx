@@ -10,8 +10,8 @@
 
 import { type ReactElement } from "react";
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/reui/toggle-group";
 import { useTranslation } from "@/i18n/useTranslation";
+import { ToggleGroup, ToggleGroupItem } from "@/primitives/reui/toggle-group";
 
 export interface ToggleGroupOption {
   /** Submitted value; must be unique within the group. */

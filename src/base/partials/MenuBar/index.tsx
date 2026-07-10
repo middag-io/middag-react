@@ -9,6 +9,7 @@
 
 import { type ReactElement } from "react";
 
+import { useTranslation } from "@/i18n/useTranslation";
 import {
   Menubar,
   MenubarContent,
@@ -17,8 +18,7 @@ import {
   MenubarSeparator,
   MenubarShortcut,
   MenubarTrigger,
-} from "@/components/reui/menubar";
-import { useTranslation } from "@/i18n/useTranslation";
+} from "@/primitives/reui/menubar";
 
 export interface MenuBarActionEntry {
   type?: "item";

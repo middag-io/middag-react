@@ -12,7 +12,6 @@
 import type { ReactElement } from "react";
 
 import { NavErrorBoundary } from "@/base/shell/partials/NavErrorBoundary";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/reui/tabs";
 import type { TabsBlockData } from "@/contracts/block-data";
 import type { BlockDescriptor } from "@/contracts/page-contract";
 import { isLazyBlock, LazyBlock } from "@/engine/LazyBlock";
@@ -20,6 +19,7 @@ import { resolveBlock } from "@/engine/registries";
 import type { BlockProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/primitives/reui/tabs";
 
 function UnknownBlock({ type }: { type: string }): ReactElement {
   const { t } = useTranslation();

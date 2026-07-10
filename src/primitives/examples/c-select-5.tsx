@@ -1,0 +1,37 @@
+import { Field } from "@/primitives/reui/field";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/primitives/reui/select";
+
+const items = [
+  { label: "Select a fruit", value: null },
+  { label: "Apple", value: "apple" },
+  { label: "Banana", value: "banana" },
+  { label: "Blueberry", value: "blueberry" },
+];
+
+export function Pattern() {
+  return (
+    <Field className="max-w-xs">
+      <Select>
+        <SelectTrigger size="sm">
+          <SelectValue placeholder="Select a fruit" />
+        </SelectTrigger>
+        <SelectContent position="popper">
+          <SelectGroup>
+            {items.map((item) => (
+              <SelectItem key={item.value} value={item.value as string}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </Field>
+  );
+}

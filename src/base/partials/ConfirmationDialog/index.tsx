@@ -12,7 +12,8 @@
 
 import { type ReactElement } from "react";
 
-import { Button } from "@/components/reui/button";
+import { useTranslation } from "@/i18n/useTranslation";
+import { Button } from "@/primitives/reui/button";
 import {
   Dialog,
   DialogContent,
@@ -20,8 +21,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/reui/dialog";
-import { useTranslation } from "@/i18n/useTranslation";
+} from "@/primitives/reui/dialog";
 
 function Spinner({ className }: { className?: string }): ReactElement {
   return (

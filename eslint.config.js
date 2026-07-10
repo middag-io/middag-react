@@ -18,8 +18,8 @@ export default tseslint.config(
             'node_modules/',
             'scripts/',
             'src/assets/lottie/next-app/',
-            'src/components/reui/',
-            'examples/',
+            'src/primitives/reui/',
+            'src/primitives/examples/',
             'src/contracts/generated/'
         ]
     },

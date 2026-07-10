@@ -24,7 +24,7 @@ export default defineConfig({
     alias: [
       {
         find: /^@middag-io\/react\/reui\/(.*)$/,
-        replacement: path.join(REPO, "src/components/reui/$1"),
+        replacement: path.join(REPO, "src/primitives/reui/$1"),
       },
       { find: /^@middag-io\/react\/form\/(.*)$/, replacement: path.join(REPO, "src/base/form/$1") },
       {

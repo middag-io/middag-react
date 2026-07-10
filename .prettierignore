@@ -1,5 +1,5 @@
 node_modules
 dist
-examples
-src/components/reui
+src/primitives/examples
+src/primitives/reui
 src/contracts/generated

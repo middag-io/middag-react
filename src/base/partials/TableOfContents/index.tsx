@@ -9,9 +9,9 @@
 
 import { type ReactElement, type RefObject } from "react";
 
-import { Scrollspy } from "@/components/reui/scrollspy";
 import { useTranslation } from "@/i18n/useTranslation";
 import { cn } from "@/lib/utils";
+import { Scrollspy } from "@/primitives/reui/scrollspy";
 
 export interface TableOfContentsItem {
   /** Anchor id — must match the `id` of the target section element. */

@@ -8,11 +8,11 @@
 import { useCallback, useState, type ReactElement } from "react";
 import { format, isValid, parse } from "date-fns";
 
-import { Button } from "@/components/reui/button";
-import { Calendar } from "@/components/reui/calendar";
-import { Input } from "@/components/reui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/reui/popover";
 import { useTranslation } from "@/i18n/useTranslation";
+import { Button } from "@/primitives/reui/button";
+import { Calendar } from "@/primitives/reui/calendar";
+import { Input } from "@/primitives/reui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/primitives/reui/popover";
 
 export interface DateFieldProps {
   id: string;

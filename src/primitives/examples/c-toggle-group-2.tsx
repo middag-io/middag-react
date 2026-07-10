@@ -1,0 +1,16 @@
+import { ToggleGroup, ToggleGroupItem } from "@/primitives/reui/toggle-group";
+
+export function Pattern() {
+  return (
+    <div className="flex items-center justify-center">
+      <ToggleGroup type="single" variant="outline" defaultValue="all">
+        <ToggleGroupItem value="all" aria-label="Toggle all">
+          All
+        </ToggleGroupItem>
+        <ToggleGroupItem value="missed" aria-label="Toggle missed">
+          Missed
+        </ToggleGroupItem>
+      </ToggleGroup>
+    </div>
+  );
+}
