@@ -20,7 +20,6 @@ import type { FieldValues, Resolver, ResolverOptions } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "@inertiajs/core";
 
-import type { BlockProps } from "@/app/registries";
 import { buildFormSchema } from "@/base/form/form-schema-builder";
 import { extractFields, isFieldRequired, isFieldVisible } from "@/base/form/form-utils";
 import { FormField } from "@/base/form/FormField";
@@ -38,6 +37,7 @@ import {
 } from "@/components/reui/dialog";
 import { Separator } from "@/components/reui/separator";
 import type { FormErrors, FormPanelBlockData, FormSchemaNode } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { resolveFieldError } from "@/i18n/resolve-field-error";
 import { useTranslation } from "@/i18n/useTranslation";

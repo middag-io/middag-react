@@ -7,8 +7,8 @@ import { block, tabsData } from "../helpers";
 
 // Mock resolveBlock to avoid needing full registry setup.
 // TabsBlock resolves inner blocks via resolveBlock().
-vi.mock("@/app/registries", async () => {
-  const actual = await vi.importActual<typeof import("@/app/registries")>("@/app/registries");
+vi.mock("@/engine/registries", async () => {
+  const actual = await vi.importActual<typeof import("@/engine/registries")>("@/engine/registries");
   return {
     ...actual,
     resolveBlock: vi.fn().mockReturnValue(undefined),

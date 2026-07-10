@@ -9,9 +9,9 @@
 
 import { lazy, Suspense, type ReactElement } from "react";
 
-import type { BlockProps } from "@/app/registries";
 import { Skeleton } from "@/components/reui/skeleton";
 import type { FormPanelBlockData } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 
 const LazyFormPanelBlock = lazy(() =>
   import("@/base/blocks/FormPanelBlock").then((m) => ({ default: m.FormPanelBlock })),

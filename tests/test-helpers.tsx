@@ -63,11 +63,11 @@ export function AllProviders({ children }: { children: ReactNode }) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { I18nProvider } = require("@/i18n/I18nProvider");
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { AuthProvider } = require("@/app/providers/auth");
+  const { AuthProvider } = require("@/engine/providers/auth");
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { ScopeProvider } = require("@/app/providers/scope");
+  const { ScopeProvider } = require("@/engine/providers/scope");
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { FlashProvider } = require("@/app/providers/flash");
+  const { FlashProvider } = require("@/engine/providers/flash");
 
   return (
     <I18nProvider>

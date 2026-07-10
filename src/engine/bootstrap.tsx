@@ -5,9 +5,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import { ContractPage } from "@/app/ContractPage";
-import { registerDefaults } from "@/app/register-defaults";
 import type { PageContract } from "@/contracts/page-contract";
+import { ContractPage } from "@/engine/ContractPage";
+import { registerDefaults } from "@/engine/register-defaults";
 
 export function mountContract(target: HTMLElement, contract: PageContract): void {
   registerDefaults();

@@ -108,7 +108,7 @@
     "supportedLocales": ["en", "pt-BR", "es"],
     "keyPrefix": "middag.ui.",
     "interpolation": "{variable}",
-    "defaultsFile": "src/app/providers/i18n-defaults.ts"
+    "defaultsFile": "src/engine/providers/i18n-defaults.ts"
   },
   "theming": {
     "method": "CSS custom properties scoped to a class",

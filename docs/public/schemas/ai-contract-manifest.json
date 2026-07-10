@@ -104,7 +104,7 @@
       },
       "builtIn": ["product", "immersive"],
       "extensible": true,
-      "sourceFile": "src/app/registries.ts"
+      "sourceFile": "src/engine/registries.ts"
     },
     {
       "name": "Layout Registry",
@@ -115,7 +115,7 @@
       },
       "builtIn": ["stack", "sidebar", "dashboard", "wizard"],
       "extensible": true,
-      "sourceFile": "src/app/registries.ts"
+      "sourceFile": "src/engine/registries.ts"
     },
     {
       "name": "Block Registry",
@@ -126,7 +126,7 @@
       },
       "builtIn": 19,
       "extensible": true,
-      "sourceFile": "src/app/registries.ts"
+      "sourceFile": "src/engine/registries.ts"
     },
     {
       "name": "Field Registry",

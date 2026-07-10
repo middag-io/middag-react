@@ -13,8 +13,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { router } from "@inertiajs/core";
 import type { TFunction } from "i18next";
 
-import { EntityLink } from "@/app/EntityRoutes";
-import type { BlockProps } from "@/app/registries";
 import { ConfirmationDialog } from "@/base/partials/ConfirmationDialog";
 import { getIcon } from "@/base/utils/icons";
 import { Button } from "@/components/reui/button";
@@ -24,6 +22,8 @@ import type {
   DetailPanelFieldDef,
   ExecutableAction,
 } from "@/contracts/block-data";
+import { EntityLink } from "@/engine/EntityRoutes";
+import type { BlockProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 import { resolveActionTarget } from "@/lib/actions/resolve-action-target";

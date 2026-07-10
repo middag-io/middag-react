@@ -168,7 +168,7 @@ export type {
 
 // ── App Core ────────────────────────────────────────────────────────────────
 
-export { ContractPage } from "@/app/ContractPage";
+export { ContractPage } from "@/engine/ContractPage";
 export {
   shellRegistry,
   layoutRegistry,
@@ -182,7 +182,7 @@ export {
   type ShellProps,
   type LayoutProps,
   type BlockProps,
-} from "@/app/registries";
+} from "@/engine/registries";
 export {
   registerFieldComponent,
   resolveFieldComponent,
@@ -199,13 +199,13 @@ export {
   resolveCellRenderer,
   type CellRendererProps,
 } from "@/base/partials/DataTable/cell-registry";
-export { registerDefaults } from "@/app/register-defaults";
+export { registerDefaults } from "@/engine/register-defaults";
 export { registerDefaultCells } from "@/base/partials/DataTable/register-default-cells";
 export { registerDefaultFields } from "@/base/form/fields/register-default-fields";
 export { registerDefaultIcons } from "@/base/utils/register-default-icons";
-export { LazyBlock, isLazyBlock } from "@/app/LazyBlock";
-export { EntityRoutesProvider, useEntityRoute, EntityLink } from "@/app/EntityRoutes";
-export { HostSlot } from "@/app/HostSlot";
+export { LazyBlock, isLazyBlock } from "@/engine/LazyBlock";
+export { EntityRoutesProvider, useEntityRoute, EntityLink } from "@/engine/EntityRoutes";
+export { HostSlot } from "@/engine/HostSlot";
 
 // ── Base partials (reusable UI blocks for consumers) ─────────────────────────
 
@@ -259,23 +259,23 @@ export { resolveFieldError } from "@/i18n/resolve-field-error";
 export { i18n, i18nReady, normalizeLocale } from "@/i18n/instance";
 export { registerUiStrings } from "@/i18n/register-strings";
 
-export { AuthProvider, useAuth, Can, Cannot } from "@/app/providers/auth";
-export { FlashProvider } from "@/app/providers/flash";
+export { AuthProvider, useAuth, Can, Cannot } from "@/engine/providers/auth";
+export { FlashProvider } from "@/engine/providers/flash";
 export {
   ScopeProvider,
   useScope,
   useScopeKey,
   type ScopeContextValue,
-} from "@/app/providers/scope";
-export { ProgressProvider } from "@/app/providers/progress";
+} from "@/engine/providers/scope";
+export { ProgressProvider } from "@/engine/providers/progress";
 
 export {
   ErrorReporterProvider,
   useErrorReporter,
   type ErrorReporter,
   type ErrorContext,
-} from "@/app/providers/error-reporter";
-export { InertiaErrorReporter } from "@/app/providers/inertia-error-reporter";
+} from "@/engine/providers/error-reporter";
+export { InertiaErrorReporter } from "@/engine/providers/inertia-error-reporter";
 
 // ── Sidebar (for consumer shells) ──────────────────────────────────────────
 

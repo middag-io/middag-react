@@ -9,9 +9,9 @@
 import type { ReactElement } from "react";
 import { router } from "@inertiajs/core";
 
-import type { BlockProps } from "@/app/registries";
 import { EmptyPlaceholder } from "@/base/partials/EmptyPlaceholder";
 import type { EmptyStateBlockData } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 

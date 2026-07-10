@@ -8,7 +8,6 @@
 import type { ReactElement } from "react";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
-import type { BlockProps } from "@/app/registries";
 import {
   ChartContainer,
   ChartLegend,
@@ -18,6 +17,7 @@ import {
   type ChartConfig,
 } from "@/components/reui/chart";
 import type { ChartBlockData } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 
 export function ChartBlock({ block }: BlockProps<ChartBlockData>): ReactElement {
   const { chartType, categoryKey, series, data, options } = block.data;

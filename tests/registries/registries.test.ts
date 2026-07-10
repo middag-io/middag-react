@@ -11,8 +11,8 @@ import {
   resolveLayout,
   resolveShell,
   shellRegistry,
-} from "@/app/registries";
-import type { BlockProps, LayoutProps, ShellProps } from "@/app/registries";
+} from "@/engine/registries";
+import type { BlockProps, LayoutProps, ShellProps } from "@/engine/registries";
 
 // ---------------------------------------------------------------------------
 // Dummy components for registration

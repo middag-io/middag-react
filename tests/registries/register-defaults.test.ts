@@ -12,8 +12,8 @@ describe("registerDefaults", () => {
   });
 
   async function loadModules() {
-    const registries = await import("@/app/registries");
-    const registerDefaultsMod = await import("@/app/register-defaults");
+    const registries = await import("@/engine/registries");
+    const registerDefaultsMod = await import("@/engine/register-defaults");
     return { registries, registerDefaultsMod };
   }
 

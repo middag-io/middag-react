@@ -70,7 +70,7 @@ Format: `type(scope): description` or `type: description`
 
 - `src/contracts/` — types consumed by Moodle/WP hosts
 - `src/index.ts` — barrel export (removing = breaking)
-- `src/app/registries.ts` — registration API
+- `src/engine/registries.ts` — registration API
 
 ### Do NOT modify
 
@@ -83,7 +83,7 @@ Format: `type(scope): description` or `type: description`
 
 1. Define data contract in `src/contracts/block-data/`
 2. Create component in `src/base/blocks/` implementing `BlockProps<TData>`
-3. Register in `src/app/register-defaults.ts`: `registerBlock('type_key', Component)`
+3. Register in `src/engine/register-defaults.ts`: `registerBlock('type_key', Component)`
 4. Add a demo page/fixture in `demo/` to preview the block
 5. Add tests in `tests/blocks/`
 

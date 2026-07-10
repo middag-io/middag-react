@@ -8,8 +8,8 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { AuthProvider, Can, Cannot, useAuth } from "@/app/providers/auth";
-import { ScopeProvider, useScope, useScopeKey } from "@/app/providers/scope";
+import { AuthProvider, Can, Cannot, useAuth } from "@/engine/providers/auth";
+import { ScopeProvider, useScope, useScopeKey } from "@/engine/providers/scope";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { useTranslation } from "@/i18n/useTranslation";
 

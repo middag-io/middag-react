@@ -9,10 +9,10 @@
 
 import { lazy, Suspense, type ReactElement } from "react";
 
-import type { BlockProps } from "@/app/registries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/reui/card";
 import { Skeleton } from "@/components/reui/skeleton";
 import type { MarkdownPanelBlockData } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 

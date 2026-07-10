@@ -1,7 +1,7 @@
 /**
  * Provider barrel — re-exports all providers for convenient imports.
  *
- * Consumers can import from "@/app/providers" instead of individual files.
+ * Consumers can import from "@/engine/providers" instead of individual files.
  * i18n moved to the i18next stack — import I18nProvider/useTranslation/etc.
  * from the package root ("@middag-io/react") or "@/i18n/*".
  */

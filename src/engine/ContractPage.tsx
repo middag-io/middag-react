@@ -13,13 +13,13 @@
 
 import { Suspense, useCallback, useMemo, type ReactElement } from "react";
 
-import { EntityRoutesProvider } from "@/app/EntityRoutes";
-import { isLazyBlock, LazyBlock } from "@/app/LazyBlock";
-import { resolveBlock, resolveLayout, resolveShell } from "@/app/registries";
 import { NavErrorBoundary } from "@/base/shell/partials/NavErrorBoundary";
 import { OverlayScreen } from "@/base/shell/partials/OverlayScreen";
 import type { BlockDescriptor, ContractPageProps } from "@/contracts/page-contract";
 import { validatePageContract } from "@/contracts/page-contract-schema";
+import { EntityRoutesProvider } from "@/engine/EntityRoutes";
+import { isLazyBlock, LazyBlock } from "@/engine/LazyBlock";
+import { resolveBlock, resolveLayout, resolveShell } from "@/engine/registries";
 import { useTranslation } from "@/i18n/useTranslation";
 
 // Registry-based dynamic component resolution (ADR-807 §6). Shell and Layout are

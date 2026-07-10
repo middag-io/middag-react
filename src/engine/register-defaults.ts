@@ -13,7 +13,6 @@
  * avoid bundling heavy deps via inlineDynamicImports.
  */
 
-import { registerBlock, registerLayout, registerShell } from "@/app/registries";
 import { ActionGridBlock } from "@/base/blocks/ActionGridBlock";
 import { ActivityTimelineBlock } from "@/base/blocks/ActivityTimelineBlock";
 import { CardGridBlock } from "@/base/blocks/CardGridBlock";
@@ -37,6 +36,7 @@ import { AuthShell } from "@/base/shell/AuthShell";
 import { BasicShell } from "@/base/shell/BasicShell";
 import { ImmersiveShell } from "@/base/shell/ImmersiveShell";
 import { registerDefaultIcons } from "@/base/utils/register-default-icons";
+import { registerBlock, registerLayout, registerShell } from "@/engine/registries";
 
 let registered = false;
 

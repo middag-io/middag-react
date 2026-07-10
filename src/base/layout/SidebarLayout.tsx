@@ -12,7 +12,7 @@
  */
 import type { ReactElement } from "react";
 
-import type { LayoutProps } from "@/app/registries";
+import type { LayoutProps } from "@/engine/registries";
 
 import { BlockRegion } from "./BlockRegion";
 

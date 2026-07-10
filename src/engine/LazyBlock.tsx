@@ -21,8 +21,8 @@
 import type { ComponentType, ReactElement } from "react";
 import { Deferred, usePage, WhenVisible } from "@inertiajs/react";
 
-import type { BlockProps } from "@/app/registries";
 import type { BlockDescriptor } from "@/contracts/page-contract";
+import type { BlockProps } from "@/engine/registries";
 
 interface LazyBlockProps {
   block: BlockDescriptor;

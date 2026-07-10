@@ -17,7 +17,6 @@ import { type ReactElement } from "react";
 import { router } from "@inertiajs/core";
 import { Link, usePage } from "@inertiajs/react";
 
-import type { ShellProps } from "@/app/registries";
 import { useIsDark } from "@/base/hooks/useIsDark";
 import { PageActionButton } from "@/base/shell/partials/PageActionButton";
 import { setAppearance } from "@/base/theme/appearance";
@@ -48,6 +47,7 @@ import { Toaster } from "@/components/reui/sonner";
 import type { NavigationNode, NavigationTreePayload } from "@/contracts/navigation";
 import type { PageMeta } from "@/contracts/page-contract";
 import type { SharedProps, SharedPropsAuth } from "@/contracts/shared-props";
+import type { ShellProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 

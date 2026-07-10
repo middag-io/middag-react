@@ -10,9 +10,9 @@ import type { ReactElement } from "react";
 import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 
-import type { BlockProps } from "@/app/registries";
 import { getIcon } from "@/base/utils/icons";
 import type { LinkListBlockData } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 import { cn } from "@/lib/utils";
 
 export function LinkListBlock({ block }: BlockProps<LinkListBlockData>): ReactElement {
