@@ -3,10 +3,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import "../setup";
 
-import { block, tabbedPanelData } from "../helpers";
+import { block, tabsData } from "../helpers";
 
 // Mock resolveBlock to avoid needing full registry setup.
-// TabbedPanelBlock resolves inner blocks via resolveBlock().
+// TabsBlock resolves inner blocks via resolveBlock().
 vi.mock("@/app/registries", async () => {
   const actual = await vi.importActual<typeof import("@/app/registries")>("@/app/registries");
   return {
@@ -15,19 +15,19 @@ vi.mock("@/app/registries", async () => {
   };
 });
 
-describe("TabbedPanelBlock", () => {
+describe("TabsBlock", () => {
   afterEach(() => {
     cleanup();
   });
 
   it("renders tab labels", async () => {
-    const { TabbedPanelBlock } = await import("@/base/blocks/TabbedPanelBlock");
+    const { TabsBlock } = await import("@/base/blocks/TabsBlock");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
-    const descriptor = block("tabbed_panel", "test-tabs", tabbedPanelData());
+    const descriptor = block("tabs", "test-tabs", tabsData());
 
     render(
       <I18nProvider>
-        <TabbedPanelBlock block={descriptor} />
+        <TabsBlock block={descriptor} />
       </I18nProvider>,
     );
 
@@ -36,13 +36,13 @@ describe("TabbedPanelBlock", () => {
   });
 
   it("renders default tab as active", async () => {
-    const { TabbedPanelBlock } = await import("@/base/blocks/TabbedPanelBlock");
+    const { TabsBlock } = await import("@/base/blocks/TabsBlock");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
-    const descriptor = block("tabbed_panel", "test-tabs-default", tabbedPanelData());
+    const descriptor = block("tabs", "test-tabs-default", tabsData());
 
     render(
       <I18nProvider>
-        <TabbedPanelBlock block={descriptor} />
+        <TabsBlock block={descriptor} />
       </I18nProvider>,
     );
 
@@ -53,14 +53,14 @@ describe("TabbedPanelBlock", () => {
   });
 
   it("renders empty div when tabs array is empty", async () => {
-    const { TabbedPanelBlock } = await import("@/base/blocks/TabbedPanelBlock");
+    const { TabsBlock } = await import("@/base/blocks/TabsBlock");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
     const data = { tabs: [], defaultTab: undefined };
-    const descriptor = block("tabbed_panel", "test-tabs-empty", data);
+    const descriptor = block("tabs", "test-tabs-empty", data);
 
     const { container } = render(
       <I18nProvider>
-        <TabbedPanelBlock block={descriptor} />
+        <TabsBlock block={descriptor} />
       </I18nProvider>,
     );
 
@@ -69,13 +69,13 @@ describe("TabbedPanelBlock", () => {
   });
 
   it("renders a localized, token-styled fallback for unknown inner blocks", async () => {
-    const { TabbedPanelBlock } = await import("@/base/blocks/TabbedPanelBlock");
+    const { TabsBlock } = await import("@/base/blocks/TabsBlock");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
-    const descriptor = block("tabbed_panel", "test-tabs-unknown", tabbedPanelData());
+    const descriptor = block("tabs", "test-tabs-unknown", tabsData());
 
     const { container } = render(
       <I18nProvider>
-        <TabbedPanelBlock block={descriptor} />
+        <TabsBlock block={descriptor} />
       </I18nProvider>,
     );
 

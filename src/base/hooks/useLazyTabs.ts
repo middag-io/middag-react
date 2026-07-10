@@ -10,13 +10,13 @@
  * ```tsx
  * const { handleTabChange, isLoading, hasError, retryTab } = useLazyTabs("overview");
  *
- * <TabbedPanel onTabChange={handleTabChange}>
+ * <SomeTabsComponent onTabChange={handleTabChange}>
  *   <Tab key="overview">...</Tab>
  *   <Tab key="invoices">
  *     {isLoading("invoices") ? <Spinner /> : <InvoiceTable />}
  *     {hasError("invoices") && <RetryButton onClick={() => retryTab("invoices")} />}
  *   </Tab>
- * </TabbedPanel>
+ * </SomeTabsComponent>
  * ```
  *
  * Imperative escape hatch: for simple per-tab loading without retry/error

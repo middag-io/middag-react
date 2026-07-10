@@ -1,5 +1,5 @@
 /**
- * TabbedPanelBlock — composite block that organizes inner blocks into tabs.
+ * TabsBlock — composite block that organizes inner blocks into tabs.
  *
  * Each tab contains an array of BlockDescriptors rendered via the block registry.
  * Uses ReUI Tabs with line variant + MIDDAG-specific styling (2px primary underline,
@@ -16,8 +16,9 @@ import { resolveBlock } from "@/app/registries";
 import type { BlockProps } from "@/app/registries";
 import { NavErrorBoundary } from "@/base/shell/partials/NavErrorBoundary";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/reui/tabs";
-import type { TabbedPanelBlockData } from "@/contracts/block-data";
+import type { TabsBlockData } from "@/contracts/block-data";
 import type { BlockDescriptor } from "@/contracts/page-contract";
+import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 
 function UnknownBlock({ type }: { type: string }): ReactElement {
@@ -52,33 +53,39 @@ function renderInnerBlock(block: BlockDescriptor): ReactElement | null {
   );
 }
 
-export function TabbedPanelBlock({ block }: BlockProps<TabbedPanelBlockData>): ReactElement {
-  const { data } = block;
-  const { tabs, defaultTab } = data;
+export function TabsBlock({ block }: BlockProps<TabsBlockData>): ReactElement {
+  const { t } = useTranslation();
+  const { tabs, defaultTab } = block.data;
 
   if (tabs.length === 0) {
     return <div />;
   }
 
-  const initialTab = defaultTab ?? tabs[0].key;
+  const initialTab = defaultTab ?? tabs[0].id;
 
   return (
     <Tabs defaultValue={initialTab} className="w-full">
       <TabsList variant="line" className="border-border w-full justify-start border-b">
         {tabs.map((tab) => (
           <TabsTrigger
-            key={tab.key}
-            value={tab.key}
+            key={tab.id}
+            value={tab.id}
             className="data-[state=active]:text-primary data-[state=active]:after:bg-primary px-4 py-3 text-sm data-[state=active]:font-medium"
           >
-            {tab.label}
+            {renderLabel(tab.label, t)}
           </TabsTrigger>
         ))}
       </TabsList>
 
       {tabs.map((tab) => (
-        <TabsContent key={tab.key} value={tab.key} className="mt-4 space-y-6">
-          {tab.blocks.map(renderInnerBlock)}
+        <TabsContent key={tab.id} value={tab.id} className="mt-4 space-y-6">
+          {/* tab.blocks is the generated wire BlockDescriptor (data: object | []);
+              renderInnerBlock takes the composed page-contract BlockDescriptor
+              (data: Record<string, unknown>). Same runtime JSON shape — the
+              generated union's `[]` arm only exists for the empty-object wire
+              case, which is not representable as Record<string, unknown> at
+              the type level. */}
+          {(tab.blocks as unknown as BlockDescriptor[]).map(renderInnerBlock)}
         </TabsContent>
       ))}
     </Tabs>

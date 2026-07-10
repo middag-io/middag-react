@@ -137,15 +137,14 @@ export type {
   // LinkList
   LinkListItem,
   LinkListBlockData,
-  // TabbedPanel
-  TabbedPanelTab,
-  TabbedPanelBlockData,
-  // WorkflowProgress
-  WorkflowProgressState,
-  WorkflowProgressBlockData,
+  // Tabs
+  TabsBlockData,
   // Form: rating + date_range
   RatingFormField,
   DateRangeFormField,
+  // Chart (free)
+  ChartSeries,
+  ChartBlockData,
 } from "@/contracts/block-data";
 
 // ── Contracts: Validation ────────────────────────────────────────────────────
@@ -387,8 +386,8 @@ export { MarkdownPanelBlock } from "@/base/blocks/MarkdownPanelBlock";
 export { CardGridBlock } from "@/base/blocks/CardGridBlock";
 export { ActionGridBlock } from "@/base/blocks/ActionGridBlock";
 export { LinkListBlock } from "@/base/blocks/LinkListBlock";
-export { TabbedPanelBlock } from "@/base/blocks/TabbedPanelBlock";
-export { WorkflowProgressBlock } from "@/base/blocks/WorkflowProgressBlock";
+export { TabsBlock } from "@/base/blocks/TabsBlock";
+export { ChartBlock } from "@/base/blocks/ChartBlock";
 // form_panel is a Community block; its heavy deps (react-hook-form + zod) are
 // code-split. The barrel exports the lazy Suspense wrapper AS FormPanelBlock so
 // the heavy module loads on demand (never eagerly) — whether registered via

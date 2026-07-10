@@ -17,6 +17,7 @@ import { registerBlock, registerLayout, registerShell } from "@/app/registries";
 import { ActionGridBlock } from "@/base/blocks/ActionGridBlock";
 import { ActivityTimelineBlock } from "@/base/blocks/ActivityTimelineBlock";
 import { CardGridBlock } from "@/base/blocks/CardGridBlock";
+import { ChartBlock } from "@/base/blocks/ChartBlock";
 import { DenseTableBlock } from "@/base/blocks/DenseTableBlock";
 import { DetailPanelBlock } from "@/base/blocks/DetailPanelBlock";
 import { EmptyStateBlock } from "@/base/blocks/EmptyStateBlock";
@@ -25,8 +26,7 @@ import { LinkListBlock } from "@/base/blocks/LinkListBlock";
 import { MarkdownPanelBlock } from "@/base/blocks/MarkdownPanelBlock";
 import { MetricCardBlock } from "@/base/blocks/MetricCardBlock";
 import { StatusStripBlock } from "@/base/blocks/StatusStripBlock";
-import { TabbedPanelBlock } from "@/base/blocks/TabbedPanelBlock";
-import { WorkflowProgressBlock } from "@/base/blocks/WorkflowProgressBlock";
+import { TabsBlock } from "@/base/blocks/TabsBlock";
 import { registerDefaultFields } from "@/base/form/fields/register-default-fields";
 import { DashboardLayout } from "@/base/layout/DashboardLayout";
 import { SidebarLayout } from "@/base/layout/SidebarLayout";
@@ -69,11 +69,13 @@ export function registerDefaults(): void {
   registerBlock("card_grid", CardGridBlock);
   registerBlock("action_grid", ActionGridBlock);
   registerBlock("link_list", LinkListBlock);
-  registerBlock("tabbed_panel", TabbedPanelBlock);
-  registerBlock("workflow_progress", WorkflowProgressBlock);
+  registerBlock("tabs", TabsBlock);
   // form_panel ships in the Community engine but its heavy deps (react-hook-form
   // + zod) are code-split: FormPanelBlockLazy loads the real block on first render.
   registerBlock("form_panel", FormPanelBlockLazy);
+  // chart — free-tier line/bar/area renderer. The richer `chart_panel` (pie,
+  // playground, config UI) is Pro.
+  registerBlock("chart", ChartBlock);
 
   // Form field components
   registerDefaultFields();

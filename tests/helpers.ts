@@ -41,20 +41,6 @@ export function linkListData() {
   };
 }
 
-// ── WorkflowProgress ────────────────────────────────────────────────────
-
-export function workflowProgressData() {
-  return {
-    states: [
-      { key: "draft", label: "Draft", timestamp: "Jan 1" },
-      { key: "review", label: "Review", timestamp: "Jan 5" },
-      { key: "approved", label: "Approved" },
-      { key: "published", label: "Published" },
-    ],
-    currentState: "review",
-  };
-}
-
 // ── StatusStrip ─────────────────────────────────────────────────────────
 
 export function statusStripData() {
@@ -206,16 +192,15 @@ export function denseTableData() {
   };
 }
 
-// ── TabbedPanel ─────────────────────────────────────────────────────────
+// ── Tabs ────────────────────────────────────────────────────────────────
 
-export function tabbedPanelData() {
+export function tabsData() {
   return {
     defaultTab: "general",
     tabs: [
       {
-        key: "general",
+        id: "general",
         label: "General",
-        icon: "settings",
         blocks: [
           {
             type: "empty_state",
@@ -225,7 +210,7 @@ export function tabbedPanelData() {
         ],
       },
       {
-        key: "advanced",
+        id: "advanced",
         label: "Advanced",
         blocks: [] as BlockDescriptor[],
       },
