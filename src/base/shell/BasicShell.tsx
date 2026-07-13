@@ -17,11 +17,16 @@ import { type ReactElement } from "react";
 import { router } from "@inertiajs/core";
 import { Link, usePage } from "@inertiajs/react";
 
-import type { ShellProps } from "@/app/registries";
 import { useIsDark } from "@/base/hooks/useIsDark";
 import { PageActionButton } from "@/base/shell/partials/PageActionButton";
 import { setAppearance } from "@/base/theme/appearance";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/reui/avatar";
+import type { NavigationNode, NavigationTreePayload } from "@/contracts/navigation";
+import type { PageMeta } from "@/contracts/page-contract";
+import type { SharedProps, SharedPropsAuth } from "@/contracts/shared-props";
+import type { ShellProps } from "@/engine/registries";
+import { renderLabel } from "@/i18n/render-label";
+import { useTranslation } from "@/i18n/useTranslation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/primitives/reui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +34,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/reui/dropdown-menu";
+} from "@/primitives/reui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -43,13 +48,8 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/reui/sidebar";
-import { Toaster } from "@/components/reui/sonner";
-import type { NavigationNode, NavigationTreePayload } from "@/contracts/navigation";
-import type { PageMeta } from "@/contracts/page-contract";
-import type { SharedProps, SharedPropsAuth } from "@/contracts/shared-props";
-import { renderLabel } from "@/i18n/render-label";
-import { useTranslation } from "@/i18n/useTranslation";
+} from "@/primitives/reui/sidebar";
+import { Toaster } from "@/primitives/reui/sonner";
 
 const EMPTY_NAV: NavigationTreePayload = { tree: [], footer: [], activeKey: "" };
 

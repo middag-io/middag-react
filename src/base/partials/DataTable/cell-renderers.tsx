@@ -13,18 +13,18 @@ import { Cancel01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { router } from "@inertiajs/core";
 
-import { EntityLink } from "@/app/EntityRoutes";
 import { getIcon } from "@/base/utils/icons";
 import { formatTimestamp } from "@/base/utils/time";
-import { Button } from "@/components/reui/button";
 import type {
   AnnotatedValue,
   LinkGroupItem,
   ProgressValue,
   RichStatusValue,
 } from "@/contracts/block-data";
+import { EntityLink } from "@/engine/EntityRoutes";
 import { useTranslation } from "@/i18n/useTranslation";
 import { cn } from "@/lib/utils";
+import { Button } from "@/primitives/reui/button";
 
 import type { CellRendererProps } from "./cell-registry";
 

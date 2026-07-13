@@ -12,8 +12,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Link } from "@inertiajs/react";
 
 import { getIcon } from "@/base/utils/icons";
-import { Button } from "@/components/reui/button";
 import { cn } from "@/lib/utils";
+import { Button } from "@/primitives/reui/button";
 
 const DotLottieReact = lazy(() =>
   import("@lottiefiles/dotlottie-react").then((m) => ({

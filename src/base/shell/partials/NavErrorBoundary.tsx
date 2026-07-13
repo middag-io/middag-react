@@ -7,7 +7,7 @@
 
 import { Component, type ErrorInfo, type ReactElement, type ReactNode } from "react";
 
-import { useErrorReporter, type ErrorReporter } from "@/app/providers/error-reporter";
+import { useErrorReporter, type ErrorReporter } from "@/engine/providers/error-reporter";
 
 // ── Default fallback ─────────────────────────────────────────────────────────
 // Hardcoded strings — an error boundary fallback must never depend on providers

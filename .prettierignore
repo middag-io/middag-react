@@ -1,6 +1,5 @@
 node_modules
 dist
-src/components/examples
-src/components/reui
-src/components/ui/svgs
+src/primitives/examples
+src/primitives/reui
 src/contracts/generated

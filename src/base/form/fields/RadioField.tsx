@@ -6,8 +6,8 @@
 
 import type { ReactElement } from "react";
 
-import { Label } from "@/components/reui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/reui/radio-group";
+import { Label } from "@/primitives/reui/label";
+import { RadioGroup, RadioGroupItem } from "@/primitives/reui/radio-group";
 
 export interface RadioOption {
   value: string;

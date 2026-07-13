@@ -1,7 +1,7 @@
 /**
  * Interactive block types — blocks with user interaction beyond read-only display.
  *
- * Community tier: ActionGrid + TabbedPanel. The Pro interactive blocks
+ * Community tier: ActionGrid + Tabs. The Pro interactive blocks
  * (SentenceBuilder, ConditionTree, FlowEditor, FormBuilder, KanbanBoard) ship as
  * generated types in @middag-io/react-pro (sourced from Middag\Core\Ui).
  */
@@ -21,22 +21,14 @@ export interface ActionGridBlockData {
   flash?: { success: boolean; message: string } | null;
 }
 
-// ── TabbedPanelBlock ───────────────────────────────────────────────────────
+// ── TabsBlock ────────────────────────────────────────────────────────────────
 
 /**
- * Block-level tab inside a tabbed_panel block. Distinct concern from the Community
- * wire `Tab` (`{ id, label, blocks }`, page-level tabs produced by
- * middag-php-ui `PageBuilder`) generated into `src/contracts/generated`: that
- * one models page navigation tabs; this one models a content panel's tabs.
+ * Composite block: organizes inner blocks into tabs. Tab items are the wire
+ * `Tab` VO produced by middag-php-ui (`{ id, label, blocks }`); `defaultTab`
+ * selects the initially-open tab by `id`.
  */
-export interface TabbedPanelTab {
-  key: string;
-  label: string;
-  icon?: string;
-  blocks: import("@/contracts/page-contract").BlockDescriptor[];
-}
-
-export interface TabbedPanelBlockData {
-  tabs: TabbedPanelTab[];
+export interface TabsBlockData {
+  tabs: import("@/contracts/generated").Tab[];
   defaultTab?: string;
 }

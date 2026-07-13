@@ -24,8 +24,8 @@ import * as lib from "@/index";
  * The 17 reui primitives promoted to the barrel root (Badge, Button, Skeleton,
  * Input, Empty, Select, Card, Progress, Alert, AlertDialog, Combobox, Switch,
  * Textarea, Dialog, Collapsible, Spinner, Label — full surface per module) plus
- * `cn` are re-exported via `export * from "@/components/reui"` (see
- * src/components/reui/index.ts, root barrel only) and appear here.
+ * `cn` are re-exported via `export * from "@/primitives/reui"` (see
+ * src/primitives/reui/index.ts, root barrel only) and appear here.
  * Update this list when intentionally adding/removing exports.
  */
 const EXPECTED_EXPORTS = [
@@ -66,6 +66,7 @@ const EXPECTED_EXPORTS = [
   "CardGridBlock",
   "CardHeader",
   "CardTitle",
+  "ChartBlock",
   "Collapsible",
   "CollapsibleContent",
   "CollapsibleTrigger",
@@ -194,8 +195,8 @@ const EXPECTED_EXPORTS = [
   "THEME_CLASSES",
   "THEME_IDS",
   "THEME_SIDEBAR_DIMS",
-  "TabbedPanelBlock",
   "TableOfContents",
+  "TabsBlock",
   "Textarea",
   "TimelineList",
   "TimestampCell",
@@ -207,7 +208,6 @@ const EXPECTED_EXPORTS = [
   "TooltipTrigger",
   "TreeView",
   "WizardLayout",
-  "WorkflowProgressBlock",
   "applyTheme",
   "badgeVariants",
   "blockRegistry",

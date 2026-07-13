@@ -12,9 +12,9 @@
   },
   "iconLibrary": "hugeicons",
   "aliases": {
-    "components": "@/components/examples/",
+    "components": "@/primitives/examples/",
     "hooks": "@/lib/hooks",
-    "ui": "@/components/reui",
+    "ui": "@/primitives/reui",
     "utils": "@/lib/utils"
   },
   "registries": {

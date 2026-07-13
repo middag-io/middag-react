@@ -12,10 +12,10 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import "../setup";
 
-import { ContractPage } from "@/app/ContractPage";
-import type { LayoutProps, ShellProps } from "@/app/registries";
-import { registerLayout, registerShell } from "@/app/registries";
 import type { PageContract } from "@/contracts/page-contract";
+import { ContractPage } from "@/engine/ContractPage";
+import type { LayoutProps, ShellProps } from "@/engine/registries";
+import { registerLayout, registerShell } from "@/engine/registries";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { i18n } from "@/i18n/instance";
 

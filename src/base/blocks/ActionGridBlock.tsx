@@ -15,17 +15,17 @@ import { AlertCircleIcon, CheckmarkCircle01Icon } from "@hugeicons/core-free-ico
 import { HugeiconsIcon } from "@hugeicons/react";
 import { router } from "@inertiajs/core";
 
-import type { BlockProps } from "@/app/registries";
 import { ConfirmationDialog } from "@/base/partials/ConfirmationDialog";
 import { getIcon } from "@/base/utils/icons";
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/reui/alert";
-import { Badge } from "@/components/reui/badge";
-import { Button } from "@/components/reui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/reui/card";
 import type { ActionGridBlockData } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 import { resolveActionTarget } from "@/lib/actions/resolve-action-target";
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/primitives/reui/alert";
+import { Badge } from "@/primitives/reui/badge";
+import { Button } from "@/primitives/reui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/primitives/reui/card";
 
 export function ActionGridBlock({ block }: BlockProps<ActionGridBlockData>): ReactElement {
   const { t } = useTranslation();

@@ -4,7 +4,7 @@
 
 import type { ReactElement } from "react";
 
-import { Badge } from "@/components/reui/badge";
+import { Badge } from "@/primitives/reui/badge";
 
 import { JsonBlock } from "./JsonBlock";
 import type { LogSeverity, ParsedLogLine } from "./types";

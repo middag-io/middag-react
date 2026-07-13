@@ -10,9 +10,9 @@ import type { ReactElement, ReactNode } from "react";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { isLazyBlock, LazyBlock } from "@/app/LazyBlock";
-import type { BlockProps } from "@/app/registries";
 import type { BlockDescriptor } from "@/contracts/page-contract";
+import { isLazyBlock, LazyBlock } from "@/engine/LazyBlock";
+import type { BlockProps } from "@/engine/registries";
 
 const h = vi.hoisted(() => ({
   pageProps: { current: {} as Record<string, unknown> },

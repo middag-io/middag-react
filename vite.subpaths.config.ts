@@ -33,7 +33,7 @@ const SRC = path.resolve(__dirname, "src");
 const OUT = path.resolve(__dirname, "dist-lib");
 
 /** Families published as built deep subpaths (src-relative directories). */
-const FAMILIES = ["components/reui", "base/shell", "base/utils", "base/theme", "lib", "i18n"];
+const FAMILIES = ["primitives/reui", "base/shell", "base/utils", "base/theme", "lib", "i18n"];
 
 function walk(dir: string): string[] {
   const out: string[] = [];

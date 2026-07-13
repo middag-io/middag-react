@@ -6,15 +6,15 @@
 
 import type { ReactElement } from "react";
 
-import { Skeleton } from "@/components/reui/skeleton";
+import { useTranslation } from "@/i18n/useTranslation";
+import { cn } from "@/lib/utils";
+import { Skeleton } from "@/primitives/reui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/reui/tooltip";
-import { useTranslation } from "@/i18n/useTranslation";
-import { cn } from "@/lib/utils";
+} from "@/primitives/reui/tooltip";
 
 export type StatusAppearance = "success" | "warning" | "danger" | "info" | "neutral";
 

@@ -17,9 +17,9 @@
 import { useMemo, type ReactElement } from "react";
 import { Link } from "@inertiajs/react";
 
-import type { BlockProps } from "@/app/registries";
 import { useInspector } from "@/base/shell/partials/InspectorContext";
 import type { CardGridBlockData, CardGridColumnDef } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 import { cn } from "@/lib/utils";
 
 export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactElement {

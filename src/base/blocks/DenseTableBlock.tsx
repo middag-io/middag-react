@@ -10,7 +10,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
 import { router } from "@inertiajs/core";
 
-import type { BlockProps } from "@/app/registries";
 import { usePolling } from "@/base/hooks/usePolling";
 import { ConfirmationDialog } from "@/base/partials/ConfirmationDialog";
 import { DataTable } from "@/base/partials/DataTable";
@@ -19,6 +18,7 @@ import { useInspector } from "@/base/shell/partials/InspectorContext";
 import { evaluateCondition } from "@/base/utils/conditions";
 import { interpolate } from "@/base/utils/interpolate";
 import type { ActionConfirmation, DenseTableBlockData } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 import { resolveActionTarget } from "@/lib/actions/resolve-action-target";

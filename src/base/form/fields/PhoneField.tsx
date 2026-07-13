@@ -12,8 +12,8 @@
 import { type ReactElement } from "react";
 import type { Value } from "react-phone-number-input";
 
-import { PhoneInput } from "@/components/reui/phone-input";
 import { useTranslation } from "@/i18n/useTranslation";
+import { PhoneInput } from "@/primitives/reui/phone-input";
 
 export interface PhoneFieldProps {
   id: string;

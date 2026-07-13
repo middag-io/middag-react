@@ -159,13 +159,26 @@
         }
       },
       {
-        "type": "tabbed_panel",
+        "type": "tabs",
         "tier": "community",
         "description": "Tabbed container with nested blocks per tab.",
         "regions": ["content"],
         "dataShape": {
           "defaultTab": "string — key of initially active tab",
-          "tabs": "{ key, label, icon?, blocks: BlockDescriptor[] }[]"
+          "tabs": "{ id, label, icon?, blocks: BlockDescriptor[] }[]"
+        }
+      },
+      {
+        "type": "chart",
+        "tier": "community",
+        "description": "Line, bar, or area chart rendering categorical series over a shared x-axis.",
+        "regions": ["content", "main"],
+        "dataShape": {
+          "chartType": "line | bar | area",
+          "categoryKey": "string — field key on each data row used for the x-axis category",
+          "series": "{ key, label, color? }[]",
+          "data": "Record<string, unknown>[]",
+          "options?": "{ showLegend?, showGrid? }"
         }
       },
       {
@@ -232,7 +245,7 @@
       },
       {
         "type": "workflow_progress",
-        "tier": "community",
+        "tier": "pro",
         "description": "Linear workflow state indicator with timestamps. Shows ordered states and highlights the current one.",
         "regions": ["content", "header"],
         "dataShape": {

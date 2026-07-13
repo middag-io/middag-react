@@ -4,7 +4,7 @@
 
 import type { ReactElement } from "react";
 
-import { Rating } from "@/components/reui/rating";
+import { Rating } from "@/primitives/reui/rating";
 
 export interface RatingFieldProps {
   id: string;

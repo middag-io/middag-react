@@ -7,13 +7,13 @@
 
 import { useCallback, useState, type ReactElement } from "react";
 
+import { useTranslation } from "@/i18n/useTranslation";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
-} from "@/components/reui/input-group";
-import { useTranslation } from "@/i18n/useTranslation";
+} from "@/primitives/reui/input-group";
 
 export interface CurrencyFieldProps {
   id: string;

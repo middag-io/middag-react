@@ -2,7 +2,7 @@
  * Data display block types — read-only blocks that present information.
  *
  * Includes DenseTable, MetricCard, EmptyState, StatusStrip, DetailPanel,
- * ActivityTimeline, MarkdownPanel, CardGrid, LinkList, and WorkflowProgress.
+ * ActivityTimeline, MarkdownPanel, CardGrid, and LinkList.
  */
 
 import type { ConditionalAction, ExecutableAction } from "./actions";
@@ -266,20 +266,22 @@ export interface LinkListBlockData {
   items: LinkListItem[];
 }
 
-// ── WorkflowProgressBlock ───────────────────────────────────────────────────
+// ── ChartBlock (free) ────────────────────────────────────────────────────────
 
-export interface WorkflowProgressState {
-  /** Unique key, e.g. "draft", "active", "expired" */
+export interface ChartSeries {
+  /** Field key on each data row this series plots. */
   key: string;
-  /** Localized display label */
+  /** Human-facing series label. */
   label: string;
-  /** Timestamp when this state was reached (ISO 8601). Shown for past/current states. */
-  timestamp?: string;
+  /** Optional CSS color token, e.g. "var(--chart-1)". */
+  color?: string;
 }
 
-export interface WorkflowProgressBlockData {
-  /** Ordered list of workflow states (left to right) */
-  states: WorkflowProgressState[];
-  /** Key of the current active state. Must match one of states[].key */
-  currentState: string;
+export interface ChartBlockData {
+  chartType: "line" | "bar" | "area";
+  /** Field key on each data row used for the x-axis category. */
+  categoryKey: string;
+  series: ChartSeries[];
+  data: Record<string, unknown>[];
+  options?: { showLegend?: boolean; showGrid?: boolean };
 }

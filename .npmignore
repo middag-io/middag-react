@@ -1,5 +1,5 @@
 # Exclude from npm publish — keep in git
-src/components/examples/
+src/primitives/examples/
 .githooks/
 .github/
 .idea/

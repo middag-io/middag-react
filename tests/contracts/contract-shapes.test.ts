@@ -23,8 +23,7 @@ import type {
   MarkdownPanelBlockData,
   MetricCardBlockData,
   StatusStripBlockData,
-  TabbedPanelBlockData,
-  WorkflowProgressBlockData,
+  TabsBlockData,
 } from "@/contracts/block-data";
 import type { NavigationNode, NavigationTreePayload } from "@/contracts/navigation";
 import type {
@@ -354,24 +353,12 @@ describe("block data shapes", () => {
     expect(data.content).toBe("# Hello");
   });
 
-  it("TabbedPanelBlockData", () => {
-    const data: TabbedPanelBlockData = {
+  it("TabsBlockData", () => {
+    const data: TabsBlockData = {
       defaultTab: "general",
-      tabs: [{ key: "general", label: "General", blocks: [] }],
+      tabs: [{ id: "general", label: "General", blocks: [] }],
     };
     expect(data.tabs).toHaveLength(1);
-  });
-
-  it("WorkflowProgressBlockData", () => {
-    const data: WorkflowProgressBlockData = {
-      states: [
-        { key: "draft", label: "Draft" },
-        { key: "active", label: "Active" },
-      ],
-      currentState: "draft",
-    };
-    expect(data.states).toHaveLength(2);
-    expect(data.currentState).toBe("draft");
   });
 
   // NOTE: Pro block shapes (FlowEditor, FormBuilder, ConditionTree,

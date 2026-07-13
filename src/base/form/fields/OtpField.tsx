@@ -13,7 +13,7 @@ import {
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/components/reui/input-otp";
+} from "@/primitives/reui/input-otp";
 
 export interface OtpFieldProps {
   id: string;

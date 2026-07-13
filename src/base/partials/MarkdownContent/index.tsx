@@ -17,9 +17,9 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 
 import { copyToClipboard } from "@/base/utils/clipboard";
-import { Skeleton } from "@/components/reui/skeleton";
 import { useTranslation } from "@/i18n/useTranslation";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/primitives/reui/skeleton";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                             */

@@ -10,10 +10,10 @@
 import { useState, type ReactElement } from "react";
 
 import { ConfirmationDialog } from "@/base/partials/ConfirmationDialog";
-import { Button } from "@/components/reui/button";
 import type { ExecutableAction } from "@/contracts/block-data";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
+import { Button } from "@/primitives/reui/button";
 
 export interface ActionBarProps {
   selectedCount: number;

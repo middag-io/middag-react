@@ -11,8 +11,8 @@ import { type ReactElement } from "react";
 import { hotkeysCoreFeature, selectionFeature, syncDataLoaderFeature } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
 
-import { Tree, TreeItem, TreeItemLabel } from "@/components/reui/tree";
 import { useTranslation } from "@/i18n/useTranslation";
+import { Tree, TreeItem, TreeItemLabel } from "@/primitives/reui/tree";
 
 export interface TreeViewNode {
   /** Visible, already-translated label. */

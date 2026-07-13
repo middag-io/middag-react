@@ -35,8 +35,11 @@ import { useRemember } from "@/base/hooks/useRemember";
 import { EmptyPlaceholder } from "@/base/partials/EmptyPlaceholder";
 import { FilterBar } from "@/base/partials/FilterBar";
 import { getIcon } from "@/base/utils/icons";
-import { Button } from "@/components/reui/button";
-import { Checkbox } from "@/components/reui/checkbox";
+import { renderLabel } from "@/i18n/render-label";
+import { useTranslation } from "@/i18n/useTranslation";
+import { cn } from "@/lib/utils";
+import { Button } from "@/primitives/reui/button";
+import { Checkbox } from "@/primitives/reui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -45,11 +48,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/reui/dropdown-menu";
-import { Skeleton } from "@/components/reui/skeleton";
-import { renderLabel } from "@/i18n/render-label";
-import { useTranslation } from "@/i18n/useTranslation";
-import { cn } from "@/lib/utils";
+} from "@/primitives/reui/dropdown-menu";
+import { Skeleton } from "@/primitives/reui/skeleton";
 
 import { resolveCellRenderer } from "./cell-registry";
 import type {

@@ -17,7 +17,7 @@ import {
   StepperItem,
   StepperSeparator,
   StepperTitle,
-} from "@/components/reui/stepper";
+} from "@/primitives/reui/stepper";
 
 export interface StepItem {
   label: string;

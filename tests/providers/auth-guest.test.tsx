@@ -8,7 +8,7 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { AuthProvider, Can, Cannot, useAuth } from "@/app/providers/auth";
+import { AuthProvider, Can, Cannot, useAuth } from "@/engine/providers/auth";
 
 // Mutable so each test can drive a different `props` shape through usePage().
 let mockProps: Record<string, unknown> = {};

@@ -137,15 +137,14 @@ export type {
   // LinkList
   LinkListItem,
   LinkListBlockData,
-  // TabbedPanel
-  TabbedPanelTab,
-  TabbedPanelBlockData,
-  // WorkflowProgress
-  WorkflowProgressState,
-  WorkflowProgressBlockData,
+  // Tabs
+  TabsBlockData,
   // Form: rating + date_range
   RatingFormField,
   DateRangeFormField,
+  // Chart (free)
+  ChartSeries,
+  ChartBlockData,
 } from "@/contracts/block-data";
 
 // ── Contracts: Validation ────────────────────────────────────────────────────
@@ -169,7 +168,7 @@ export type {
 
 // ── App Core ────────────────────────────────────────────────────────────────
 
-export { ContractPage } from "@/app/ContractPage";
+export { ContractPage } from "@/engine/ContractPage";
 export {
   shellRegistry,
   layoutRegistry,
@@ -183,7 +182,7 @@ export {
   type ShellProps,
   type LayoutProps,
   type BlockProps,
-} from "@/app/registries";
+} from "@/engine/registries";
 export {
   registerFieldComponent,
   resolveFieldComponent,
@@ -200,13 +199,13 @@ export {
   resolveCellRenderer,
   type CellRendererProps,
 } from "@/base/partials/DataTable/cell-registry";
-export { registerDefaults } from "@/app/register-defaults";
+export { registerDefaults } from "@/engine/register-defaults";
 export { registerDefaultCells } from "@/base/partials/DataTable/register-default-cells";
 export { registerDefaultFields } from "@/base/form/fields/register-default-fields";
 export { registerDefaultIcons } from "@/base/utils/register-default-icons";
-export { LazyBlock, isLazyBlock } from "@/app/LazyBlock";
-export { EntityRoutesProvider, useEntityRoute, EntityLink } from "@/app/EntityRoutes";
-export { HostSlot } from "@/app/HostSlot";
+export { LazyBlock, isLazyBlock } from "@/engine/LazyBlock";
+export { EntityRoutesProvider, useEntityRoute, EntityLink } from "@/engine/EntityRoutes";
+export { HostSlot } from "@/engine/HostSlot";
 
 // ── Base partials (reusable UI blocks for consumers) ─────────────────────────
 
@@ -260,23 +259,23 @@ export { resolveFieldError } from "@/i18n/resolve-field-error";
 export { i18n, i18nReady, normalizeLocale } from "@/i18n/instance";
 export { registerUiStrings } from "@/i18n/register-strings";
 
-export { AuthProvider, useAuth, Can, Cannot } from "@/app/providers/auth";
-export { FlashProvider } from "@/app/providers/flash";
+export { AuthProvider, useAuth, Can, Cannot } from "@/engine/providers/auth";
+export { FlashProvider } from "@/engine/providers/flash";
 export {
   ScopeProvider,
   useScope,
   useScopeKey,
   type ScopeContextValue,
-} from "@/app/providers/scope";
-export { ProgressProvider } from "@/app/providers/progress";
+} from "@/engine/providers/scope";
+export { ProgressProvider } from "@/engine/providers/progress";
 
 export {
   ErrorReporterProvider,
   useErrorReporter,
   type ErrorReporter,
   type ErrorContext,
-} from "@/app/providers/error-reporter";
-export { InertiaErrorReporter } from "@/app/providers/inertia-error-reporter";
+} from "@/engine/providers/error-reporter";
+export { InertiaErrorReporter } from "@/engine/providers/inertia-error-reporter";
 
 // ── Sidebar (for consumer shells) ──────────────────────────────────────────
 
@@ -294,7 +293,7 @@ export {
   SidebarMenuItem,
   SidebarRail,
   SidebarTrigger,
-} from "@/components/reui/sidebar";
+} from "@/primitives/reui/sidebar";
 
 // ── Storage ────────────────────────────────────────────────────────────────
 
@@ -327,13 +326,13 @@ export { useInspector, type InspectorResponse } from "@/base/shell/partials/Insp
 // These must be exported from the barrel so dist-mock can externalize them
 // to @middag-io/react — shared React context requires a single module instance.
 
-export { Toaster } from "@/components/reui/sonner";
+export { Toaster } from "@/primitives/reui/sonner";
 export {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/reui/tooltip";
+} from "@/primitives/reui/tooltip";
 export {
   DropdownMenu,
   DropdownMenuContent,
@@ -350,11 +349,11 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
-} from "@/components/reui/dropdown-menu";
+} from "@/primitives/reui/dropdown-menu";
 
 // ── reui primitives (host-runtime barrel surface) ───────────────────────────
 // Surface lives in its own reui index module (exposed through the root barrel only).
-export * from "@/components/reui";
+export * from "@/primitives/reui";
 
 // ── Utils (barrel-root for host-runtime consumers) ──────────────────────────
 export { cn } from "@/lib/utils";
@@ -387,8 +386,8 @@ export { MarkdownPanelBlock } from "@/base/blocks/MarkdownPanelBlock";
 export { CardGridBlock } from "@/base/blocks/CardGridBlock";
 export { ActionGridBlock } from "@/base/blocks/ActionGridBlock";
 export { LinkListBlock } from "@/base/blocks/LinkListBlock";
-export { TabbedPanelBlock } from "@/base/blocks/TabbedPanelBlock";
-export { WorkflowProgressBlock } from "@/base/blocks/WorkflowProgressBlock";
+export { TabsBlock } from "@/base/blocks/TabsBlock";
+export { ChartBlock } from "@/base/blocks/ChartBlock";
 // form_panel is a Community block; its heavy deps (react-hook-form + zod) are
 // code-split. The barrel exports the lazy Suspense wrapper AS FormPanelBlock so
 // the heavy module loads on demand (never eagerly) — whether registered via

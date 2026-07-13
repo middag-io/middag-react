@@ -11,7 +11,7 @@ import {
   DateSelector,
   type DateSelectorFilterType,
   type DateSelectorValue,
-} from "@/components/reui/date-selector";
+} from "@/primitives/reui/date-selector";
 
 export interface DateRangeFieldProps {
   id: string;

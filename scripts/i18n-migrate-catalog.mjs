@@ -6,7 +6,7 @@
  *   node scripts/i18n-migrate-catalog.mjs <src.ts> <exportName> <out.json>
  * Example:
  *   node scripts/i18n-migrate-catalog.mjs \
- *     src/app/providers/i18n-defaults.ts LIB_UI_DEFAULTS \
+ *     src/engine/providers/i18n-defaults.ts LIB_UI_DEFAULTS \
  *     src/i18n/locales/en/ui.json
  */
 import { writeFileSync } from "node:fs";

@@ -12,8 +12,8 @@ describe("registerDefaults", () => {
   });
 
   async function loadModules() {
-    const registries = await import("@/app/registries");
-    const registerDefaultsMod = await import("@/app/register-defaults");
+    const registries = await import("@/engine/registries");
+    const registerDefaultsMod = await import("@/engine/register-defaults");
     return { registries, registerDefaultsMod };
   }
 
@@ -66,9 +66,9 @@ describe("registerDefaults", () => {
       "card_grid",
       "action_grid",
       "link_list",
-      "tabbed_panel",
-      "workflow_progress",
+      "tabs",
       "form_panel",
+      "chart",
     ];
     for (const key of expectedBlocks) {
       expect(registries.blockRegistry.has(key)).toBe(true);

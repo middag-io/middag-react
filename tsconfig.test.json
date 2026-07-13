@@ -9,8 +9,8 @@
     "exclude": [
         "node_modules",
         "dist",
-        "src/components/examples",
-        "src/components/reui",
+        "src/primitives/examples",
+        "src/primitives/reui",
         "tests/test-helpers.tsx"
     ]
 }

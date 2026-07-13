@@ -1,0 +1,105 @@
+import { Badge } from "@/primitives/reui/badge";
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarImage,
+} from "@/primitives/reui/avatar";
+import { Button } from "@/primitives/reui/button";
+import { Card, CardContent } from "@/primitives/reui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/primitives/reui/dropdown-menu";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Tick02Icon, MoreVerticalCircleIcon } from "@hugeicons/core-free-icons";
+
+export function Pattern() {
+  return (
+    <Card className="w-full max-w-sm p-0">
+      <CardContent className="p-0">
+        <div className="flex items-center justify-between border-b px-3 py-2">
+          <Badge variant="secondary">
+            <HugeiconsIcon
+              icon={Tick02Icon}
+              strokeWidth={2}
+              aria-hidden="true"
+            />
+            Live
+          </Badge>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground"
+                aria-label="More options"
+              >
+                <HugeiconsIcon
+                  icon={MoreVerticalCircleIcon}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-32" align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Copy link</DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="space-y-3 p-4">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="text-sm leading-tight font-medium">
+              Integration name
+            </h3>
+            <Badge variant="success-light" size="sm">
+              Installed
+            </Badge>
+          </div>
+          <p className="text-muted-foreground text-sm">
+            Short description of the integration and what it does in one line.
+          </p>
+          <AvatarGroup>
+            <Avatar className="size-6">
+              <AvatarImage
+                src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=96&h=96&dpr=2&q=80"
+                alt="User 1"
+              />
+              <AvatarFallback>SC</AvatarFallback>
+            </Avatar>
+            <Avatar className="size-6">
+              <AvatarImage
+                src="https://images.unsplash.com/photo-1584308972272-9e4e7685e80f?w=96&h=96&dpr=2&q=80"
+                alt="User 2"
+              />
+              <AvatarFallback>MR</AvatarFallback>
+            </Avatar>
+            <Avatar className="size-6">
+              <AvatarImage
+                src="https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=96&h=96&dpr=2&q=80"
+                alt="User 3"
+              />
+              <AvatarFallback>EW</AvatarFallback>
+            </Avatar>
+            <AvatarGroupCount className="size-6 border text-[10px]">
+              +3
+            </AvatarGroupCount>
+          </AvatarGroup>
+        </div>
+        <div className="border-t p-3">
+          <Button variant="outline" className="w-full">
+            Open
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

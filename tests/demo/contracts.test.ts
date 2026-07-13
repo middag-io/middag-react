@@ -8,10 +8,10 @@
  */
 import { beforeAll, describe, expect, test } from "vitest";
 
-import { registerDefaults } from "@/app/register-defaults";
-import { registerShell, resolveBlock, resolveLayout, resolveShell } from "@/app/registries";
 import { BasicShell } from "@/base/shell/BasicShell";
 import type { BlockDescriptor, PageContract } from "@/contracts/page-contract";
+import { registerDefaults } from "@/engine/register-defaults";
+import { registerShell, resolveBlock, resolveLayout, resolveShell } from "@/engine/registries";
 
 import { loginContract } from "../../demo/pages/login";
 import { taskDetailContract } from "../../demo/pages/task-detail";

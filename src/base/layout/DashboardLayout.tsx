@@ -11,12 +11,12 @@
 
 import type { ReactElement } from "react";
 
-import type { LayoutProps } from "@/app/registries";
 import { StatRow } from "@/base/partials/StatRow";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/reui/card";
 import type { BlockDescriptor } from "@/contracts/page-contract";
+import type { LayoutProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/primitives/reui/card";
 
 function BlockCard({
   block,

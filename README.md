@@ -159,9 +159,10 @@ import { I18nProvider } from '@middag-io/react';
 src/
   app/           # ContractPage, registries (shell/layout/block), providers, LazyBlock
   base/          # Shells, layouts, blocks, hooks, theme, form, partials, registries (field/icon/cell)
-  components/
+  primitives/
     reui/        # ReUI primitives (Radix-based, source of truth)
     examples/    # ReUI component examples (synced from registry)
+    ui/svgs/     # AI-provider icons used by examples
   contracts/     # TypeScript types (PageContract, BlockData, etc.)
   lib/           # Generic utilities and hooks
   assets/        # Fonts, lottie animations
@@ -209,7 +210,7 @@ The demo harness consumes the engine from `src/` via Vite aliases (instant HMR),
 
 ### ReUI component examples
 
-Examples from the ReUI registry are synced to `src/components/examples/`. They serve as reference for component usage and are excluded from the published NPM package.
+Examples from the ReUI registry are synced to `src/primitives/examples/` (dev-only). They serve as reference for component usage and are excluded from the published NPM package.
 
 ```bash
 # Sync all examples from ReUI registry (auto-discovers new components)

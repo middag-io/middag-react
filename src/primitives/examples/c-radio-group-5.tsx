@@ -1,0 +1,33 @@
+import { Field, FieldLabel } from "@/primitives/reui/field";
+import { RadioGroup, RadioGroupItem } from "@/primitives/reui/radio-group";
+
+export function Pattern() {
+  return (
+    <RadioGroup defaultValue="blue" className="w-fit">
+      <Field orientation="horizontal">
+        <RadioGroupItem
+          value="blue"
+          id="color-blue"
+          className="border-blue-500 data-checked:border-blue-500"
+        />
+        <FieldLabel htmlFor="color-blue">Blue</FieldLabel>
+      </Field>
+      <Field orientation="horizontal">
+        <RadioGroupItem
+          value="green"
+          id="color-green"
+          className="border-green-500 data-checked:border-green-500"
+        />
+        <FieldLabel htmlFor="color-green">Green</FieldLabel>
+      </Field>
+      <Field orientation="horizontal">
+        <RadioGroupItem
+          value="yellow"
+          id="color-yellow"
+          className="border-yellow-500 data-checked:border-yellow-500"
+        />
+        <FieldLabel htmlFor="color-yellow">Yellow</FieldLabel>
+      </Field>
+    </RadioGroup>
+  );
+}

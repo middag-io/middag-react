@@ -10,8 +10,8 @@
 
 import { type ReactElement, type ReactNode } from "react";
 
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/reui/resizable";
 import { cn } from "@/lib/utils";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/primitives/reui/resizable";
 
 export interface ResizableSidebarProps {
   /** Primary content. */

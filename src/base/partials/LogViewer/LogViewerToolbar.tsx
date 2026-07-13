@@ -7,9 +7,9 @@ import { Cancel01Icon, Copy01Icon, Download01Icon } from "@hugeicons/core-free-i
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { toast } from "sonner";
 
-import { Badge } from "@/components/reui/badge";
-import { Button } from "@/components/reui/button";
 import { useTranslation } from "@/i18n/useTranslation";
+import { Badge } from "@/primitives/reui/badge";
+import { Button } from "@/primitives/reui/button";
 
 interface LogViewerToolbarProps {
   filename: string;

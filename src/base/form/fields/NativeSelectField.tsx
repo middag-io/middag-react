@@ -9,8 +9,8 @@
 import type { ChangeEvent, ReactElement } from "react";
 
 import type { SelectOption } from "@/base/form/fields/SelectField";
-import { NativeSelect, NativeSelectOption } from "@/components/reui/native-select";
 import { useTranslation } from "@/i18n/useTranslation";
+import { NativeSelect, NativeSelectOption } from "@/primitives/reui/native-select";
 
 export interface NativeSelectFieldProps {
   id: string;

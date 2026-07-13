@@ -12,15 +12,15 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { router } from "@inertiajs/core";
 import { usePage } from "@inertiajs/react";
 
-import type { BlockProps } from "@/app/registries";
 import { EmptyPlaceholder } from "@/base/partials/EmptyPlaceholder";
 import { getIcon } from "@/base/utils/icons";
 import { formatISO, formatRelativeTime } from "@/base/utils/time";
-import { Button } from "@/components/reui/button";
-import { Skeleton } from "@/components/reui/skeleton";
 import type { ActivityTimelineBlockData } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 import { useTranslation } from "@/i18n/useTranslation";
 import { cn } from "@/lib/utils";
+import { Button } from "@/primitives/reui/button";
+import { Skeleton } from "@/primitives/reui/skeleton";
 
 const COLOR_MAP: Record<string, string> = {
   success: "bg-success",

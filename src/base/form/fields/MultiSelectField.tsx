@@ -8,8 +8,9 @@
 import { useCallback, useMemo, useState, type ReactElement } from "react";
 import type { TFunction } from "i18next";
 
-import { Badge } from "@/components/reui/badge";
-import { Checkbox } from "@/components/reui/checkbox";
+import { useTranslation } from "@/i18n/useTranslation";
+import { Badge } from "@/primitives/reui/badge";
+import { Checkbox } from "@/primitives/reui/checkbox";
 import {
   Combobox,
   ComboboxContent,
@@ -17,9 +18,8 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-} from "@/components/reui/combobox";
-import { Label } from "@/components/reui/label";
-import { useTranslation } from "@/i18n/useTranslation";
+} from "@/primitives/reui/combobox";
+import { Label } from "@/primitives/reui/label";
 
 export interface MultiSelectFieldProps {
   id: string;

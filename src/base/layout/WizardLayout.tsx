@@ -9,10 +9,10 @@
 
 import type { ReactElement } from "react";
 
-import type { LayoutProps } from "@/app/registries";
 import { StepIndicator, type StepItem } from "@/base/partials/StepIndicator";
 import { PageActionButton } from "@/base/shell/partials/PageActionButton";
 import type { PageAction } from "@/contracts/page-contract";
+import type { LayoutProps } from "@/engine/registries";
 
 import { BlockRegion } from "./BlockRegion";
 

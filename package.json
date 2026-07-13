@@ -28,14 +28,14 @@
     "./style.css": "./dist-lib/middag-react.css",
     "./theme.css": "./src/theme.css",
     "./reui/*": {
-      "types": "./dist-lib/components/reui/*.d.ts",
-      "import": "./dist-lib/components/reui/*.js",
-      "default": "./dist-lib/components/reui/*.js"
+      "types": "./dist-lib/primitives/reui/*.d.ts",
+      "import": "./dist-lib/primitives/reui/*.js",
+      "default": "./dist-lib/primitives/reui/*.js"
     },
     "./reui/*.tsx": {
-      "types": "./dist-lib/components/reui/*.d.ts",
-      "import": "./dist-lib/components/reui/*.js",
-      "default": "./dist-lib/components/reui/*.js"
+      "types": "./dist-lib/primitives/reui/*.d.ts",
+      "import": "./dist-lib/primitives/reui/*.js",
+      "default": "./dist-lib/primitives/reui/*.js"
     },
     "./i18n/*": {
       "types": "./dist-lib/i18n/*.d.ts",
@@ -73,14 +73,12 @@
   },
   "files": [
     "dist-lib",
-    "dist-mock",
     "bin",
     "src/theme.css",
     "src/base",
-    "src/app",
+    "src/engine",
     "src/contracts",
-    "src/components/reui",
-    "src/components/ui",
+    "src/primitives/reui",
     "src/lib",
     "src/i18n",
     "src/assets",

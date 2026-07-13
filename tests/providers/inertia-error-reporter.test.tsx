@@ -2,14 +2,14 @@ import { router } from "@inertiajs/core";
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { InertiaErrorReporter } from "@/app/providers/inertia-error-reporter";
+import { InertiaErrorReporter } from "@/engine/providers/inertia-error-reporter";
 
 const { captureError, toastError } = vi.hoisted(() => ({
   captureError: vi.fn(),
   toastError: vi.fn(),
 }));
 
-vi.mock("@/app/providers/error-reporter", () => ({
+vi.mock("@/engine/providers/error-reporter", () => ({
   useErrorReporter: () => ({ captureError, captureMessage: vi.fn() }),
 }));
 vi.mock("@/i18n/useTranslation", () => ({

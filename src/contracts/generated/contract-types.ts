@@ -9,7 +9,7 @@
  *
  * @source middag-php-ui/schema/{page-contract,fragment}.json
  * @contract-version 1
- * @hash 79af531307021a11
+ * @hash b0540f41dc0f8958
  */
 export type Label = string | Translatable;
 export type ActionTarget =
@@ -567,8 +567,9 @@ export interface Pagination {
   lastPage: number;
 }
 export interface ChartSeries {
-  name: string;
-  data: number[];
+  key: string;
+  label: string;
+  color?: string;
 }
 export interface Tab {
   id: string;

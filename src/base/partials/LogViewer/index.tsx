@@ -9,7 +9,7 @@
 
 import { useEffect, useRef, useState, type ReactElement } from "react";
 
-import { Skeleton } from "@/components/reui/skeleton";
+import { Skeleton } from "@/primitives/reui/skeleton";
 
 import { LogEntry } from "./LogEntry";
 import { LogViewerToolbar } from "./LogViewerToolbar";

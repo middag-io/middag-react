@@ -15,11 +15,11 @@ import { Link } from "@inertiajs/react";
 import { EmptyPlaceholder } from "@/base/partials/EmptyPlaceholder";
 import { getIcon } from "@/base/utils/icons";
 import { formatISO, formatRelativeTime } from "@/base/utils/time";
-import { Button } from "@/components/reui/button";
-import { Skeleton } from "@/components/reui/skeleton";
-import { Spinner } from "@/components/reui/spinner";
 import { useTranslation } from "@/i18n/useTranslation";
 import { cn } from "@/lib/utils";
+import { Button } from "@/primitives/reui/button";
+import { Skeleton } from "@/primitives/reui/skeleton";
+import { Spinner } from "@/primitives/reui/spinner";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                             */

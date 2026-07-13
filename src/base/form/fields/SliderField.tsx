@@ -8,7 +8,7 @@
 
 import type { ReactElement } from "react";
 
-import { Slider } from "@/components/reui/slider";
+import { Slider } from "@/primitives/reui/slider";
 
 export interface SliderFieldProps {
   id: string;

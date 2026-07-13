@@ -8,9 +8,9 @@
 
 import type { ReactElement } from "react";
 
-import type { BlockProps } from "@/app/registries";
 import { StatusBar, type StatusBarItem } from "@/base/partials/StatusBar";
 import type { StatusItemAppearance, StatusStripBlockData } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
 import { useTranslation } from "@/i18n/useTranslation";
 
 function scoreToAppearance(score: number): StatusItemAppearance {

@@ -15,8 +15,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Link } from "@inertiajs/react";
 
 import { getIcon } from "@/base/utils/icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/reui/avatar";
-import { Button } from "@/components/reui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/primitives/reui/avatar";
+import { Button } from "@/primitives/reui/button";
 import {
   Item,
   ItemActions,
@@ -24,7 +24,7 @@ import {
   ItemDescription,
   ItemMedia,
   ItemTitle,
-} from "@/components/reui/item";
+} from "@/primitives/reui/item";
 
 export interface EntityItemAvatar {
   /** Image URL. Falls back to `fallback` (typically initials) when missing or it fails to load. */

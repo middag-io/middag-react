@@ -22,12 +22,12 @@ import { HugeiconsIcon } from "@hugeicons/react";
 
 import { copyToClipboard } from "@/base/utils/clipboard";
 import { formatISO, formatRelativeTime } from "@/base/utils/time";
-import { Badge } from "@/components/reui/badge";
-import { Button } from "@/components/reui/button";
-import { Frame, FrameHeader, FramePanel, FrameTitle } from "@/components/reui/frame";
-import { Skeleton } from "@/components/reui/skeleton";
 import { useTranslation } from "@/i18n/useTranslation";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/primitives/reui/badge";
+import { Button } from "@/primitives/reui/button";
+import { Frame, FrameHeader, FramePanel, FrameTitle } from "@/primitives/reui/frame";
+import { Skeleton } from "@/primitives/reui/skeleton";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                             */

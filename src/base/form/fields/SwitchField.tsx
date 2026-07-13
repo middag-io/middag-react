@@ -6,8 +6,8 @@
 
 import type { ReactElement } from "react";
 
-import { Label } from "@/components/reui/label";
-import { Switch } from "@/components/reui/switch";
+import { Label } from "@/primitives/reui/label";
+import { Switch } from "@/primitives/reui/switch";
 
 export interface SwitchFieldProps {
   id: string;

@@ -64,18 +64,17 @@ Format: `type(scope): description` or `type: description`
 - `demo/` — dev harness, not published
 - `src/base/` — shells, layouts, blocks, hooks
 - `src/lib/` — utils and generic hooks
-- `src/components/ui/` — custom UI components
 
 ### Modify with care (breaking changes)
 
 - `src/contracts/` — types consumed by Moodle/WP hosts
 - `src/index.ts` — barrel export (removing = breaking)
-- `src/app/registries.ts` — registration API
+- `src/engine/registries.ts` — registration API
 
 ### Do NOT modify
 
-- `src/components/reui/` — synced from ReUI registry
-- `src/components/examples/` — synced via `npm run sync:examples`
+- `src/primitives/reui/` — synced from ReUI registry
+- `src/primitives/examples/` — synced via `npm run sync:examples` (dev-only gallery, not published)
 - `src/contracts/generated/` — generated from the php-ui JSON schemas
   (`npm run gen:contracts`); never hand-edit
 
@@ -83,7 +82,7 @@ Format: `type(scope): description` or `type: description`
 
 1. Define data contract in `src/contracts/block-data/`
 2. Create component in `src/base/blocks/` implementing `BlockProps<TData>`
-3. Register in `src/app/register-defaults.ts`: `registerBlock('type_key', Component)`
+3. Register in `src/engine/register-defaults.ts`: `registerBlock('type_key', Component)`
 4. Add a demo page/fixture in `demo/` to preview the block
 5. Add tests in `tests/blocks/`
 

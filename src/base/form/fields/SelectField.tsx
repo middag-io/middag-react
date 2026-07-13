@@ -6,14 +6,14 @@
 
 import type { ReactElement } from "react";
 
+import { useTranslation } from "@/i18n/useTranslation";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/reui/select";
-import { useTranslation } from "@/i18n/useTranslation";
+} from "@/primitives/reui/select";
 
 export interface SelectOption {
   value: string;

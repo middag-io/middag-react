@@ -10,18 +10,18 @@ import { useState, type ReactElement } from "react";
 import { FilterIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-import { Badge } from "@/components/reui/badge";
-import { Button } from "@/components/reui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/reui/popover";
+import { useTranslation } from "@/i18n/useTranslation";
+import { Badge } from "@/primitives/reui/badge";
+import { Button } from "@/primitives/reui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/primitives/reui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/reui/select";
-import { Separator } from "@/components/reui/separator";
-import { useTranslation } from "@/i18n/useTranslation";
+} from "@/primitives/reui/select";
+import { Separator } from "@/primitives/reui/separator";
 
 export interface FilterDef {
   key: string;

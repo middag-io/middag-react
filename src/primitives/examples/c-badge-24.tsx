@@ -1,0 +1,25 @@
+import { Badge } from "@/primitives/reui/badge";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/primitives/reui/avatar";
+import { Button } from "@/primitives/reui/button";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { MultiplicationSignIcon } from "@hugeicons/core-free-icons";
+
+export function Pattern() {
+  return (
+    <Badge variant="outline">
+      <Avatar className="size-3.5">
+        <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=96&h=96&dpr=2&q=80" />
+        <AvatarFallback>AL</AvatarFallback>
+      </Avatar>
+      Alex
+      <Button
+        variant="ghost"
+        size="icon"
+        className="size-3 hover:bg-transparent"
+      >
+        <HugeiconsIcon icon={MultiplicationSignIcon} strokeWidth={2} />
+      </Button>
+    </Badge>
+  );
+}

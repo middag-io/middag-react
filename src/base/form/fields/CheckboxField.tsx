@@ -6,8 +6,8 @@
 
 import type { ReactElement } from "react";
 
-import { Checkbox } from "@/components/reui/checkbox";
-import { Label } from "@/components/reui/label";
+import { Checkbox } from "@/primitives/reui/checkbox";
+import { Label } from "@/primitives/reui/label";
 
 export interface CheckboxFieldProps {
   id: string;

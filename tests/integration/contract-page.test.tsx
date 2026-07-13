@@ -32,7 +32,7 @@ vi.mock("@/base/hooks/usePolling", () => ({
 }));
 
 // NavErrorBoundary uses error reporter
-vi.mock("@/app/providers/error-reporter", () => ({
+vi.mock("@/engine/providers/error-reporter", () => ({
   useErrorReporter: () => ({
     captureError: vi.fn(),
     captureMessage: vi.fn(),
@@ -68,7 +68,7 @@ describe("ContractPage integration", () => {
 
   // Register all defaults (shells, layouts, blocks, fields, icons, cells) once
   beforeAll(async () => {
-    const { registerDefaults } = await import("@/app/register-defaults");
+    const { registerDefaults } = await import("@/engine/register-defaults");
     registerDefaults();
   });
 
@@ -77,7 +77,7 @@ describe("ContractPage integration", () => {
   // --------------------------------------------------------------------------
 
   it("renders a dashboard contract with metric cards and dense table", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     const contract = {
@@ -151,7 +151,7 @@ describe("ContractPage integration", () => {
   // --------------------------------------------------------------------------
 
   it("renders a stack layout with empty state block in immersive shell", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     const contract = {
@@ -192,7 +192,7 @@ describe("ContractPage integration", () => {
   // --------------------------------------------------------------------------
 
   it("renders a sidebar layout with link list and detail panel", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     const contract = {
@@ -258,7 +258,7 @@ describe("ContractPage integration", () => {
   // --------------------------------------------------------------------------
 
   it("falls back gracefully for unknown block type", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     const contract = {
@@ -294,7 +294,7 @@ describe("ContractPage integration", () => {
   // registerDefaults only ships "basic" + "immersive").
 
   it("falls back to the immersive shell for unknown shell type", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     const contract = {
@@ -338,7 +338,7 @@ describe("ContractPage integration", () => {
   // --------------------------------------------------------------------------
 
   it("renders the built-in auth shell as a chromeless centered card", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     const contract = {
@@ -372,7 +372,7 @@ describe("ContractPage integration", () => {
   });
 
   it("validates and renders the standalone login.json golden contract", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     const contract = loginGolden.props.contract as unknown as PageContract;
@@ -406,7 +406,7 @@ describe("ContractPage integration", () => {
   // --------------------------------------------------------------------------
 
   it("falls back to stack layout for unknown layout template", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     const contract = {
@@ -444,7 +444,7 @@ describe("ContractPage integration", () => {
   // --------------------------------------------------------------------------
 
   it("renders validation errors for invalid contract", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     // Missing required fields: version, page.key, page.title, layout
@@ -471,7 +471,7 @@ describe("ContractPage integration", () => {
   // --------------------------------------------------------------------------
 
   it("renders multiple blocks stacked in the same region", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     const contract = {
@@ -522,7 +522,7 @@ describe("ContractPage integration", () => {
   // --------------------------------------------------------------------------
 
   it("renders dashboard layout with all three regions populated", async () => {
-    const { ContractPage } = await import("@/app/ContractPage");
+    const { ContractPage } = await import("@/engine/ContractPage");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
 
     const contract = {

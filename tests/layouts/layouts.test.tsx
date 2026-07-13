@@ -9,8 +9,8 @@ import type { ReactElement } from "react";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { LayoutProps } from "@/app/registries";
 import type { BlockDescriptor, LayoutDescriptor } from "@/contracts/page-contract";
+import type { LayoutProps } from "@/engine/registries";
 import { I18nProvider } from "@/i18n/I18nProvider";
 
 // Mock Inertia at top level — WizardLayout uses usePage for step indicator

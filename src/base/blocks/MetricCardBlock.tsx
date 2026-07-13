@@ -9,19 +9,19 @@ import { ArrowDown01Icon, ArrowUp01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Link } from "@inertiajs/react";
 
-import type { BlockProps } from "@/app/registries";
 import { getIcon } from "@/base/utils/icons";
-import { Card, CardContent, CardHeader } from "@/components/reui/card";
-import { Skeleton } from "@/components/reui/skeleton";
+import type { MetricCardBlockData } from "@/contracts/block-data";
+import type { BlockProps } from "@/engine/registries";
+import { useTranslation } from "@/i18n/useTranslation";
+import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader } from "@/primitives/reui/card";
+import { Skeleton } from "@/primitives/reui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/reui/tooltip";
-import type { MetricCardBlockData } from "@/contracts/block-data";
-import { useTranslation } from "@/i18n/useTranslation";
-import { cn } from "@/lib/utils";
+} from "@/primitives/reui/tooltip";
 
 function inferDeltaDirection(
   delta?: string,

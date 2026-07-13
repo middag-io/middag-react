@@ -15,8 +15,8 @@
 
 import { useCallback, useMemo, type ReactElement } from "react";
 
-import { Input } from "@/components/reui/input";
 import { useTranslation } from "@/i18n/useTranslation";
+import { Input } from "@/primitives/reui/input";
 
 export type { DocumentType } from "./document-validation";
 // eslint-disable-next-line react-refresh/only-export-components
