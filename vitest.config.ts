@@ -61,6 +61,8 @@ export default defineConfig({
       include: ["src/**/*.{ts,tsx}"],
       exclude: [
         "src/primitives/reui/**",
+        "src/primitives/examples/**",
+        "src/primitives/ui/**",
         "src/contracts/generated/**",
         "src/**/*.d.ts",
         "src/**/index.ts",
