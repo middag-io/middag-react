@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.38.0](https://github.com/middag-io/middag-react/compare/v0.37.1...v0.38.0) (2026-07-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **blocks:** the tabbed_panel block is renamed to tabs (tab item key -> id), and workflow_progress is no longer registered by the free package (moved to @middag-io/react-pro).
+
+### Features
+
+* **blocks:** rename tabbed_panel to tabs, add chart, move workflow_progress to pro ([d9a21fe](https://github.com/middag-io/middag-react/commit/d9a21feee7d190484472bf085ff5eb0e70d65660))
+* **blocks:** rename tabbed_panel to tabs, add chart, move workflow_progress to pro ([4c41b61](https://github.com/middag-io/middag-react/commit/4c41b61f62bdc3c16c6ad9eb4264240f52aaa7bd))
+
+
+### Refactoring
+
+* **engine:** rename src/app to src/engine ([0963b85](https://github.com/middag-io/middag-react/commit/0963b85c797b55581d2be9ea11c1593b26afd01f))
+* group vendored primitives, gallery and icons under src/primitives/ ([e689608](https://github.com/middag-io/middag-react/commit/e6896088e654891a798ab49aaebe5c9538ca67da))
+* move example gallery out of src into repo-root examples/ ([a2a7e0d](https://github.com/middag-io/middag-react/commit/a2a7e0dc2c692ab98f87e1d55986eb0e31cbf249))
+
+
+### Documentation
+
+* **schemas:** rename tabbed_panel to tabs and add chart block manifest ([be2f3d9](https://github.com/middag-io/middag-react/commit/be2f3d9fc6f5f2446346cbab2afafa84fef11e86))
+
 ## [0.37.1](https://github.com/middag-io/middag-react/compare/v0.37.0...v0.37.1) (2026-07-09)
 
 
