@@ -4,7 +4,6 @@
   "name": "@middag-io/react AI Contract Manifest",
   "version": "1.0.0",
   "description": "Machine-readable manifest that describes the MIDDAG React UI contract-driven rendering system. Designed for LLMs and AI agents that generate, validate, or adapt PageContract JSON objects consumed by the React frontend. The backend (PHP via Moodle or WordPress) builds PageContracts; the frontend resolves them through registries into a rendered component tree: Shell > Layout > Blocks.",
-
   "schemaReferences": [
     {
       "id": "page-contract",
@@ -77,7 +76,6 @@
       "x-ai-purpose": "Use when building connector management pages. ConnectorStatus maps to semantic colors for badges. CredentialField drives dynamic configuration forms."
     }
   ],
-
   "systemOverview": {
     "description": "MIDDAG React is a contract-driven UI library. The backend (PHP) builds a PageContract JSON object that fully describes a page. The frontend resolves the contract through 6 registries into a rendered React component tree.",
     "renderingHierarchy": [
@@ -93,7 +91,6 @@
     "contractImmutability": "The contract is read-only once it reaches the frontend. All mutations happen on the backend, which sends a new contract via Inertia partial reload.",
     "contractVersion": "1"
   },
-
   "registries": [
     {
       "name": "Shell Registry",
@@ -102,7 +99,10 @@
         "register": "registerShell(key: string, component: ComponentType<ShellProps>)",
         "resolve": "resolveShell(key: string): ComponentType<ShellProps> | undefined"
       },
-      "builtIn": ["product", "immersive"],
+      "builtIn": [
+        "product",
+        "immersive"
+      ],
       "extensible": true,
       "sourceFile": "src/engine/registries.ts"
     },
@@ -113,7 +113,12 @@
         "register": "registerLayout(key: string, component: ComponentType<LayoutProps>)",
         "resolve": "resolveLayout(key: string): ComponentType<LayoutProps> | undefined"
       },
-      "builtIn": ["stack", "sidebar", "dashboard", "wizard"],
+      "builtIn": [
+        "stack",
+        "sidebar",
+        "dashboard",
+        "wizard"
+      ],
       "extensible": true,
       "sourceFile": "src/engine/registries.ts"
     },
@@ -164,7 +169,6 @@
       "sourceFile": "src/base/partials/DataTable/cell-registry.ts"
     }
   ],
-
   "platforms": [
     {
       "name": "Moodle",
@@ -196,7 +200,6 @@
       "x-ai-platform-notes": "Custom hosts must provide their own Inertia adapter or mock the page contract resolution."
     }
   ],
-
   "generationRules": {
     "description": "Rules for AI agents generating valid PageContract JSON objects.",
     "steps": [
@@ -241,7 +244,6 @@
       }
     }
   },
-
   "validationRules": {
     "zodSchema": "pageContractSchema — validates structure (version, shell, page, layout). Block data is typed but not deeply validated to allow custom block types.",
     "validateFunction": "validatePageContract(contract: unknown): PageContractValidationError[] | null",
@@ -266,7 +268,6 @@
       "dense_table data must include columns (array) and rows (array)"
     ]
   },
-
   "shells": [
     {
       "key": "product",
@@ -305,15 +306,23 @@
       "x-ai-avoid-when": "Apps that register react-pro — prefer the richer product shell for navigation context."
     }
   ],
-
   "layouts": [
     {
       "key": "stack",
       "description": "Single column with blocks stacked vertically. Simplest and most common layout.",
       "regions": {
-        "content": { "required": true, "description": "Main content area. Any block types." },
-        "header": { "required": false, "description": "Optional header region above content." },
-        "footer": { "required": false, "description": "Optional footer region below content." }
+        "content": {
+          "required": true,
+          "description": "Main content area. Any block types."
+        },
+        "header": {
+          "required": false,
+          "description": "Optional header region above content."
+        },
+        "footer": {
+          "required": false,
+          "description": "Optional footer region below content."
+        }
       },
       "x-ai-use-when": "Simple pages: single table, single form, content display, empty states.",
       "x-ai-generation-priority": "high"
@@ -322,9 +331,18 @@
       "key": "sidebar",
       "description": "Two-column layout: main content + 320px fixed aside panel.",
       "regions": {
-        "main": { "required": true, "description": "Primary content (left). Tables, forms, timelines." },
-        "aside": { "required": true, "description": "320px side panel (right). Detail panels, link lists, metrics." },
-        "header": { "required": false, "description": "Optional header spanning full width." }
+        "main": {
+          "required": true,
+          "description": "Primary content (left). Tables, forms, timelines."
+        },
+        "aside": {
+          "required": true,
+          "description": "320px side panel (right). Detail panels, link lists, metrics."
+        },
+        "header": {
+          "required": false,
+          "description": "Optional header spanning full width."
+        }
       },
       "x-ai-use-when": "Detail pages with supplementary info, entity views with sidebar metadata.",
       "x-ai-generation-priority": "high"
@@ -333,10 +351,22 @@
       "key": "dashboard",
       "description": "KPI overview with metrics row at top and content + optional aside below.",
       "regions": {
-        "metrics": { "required": true, "description": "Responsive grid of metric_card blocks. No per-block padding — fills grid cells directly." },
-        "content": { "required": true, "description": "Main body area below metrics." },
-        "aside": { "required": false, "description": "Optional side panel." },
-        "header": { "required": false, "description": "Optional header above metrics." }
+        "metrics": {
+          "required": true,
+          "description": "Responsive grid of metric_card blocks. No per-block padding — fills grid cells directly."
+        },
+        "content": {
+          "required": true,
+          "description": "Main body area below metrics."
+        },
+        "aside": {
+          "required": false,
+          "description": "Optional side panel."
+        },
+        "header": {
+          "required": false,
+          "description": "Optional header above metrics."
+        }
       },
       "x-ai-use-when": "Dashboard pages with KPIs, overview pages, analytics.",
       "x-ai-avoid-when": "Only metric_card blocks should go in the metrics region.",
@@ -346,7 +376,10 @@
       "key": "wizard",
       "description": "Multi-step form with progress indicator and action footer. Pair with immersive shell.",
       "regions": {
-        "content": { "required": true, "description": "One form_panel block per step. Changes as user advances." }
+        "content": {
+          "required": true,
+          "description": "One form_panel block per step. Changes as user advances."
+        }
       },
       "metaRequired": {
         "steps": "Array of step labels for the progress indicator",
@@ -357,7 +390,6 @@
       "x-ai-generation-priority": "low"
     }
   ],
-
   "blocks": [
     {
       "type": "dense_table",
@@ -397,6 +429,18 @@
       "x-ai-avoid-when": "Data that needs sorting/filtering (use dense_table instead).",
       "x-ai-generation-priority": "medium",
       "x-ai-validation-hints": "columns[] and rows[] required. variant can be 'default', 'store', or 'connector'."
+    },
+    {
+      "type": "chart",
+      "tier": "community",
+      "category": "Visualization",
+      "description": "Line, bar, or area chart rendering categorical series over a shared x-axis.",
+      "dataInterface": "ChartBlockData",
+      "lazyLoaded": false,
+      "x-ai-purpose": "Plot one or more numeric series against a category axis (e.g. monthly trends). For richer/interactive charts (pie, playground) use the premium chart_panel.",
+      "x-ai-use-when": "Trend or comparison visualizations on dashboards with a small number of series.",
+      "x-ai-avoid-when": "A single KPI (use metric_card) or advanced/interactive charts (use chart_panel).",
+      "x-ai-generation-priority": "medium"
     },
     {
       "type": "link_list",
@@ -471,11 +515,11 @@
       "x-ai-generation-priority": "low"
     },
     {
-      "type": "tabbed_panel",
+      "type": "tabs",
       "tier": "community",
       "category": "Content",
       "description": "Tab container with nested BlockDescriptor arrays per tab. Radix Tabs unmounts inactive content.",
-      "dataInterface": "TabbedPanelBlockData",
+      "dataInterface": "TabsBlockData",
       "lazyLoaded": false,
       "x-ai-purpose": "Organize related content into tabs. Each tab contains its own blocks. Combines well with lazy loading (meta.lazyProp) to defer inactive tab data.",
       "x-ai-use-when": "Entity pages with multiple views (overview, history, settings). Complex pages that benefit from tabbed organization.",
@@ -496,7 +540,7 @@
     },
     {
       "type": "workflow_progress",
-      "tier": "community",
+      "tier": "pro",
       "category": "Data Display",
       "description": "Linear stepper showing workflow states with timestamps for past/current states.",
       "dataInterface": "WorkflowProgressBlockData",
@@ -513,7 +557,10 @@
       "description": "Schema-driven dynamic form with field groups, sections, validation, and submission.",
       "dataInterface": "FormPanelBlockData",
       "lazyLoaded": true,
-      "heavyDependencies": ["react-hook-form (~45KB)", "zod (~55KB)"],
+      "heavyDependencies": [
+        "react-hook-form (~45KB)",
+        "zod (~55KB)"
+      ],
       "x-ai-purpose": "The primary form block. Backend defines the form schema (fields, sections, groups); frontend renders it automatically. Supports the full FormFieldNode field catalog, client+server validation, conditional visibility, and multi-step mode.",
       "x-ai-use-when": "Any data entry: create, edit, settings, onboarding forms.",
       "x-ai-avoid-when": "Read-only data display (use detail_panel instead).",
@@ -527,7 +574,9 @@
       "description": "Drag-and-drop form field designer for end-user form creation.",
       "dataInterface": "FormBuilderBlockData",
       "lazyLoaded": true,
-      "heavyDependencies": ["@dnd-kit (~15KB)"],
+      "heavyDependencies": [
+        "@dnd-kit (~15KB)"
+      ],
       "x-ai-purpose": "Let end users visually design forms by dragging field types onto a canvas.",
       "x-ai-use-when": "Form designer tools, custom field configuration, survey builders.",
       "x-ai-avoid-when": "Standard data entry forms (use form_panel instead).",
@@ -564,7 +613,9 @@
       "description": "Visual workflow/node graph editor with trigger, condition, and action nodes.",
       "dataInterface": "FlowEditorBlockData",
       "lazyLoaded": true,
-      "heavyDependencies": ["@xyflow/react (~200KB)"],
+      "heavyDependencies": [
+        "@xyflow/react (~200KB)"
+      ],
       "x-ai-purpose": "Visual workflow builder with draggable nodes and edges. Supports trigger, condition, and action node types.",
       "x-ai-use-when": "Workflow automation, process design, integration pipelines.",
       "x-ai-avoid-when": "Linear workflows (use workflow_progress instead).",
@@ -578,7 +629,9 @@
       "description": "Multi-series chart supporting bar, line, area, and pie chart types via Recharts.",
       "dataInterface": "ChartPanelBlockData",
       "lazyLoaded": true,
-      "heavyDependencies": ["recharts (~555KB)"],
+      "heavyDependencies": [
+        "recharts (~555KB)"
+      ],
       "x-ai-purpose": "Data visualization with charts. Supports multiple series, configurable chart types per series, grid lines, and legends. Uses --chart-1 through --chart-5 CSS tokens for colors.",
       "x-ai-use-when": "Analytics dashboards, trend visualization, data comparison. Place in dashboard content or sidebar main region.",
       "x-ai-avoid-when": "Simple numeric KPIs (use metric_card instead).",
@@ -592,7 +645,9 @@
       "description": "Drag-and-drop kanban board with columns and cards. Supports card move operations via Inertia endpoint.",
       "dataInterface": "KanbanBoardBlockData",
       "lazyLoaded": true,
-      "heavyDependencies": ["@dnd-kit (~15KB)"],
+      "heavyDependencies": [
+        "@dnd-kit (~15KB)"
+      ],
       "x-ai-purpose": "Visual task/card management with drag-and-drop between columns. Cards show title, description, status badge, assignee avatar, and due date.",
       "x-ai-use-when": "Task management, pipeline views, status boards, project tracking.",
       "x-ai-avoid-when": "Simple lists (use dense_table) or non-draggable status views (use card_grid with variant).",
@@ -632,7 +687,9 @@
       "description": "Lexical WYSIWYG document editor; content is opaque serialized editor state (the client never emits HTML).",
       "dataInterface": "RichDocumentBlockData",
       "lazyLoaded": true,
-      "heavyDependencies": ["lexical (~300KB)"],
+      "heavyDependencies": [
+        "lexical (~300KB)"
+      ],
       "x-ai-purpose": "Rich-text document authoring. content is the serialized Lexical state (opaque to the page). Editing persists via an explicit Save (Inertia POST of { revision, content }); a conflict prompts a reload. previewEndpoint adds a Write/Preview tab pair (server-rendered HTML round-trip); mergeTags expose insertable placeholders.",
       "x-ai-use-when": "Email/letter templates, articles, any long-form rich text authored in place.",
       "x-ai-avoid-when": "Plain markdown display (use markdown_panel) or short single-line text (use form_panel).",
@@ -653,7 +710,6 @@
       "x-ai-validation-hints": "events[] and revision (string) are required. Each event needs id, title, start, end (ISO strings). resources[] enable the resource-lanes view; view (month|week|agenda|resources) sets the initial view. moveEndpoint/createEndpoint/updateEndpoint/deleteEndpoint gate the respective interactions."
     }
   ],
-
   "fields": [
     {
       "component": "text",
@@ -668,7 +724,9 @@
       "valueType": "string",
       "description": "Multi-line text area. Supports rows prop for height.",
       "unionType": "TextareaFormField",
-      "extraProps": ["rows"],
+      "extraProps": [
+        "rows"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "high"
     },
@@ -701,7 +759,11 @@
       "valueType": "number",
       "description": "Integer input. Supports min, max, step.",
       "unionType": "NumericFormField",
-      "extraProps": ["min", "max", "step"],
+      "extraProps": [
+        "min",
+        "max",
+        "step"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "high"
     },
@@ -710,7 +772,11 @@
       "valueType": "number",
       "description": "Decimal number input. Supports min, max, step.",
       "unionType": "NumericFormField",
-      "extraProps": ["min", "max", "step"],
+      "extraProps": [
+        "min",
+        "max",
+        "step"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "medium"
     },
@@ -719,7 +785,10 @@
       "valueType": "number",
       "description": "Locale-aware currency input with symbol prefix via InputGroup. Props: currency (ISO 4217), currencyLocale.",
       "unionType": "CurrencyFormField",
-      "extraProps": ["currency", "currencyLocale"],
+      "extraProps": [
+        "currency",
+        "currencyLocale"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "medium"
     },
@@ -728,7 +797,9 @@
       "valueType": "string",
       "description": "Dropdown select. Requires options array.",
       "unionType": "SelectFormField",
-      "extraProps": ["options"],
+      "extraProps": [
+        "options"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "high"
     },
@@ -737,7 +808,9 @@
       "valueType": "string[]",
       "description": "Searchable multi-select with chips (>8 options) or checkboxes (<=8).",
       "unionType": "MultiSelectFormField",
-      "extraProps": ["options"],
+      "extraProps": [
+        "options"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "high"
     },
@@ -746,7 +819,9 @@
       "valueType": "string",
       "description": "Radio button group. Requires options array.",
       "unionType": "SelectFormField",
-      "extraProps": ["options"],
+      "extraProps": [
+        "options"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "medium"
     },
@@ -772,7 +847,10 @@
       "description": "Calendar popover date picker (YYYY-MM-DD).",
       "unionType": "DateFormField",
       "lazyLoaded": true,
-      "heavyDependencies": ["date-fns (~60KB)", "react-day-picker (~55KB)"],
+      "heavyDependencies": [
+        "date-fns (~60KB)",
+        "react-day-picker (~55KB)"
+      ],
       "x-ai-generation-priority": "high"
     },
     {
@@ -781,7 +859,10 @@
       "description": "Calendar + time picker (YYYY-MM-DDTHH:mm).",
       "unionType": "DateFormField",
       "lazyLoaded": true,
-      "heavyDependencies": ["date-fns (~60KB)", "react-day-picker (~55KB)"],
+      "heavyDependencies": [
+        "date-fns (~60KB)",
+        "react-day-picker (~55KB)"
+      ],
       "x-ai-generation-priority": "medium"
     },
     {
@@ -797,7 +878,12 @@
       "valueType": "File | File[]",
       "description": "File upload with drag-drop, previews, and validation. Supports accept filter, multiple files, maxFiles, maxSize.",
       "unionType": "FileFormField",
-      "extraProps": ["accept", "multiple", "maxFiles", "maxSize"],
+      "extraProps": [
+        "accept",
+        "multiple",
+        "maxFiles",
+        "maxSize"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "medium",
       "x-ai-validation-hints": "accept is MIME type or extension (e.g. 'image/*', '.pdf,.docx'). maxSize is in bytes."
@@ -807,7 +893,13 @@
       "valueType": "string",
       "description": "Searchable entity selection with avatar, subtitle, and async autocomplete.",
       "unionType": "EntityPickerFormField",
-      "extraProps": ["autocompleteHref", "autocompleteMinChars", "entityDisplayField", "entitySubtitleField", "entityAvatarField"],
+      "extraProps": [
+        "autocompleteHref",
+        "autocompleteMinChars",
+        "entityDisplayField",
+        "entitySubtitleField",
+        "entityAvatarField"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "medium"
     },
@@ -816,9 +908,14 @@
       "valueType": "string",
       "description": "International phone input (E.164 format) with country selector and flags.",
       "unionType": "PhoneFormField",
-      "extraProps": ["defaultCountry", "fixedCountry"],
+      "extraProps": [
+        "defaultCountry",
+        "fixedCountry"
+      ],
       "lazyLoaded": true,
-      "heavyDependencies": ["libphonenumber-js (~40KB)"],
+      "heavyDependencies": [
+        "libphonenumber-js (~40KB)"
+      ],
       "x-ai-generation-priority": "medium"
     },
     {
@@ -826,9 +923,15 @@
       "valueType": "string",
       "description": "Country-aware document input (CPF, CNPJ, SSN, etc.) with locale-based validation and masking.",
       "unionType": "DocumentFormField",
-      "extraProps": ["documentType", "documentScope", "documentMasks"],
+      "extraProps": [
+        "documentType",
+        "documentScope",
+        "documentMasks"
+      ],
       "lazyLoaded": true,
-      "heavyDependencies": ["validator.js (~28KB)"],
+      "heavyDependencies": [
+        "validator.js (~28KB)"
+      ],
       "x-ai-generation-priority": "medium",
       "x-ai-validation-hints": "documentScope: 'person' (CPF), 'company' (CNPJ), 'any' (either). documentType is a validator.js locale key."
     },
@@ -845,7 +948,10 @@
       "valueType": "string",
       "description": "URL-friendly slug with auto-generation from source field and URL prefix display via InputGroup.",
       "unionType": "SlugFormField",
-      "extraProps": ["sourceField", "prefix"],
+      "extraProps": [
+        "sourceField",
+        "prefix"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "medium"
     },
@@ -854,7 +960,9 @@
       "valueType": "string[]",
       "description": "Chip-based tag input with optional max limit.",
       "unionType": "TagsFormField",
-      "extraProps": ["maxTags"],
+      "extraProps": [
+        "maxTags"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "medium"
     },
@@ -863,7 +971,9 @@
       "valueType": "number",
       "description": "Star rating input via ReUI Rating component.",
       "unionType": "RatingFormField",
-      "extraProps": ["maxRating"],
+      "extraProps": [
+        "maxRating"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "medium",
       "x-ai-validation-hints": "maxRating defaults to 5. Value is 0 to maxRating."
@@ -873,7 +983,12 @@
       "valueType": "number",
       "description": "Range slider via ReUI Slider. Single thumb by default; set multiple for a two-thumb range.",
       "unionType": "SliderFormField",
-      "extraProps": ["min", "max", "step", "multiple"],
+      "extraProps": [
+        "min",
+        "max",
+        "step",
+        "multiple"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "low",
       "x-ai-validation-hints": "min/max/step bound the range. When multiple is true the value becomes a [from, to] tuple."
@@ -883,7 +998,11 @@
       "valueType": "string",
       "description": "One-time-code input via ReUI InputOTP, rendered as grouped slots.",
       "unionType": "OtpFormField",
-      "extraProps": ["maxLength", "pattern", "groupSize"],
+      "extraProps": [
+        "maxLength",
+        "pattern",
+        "groupSize"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "low",
       "x-ai-validation-hints": "maxLength is the slot count (default 6). pattern: 'digits' (default) or 'alphanumeric'. groupSize inserts a visual separator every N slots."
@@ -893,7 +1012,9 @@
       "valueType": "string",
       "description": "Native HTML <select> dropdown. Requires an options array; safe fallback for iframe/Moodle contexts where the styled Select misbehaves.",
       "unionType": "NativeSelectFormField",
-      "extraProps": ["options"],
+      "extraProps": [
+        "options"
+      ],
       "lazyLoaded": false,
       "x-ai-generation-priority": "medium",
       "x-ai-validation-hints": "Requires options array (value/label). Prefer over 'select' only when native rendering is required."
@@ -903,7 +1024,9 @@
       "valueType": "string[]",
       "description": "Date range selector with filter operators and presets via ReUI DateSelector.",
       "unionType": "DateRangeFormField",
-      "extraProps": ["operator"],
+      "extraProps": [
+        "operator"
+      ],
       "lazyLoaded": true,
       "x-ai-generation-priority": "medium",
       "x-ai-validation-hints": "operator preset: 'is', 'before', 'after', 'between'. Value is array of date strings."
@@ -933,7 +1056,6 @@
       "x-ai-generation-priority": "low"
     }
   ],
-
   "themeGuidance": {
     "colorSpace": "OKLCH (oklch(lightness chroma hue))",
     "colorFormat": "oklch(L C H) where L=0-1, C=0-0.4, H=0-360",
@@ -980,12 +1102,16 @@
     "darkMode": {
       "selector": ":root.dark .theme-{name}",
       "strategy": "Separate colorsDark token set. Dark mode auto-switches based on system preference or manual toggle.",
-      "functions": ["getStoredAppearance()", "setAppearance()", "cycleAppearance()", "onSystemThemeChange()"]
+      "functions": [
+        "getStoredAppearance()",
+        "setAppearance()",
+        "cycleAppearance()",
+        "onSystemThemeChange()"
+      ]
     },
     "chartColors": "Use --chart-1 through --chart-5 CSS tokens for chart series colors. These are theme-aware.",
     "x-ai-purpose": "When generating a custom theme, start from theme-defaults.json and only override tokens that differ. Use OKLCH format for all colors. The 8px grid applies to spacing tokens."
   },
-
   "componentGuidance": {
     "description": "ReUI components are Radix/Base UI atoms shared across all blocks. They are read-only primitives — never modified by consumers.",
     "importPattern": "import { Button } from '@middag-io/react/reui/button'",
@@ -1005,7 +1131,6 @@
     ],
     "x-ai-purpose": "Reference components.json schema for full list with variants and sizes. Consumers building custom blocks or shells can import ReUI primitives directly."
   },
-
   "antiPatterns": [
     {
       "id": "AP-01",
@@ -1086,7 +1211,6 @@
       "fix": "Use { title, message, variant, confirmLabel?, cancelLabel? }. Set variant: 'danger' for destructive confirmations, otherwise 'default'."
     }
   ],
-
   "examples": [
     {
       "id": "EX-01",
@@ -1102,21 +1226,78 @@
           "subtitle": "COURSE-2024-101",
           "icon": "graduation-cap",
           "breadcrumbs": [
-            { "label": "Courses", "href": "/courses" },
-            { "label": "Introduction to Biology" }
+            {
+              "label": "Courses",
+              "href": "/courses"
+            },
+            {
+              "label": "Introduction to Biology"
+            }
           ],
           "actions": [
-            { "id": "edit", "label": "Edit Course", "intent": "secondary", "target": { "kind": "link", "href": "/courses/101/edit" } },
-            { "id": "archive", "label": "Archive", "intent": "danger", "target": { "kind": "request", "endpoint": "/courses/101/archive", "method": "post" }, "confirmation": { "title": "Archive Course?", "message": "Students will lose access.", "variant": "danger", "confirmLabel": "Archive" } }
+            {
+              "id": "edit",
+              "label": "Edit Course",
+              "intent": "secondary",
+              "target": {
+                "kind": "link",
+                "href": "/courses/101/edit"
+              }
+            },
+            {
+              "id": "archive",
+              "label": "Archive",
+              "intent": "danger",
+              "target": {
+                "kind": "request",
+                "endpoint": "/courses/101/archive",
+                "method": "post"
+              },
+              "confirmation": {
+                "title": "Archive Course?",
+                "message": "Students will lose access.",
+                "variant": "danger",
+                "confirmLabel": "Archive"
+              }
+            }
           ]
         },
         "layout": {
           "template": "dashboard",
           "regions": {
             "metrics": [
-              { "type": "metric_card", "key": "enrolled", "data": { "label": "Enrolled", "value": 142, "delta": "+12", "deltaDirection": "positive", "icon": "users" } },
-              { "type": "metric_card", "key": "completion", "data": { "label": "Completion Rate", "value": "78%", "delta": "+5%", "deltaDirection": "positive", "icon": "check-circle" } },
-              { "type": "metric_card", "key": "avg-score", "data": { "label": "Avg Score", "value": "8.4", "deltaDirection": "neutral", "icon": "star" } }
+              {
+                "type": "metric_card",
+                "key": "enrolled",
+                "data": {
+                  "label": "Enrolled",
+                  "value": 142,
+                  "delta": "+12",
+                  "deltaDirection": "positive",
+                  "icon": "users"
+                }
+              },
+              {
+                "type": "metric_card",
+                "key": "completion",
+                "data": {
+                  "label": "Completion Rate",
+                  "value": "78%",
+                  "delta": "+5%",
+                  "deltaDirection": "positive",
+                  "icon": "check-circle"
+                }
+              },
+              {
+                "type": "metric_card",
+                "key": "avg-score",
+                "data": {
+                  "label": "Avg Score",
+                  "value": "8.4",
+                  "deltaDirection": "neutral",
+                  "icon": "star"
+                }
+              }
             ],
             "content": [
               {
@@ -1125,20 +1306,66 @@
                 "title": "Enrolled Students",
                 "data": {
                   "columns": [
-                    { "key": "name", "label": "Student", "sortable": true },
-                    { "key": "email", "label": "Email" },
-                    { "key": "progress", "label": "Progress", "variant": "badge" },
-                    { "key": "lastAccess", "label": "Last Access", "variant": "timestamp" }
+                    {
+                      "key": "name",
+                      "label": "Student",
+                      "sortable": true
+                    },
+                    {
+                      "key": "email",
+                      "label": "Email"
+                    },
+                    {
+                      "key": "progress",
+                      "label": "Progress",
+                      "variant": "badge"
+                    },
+                    {
+                      "key": "lastAccess",
+                      "label": "Last Access",
+                      "variant": "timestamp"
+                    }
                   ],
                   "rows": [
-                    { "id": "1", "name": "Maria Silva", "email": "maria@example.com", "progress": "75%", "lastAccess": 1714838400 },
-                    { "id": "2", "name": "João Santos", "email": "joao@example.com", "progress": "92%", "lastAccess": 1714752000 }
+                    {
+                      "id": "1",
+                      "name": "Maria Silva",
+                      "email": "maria@example.com",
+                      "progress": "75%",
+                      "lastAccess": 1714838400
+                    },
+                    {
+                      "id": "2",
+                      "name": "João Santos",
+                      "email": "joao@example.com",
+                      "progress": "92%",
+                      "lastAccess": 1714752000
+                    }
                   ],
-                  "pagination": { "page": 1, "perPage": 25, "total": 142, "lastPage": 6 },
-                  "sort": { "column": "name", "direction": "asc" },
-                  "filters": { "available": [], "applied": {} },
+                  "pagination": {
+                    "page": 1,
+                    "perPage": 25,
+                    "total": 142,
+                    "lastPage": 6
+                  },
+                  "sort": {
+                    "column": "name",
+                    "direction": "asc"
+                  },
+                  "filters": {
+                    "available": [],
+                    "applied": {}
+                  },
                   "rowActions": [
-                    { "id": "view", "label": "View Profile", "intent": "secondary", "target": { "kind": "link", "href": "/students/{id}" } }
+                    {
+                      "id": "view",
+                      "label": "View Profile",
+                      "intent": "secondary",
+                      "target": {
+                        "kind": "link",
+                        "href": "/students/{id}"
+                      }
+                    }
                   ]
                 }
               }
@@ -1160,8 +1387,13 @@
           "key": "plugin-settings",
           "title": "MIDDAG Settings",
           "breadcrumbs": [
-            { "label": "Dashboard", "href": "/wp-admin" },
-            { "label": "MIDDAG Settings" }
+            {
+              "label": "Dashboard",
+              "href": "/wp-admin"
+            },
+            {
+              "label": "MIDDAG Settings"
+            }
           ]
         },
         "layout": {
@@ -1181,15 +1413,54 @@
                       "id": "general",
                       "label": "General",
                       "children": [
-                        { "kind": "field", "key": "site_name", "component": "text", "props": { "label": "Site Name", "required": true } },
-                        { "kind": "field", "key": "locale", "component": "select", "props": { "label": "Language", "options": [{ "value": "en", "label": "English" }, { "value": "pt-BR", "label": "Português" }] } },
-                        { "kind": "field", "key": "notifications", "component": "switch", "props": { "label": "Enable Notifications" } }
+                        {
+                          "kind": "field",
+                          "key": "site_name",
+                          "component": "text",
+                          "props": {
+                            "label": "Site Name",
+                            "required": true
+                          }
+                        },
+                        {
+                          "kind": "field",
+                          "key": "locale",
+                          "component": "select",
+                          "props": {
+                            "label": "Language",
+                            "options": [
+                              {
+                                "value": "en",
+                                "label": "English"
+                              },
+                              {
+                                "value": "pt-BR",
+                                "label": "Português"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "kind": "field",
+                          "key": "notifications",
+                          "component": "switch",
+                          "props": {
+                            "label": "Enable Notifications"
+                          }
+                        }
                       ]
                     }
                   ],
-                  "values": { "site_name": "My Site", "locale": "en", "notifications": true },
+                  "values": {
+                    "site_name": "My Site",
+                    "locale": "en",
+                    "notifications": true
+                  },
                   "errors": {},
-                  "meta": { "submitLabel": "Save Settings", "cancelHref": "/wp-admin" }
+                  "meta": {
+                    "submitLabel": "Save Settings",
+                    "cancelHref": "/wp-admin"
+                  }
                 }
               }
             ],
@@ -1204,8 +1475,18 @@
                       "id": "license",
                       "title": "Subscription",
                       "fields": [
-                        { "key": "plan", "label": "Plan", "value": "Pro", "kind": "status" },
-                        { "key": "expires", "label": "Expires", "value": "2026-12-31", "kind": "timestamp" }
+                        {
+                          "key": "plan",
+                          "label": "Plan",
+                          "value": "Pro",
+                          "kind": "status"
+                        },
+                        {
+                          "key": "expires",
+                          "label": "Expires",
+                          "value": "2026-12-31",
+                          "kind": "timestamp"
+                        }
                       ]
                     }
                   ]
@@ -1264,12 +1545,28 @@
           "key": "project-tasks",
           "title": "Sprint 14 — Tasks",
           "breadcrumbs": [
-            { "label": "Projects", "href": "/projects" },
-            { "label": "MIDDAG Core", "href": "/projects/1" },
-            { "label": "Sprint 14" }
+            {
+              "label": "Projects",
+              "href": "/projects"
+            },
+            {
+              "label": "MIDDAG Core",
+              "href": "/projects/1"
+            },
+            {
+              "label": "Sprint 14"
+            }
           ],
           "actions": [
-            { "id": "add-task", "label": "New Task", "intent": "primary", "target": { "kind": "link", "href": "/tasks/create" } }
+            {
+              "id": "add-task",
+              "label": "New Task",
+              "intent": "primary",
+              "target": {
+                "kind": "link",
+                "href": "/tasks/create"
+              }
+            }
           ]
         },
         "layout": {
@@ -1285,22 +1582,45 @@
                       "id": "todo",
                       "title": "To Do",
                       "cards": [
-                        { "id": "t-1", "title": "Fix login redirect", "status": "bug", "statusIntent": "destructive", "assignee": "Maria", "dueDate": "2026-05-10" },
-                        { "id": "t-2", "title": "Add dark mode toggle", "description": "User preference stored in localStorage", "assignee": "João" }
+                        {
+                          "id": "t-1",
+                          "title": "Fix login redirect",
+                          "status": "bug",
+                          "statusIntent": "destructive",
+                          "assignee": "Maria",
+                          "dueDate": "2026-05-10"
+                        },
+                        {
+                          "id": "t-2",
+                          "title": "Add dark mode toggle",
+                          "description": "User preference stored in localStorage",
+                          "assignee": "João"
+                        }
                       ]
                     },
                     {
                       "id": "in-progress",
                       "title": "In Progress",
                       "cards": [
-                        { "id": "t-3", "title": "Refactor auth middleware", "status": "in-progress", "statusIntent": "warning", "assignee": "Paulo" }
+                        {
+                          "id": "t-3",
+                          "title": "Refactor auth middleware",
+                          "status": "in-progress",
+                          "statusIntent": "warning",
+                          "assignee": "Paulo"
+                        }
                       ]
                     },
                     {
                       "id": "done",
                       "title": "Done",
                       "cards": [
-                        { "id": "t-4", "title": "Update API docs", "status": "complete", "statusIntent": "success" }
+                        {
+                          "id": "t-4",
+                          "title": "Update API docs",
+                          "status": "complete",
+                          "statusIntent": "success"
+                        }
                       ]
                     }
                   ],
@@ -1323,16 +1643,41 @@
           "key": "analytics",
           "title": "Revenue Analytics",
           "breadcrumbs": [
-            { "label": "Dashboard", "href": "/" },
-            { "label": "Analytics" }
+            {
+              "label": "Dashboard",
+              "href": "/"
+            },
+            {
+              "label": "Analytics"
+            }
           ]
         },
         "layout": {
           "template": "dashboard",
           "regions": {
             "metrics": [
-              { "type": "metric_card", "key": "total-revenue", "data": { "label": "Total Revenue", "value": "R$ 142.500", "delta": "+18%", "deltaDirection": "positive", "icon": "dollar-sign" } },
-              { "type": "metric_card", "key": "active-users", "data": { "label": "Active Users", "value": 3420, "delta": "+230", "deltaDirection": "positive", "icon": "users" } }
+              {
+                "type": "metric_card",
+                "key": "total-revenue",
+                "data": {
+                  "label": "Total Revenue",
+                  "value": "R$ 142.500",
+                  "delta": "+18%",
+                  "deltaDirection": "positive",
+                  "icon": "dollar-sign"
+                }
+              },
+              {
+                "type": "metric_card",
+                "key": "active-users",
+                "data": {
+                  "label": "Active Users",
+                  "value": 3420,
+                  "delta": "+230",
+                  "deltaDirection": "positive",
+                  "icon": "users"
+                }
+              }
             ],
             "content": [
               {
@@ -1343,16 +1688,50 @@
                   "chartType": "bar",
                   "categoryKey": "month",
                   "series": [
-                    { "key": "revenue", "label": "Revenue (R$)", "color": "var(--chart-1)", "type": "bar" },
-                    { "key": "users", "label": "Active Users", "color": "var(--chart-2)", "type": "line" }
+                    {
+                      "key": "revenue",
+                      "label": "Revenue (R$)",
+                      "color": "var(--chart-1)",
+                      "type": "bar"
+                    },
+                    {
+                      "key": "users",
+                      "label": "Active Users",
+                      "color": "var(--chart-2)",
+                      "type": "line"
+                    }
                   ],
                   "data": [
-                    { "month": "Nov", "revenue": 18500, "users": 2100 },
-                    { "month": "Dec", "revenue": 22000, "users": 2400 },
-                    { "month": "Jan", "revenue": 19800, "users": 2600 },
-                    { "month": "Feb", "revenue": 24500, "users": 2900 },
-                    { "month": "Mar", "revenue": 28000, "users": 3100 },
-                    { "month": "Apr", "revenue": 29700, "users": 3420 }
+                    {
+                      "month": "Nov",
+                      "revenue": 18500,
+                      "users": 2100
+                    },
+                    {
+                      "month": "Dec",
+                      "revenue": 22000,
+                      "users": 2400
+                    },
+                    {
+                      "month": "Jan",
+                      "revenue": 19800,
+                      "users": 2600
+                    },
+                    {
+                      "month": "Feb",
+                      "revenue": 24500,
+                      "users": 2900
+                    },
+                    {
+                      "month": "Mar",
+                      "revenue": 28000,
+                      "users": 3100
+                    },
+                    {
+                      "month": "Apr",
+                      "revenue": 29700,
+                      "users": 3420
+                    }
                   ],
                   "showGrid": true,
                   "showLegend": true
@@ -1364,7 +1743,6 @@
       }
     }
   ],
-
   "agentCapabilities": {
     "description": "What an AI agent can do with this manifest and the referenced schemas.",
     "capabilities": [
@@ -1372,42 +1750,56 @@
         "id": "generate-contract",
         "name": "Generate PageContract",
         "description": "Create a complete, valid PageContract JSON for a given page description. Choose appropriate shell, layout, blocks, and field types.",
-        "requiredSchemas": ["blocks", "theme"],
+        "requiredSchemas": [
+          "blocks",
+          "theme"
+        ],
         "workflow": "Read systemOverview → choose shell and layout → populate regions with blocks → validate with pageContractSchema"
       },
       {
         "id": "validate-contract",
         "name": "Validate PageContract",
         "description": "Check a PageContract for structural and semantic validity.",
-        "requiredSchemas": ["blocks"],
+        "requiredSchemas": [
+          "blocks"
+        ],
         "workflow": "Run validatePageContract() → check block types exist in registry → verify region compatibility → check for anti-patterns"
       },
       {
         "id": "generate-theme",
         "name": "Generate Custom Theme",
         "description": "Create a custom theme by overriding tokens from the defaults.",
-        "requiredSchemas": ["theme", "theme-defaults"],
+        "requiredSchemas": [
+          "theme",
+          "theme-defaults"
+        ],
         "workflow": "Read theme-defaults.json → identify tokens to override → generate OKLCH values → validate against theme.json schema"
       },
       {
         "id": "adapt-platform",
         "name": "Adapt for Platform",
         "description": "Adjust a contract or integration code for Moodle, WordPress, or custom host.",
-        "requiredSchemas": ["manifest"],
+        "requiredSchemas": [
+          "manifest"
+        ],
         "workflow": "Check platform → apply registration strategy (registerDefaults vs selective) → set host header height → configure CSS isolation"
       },
       {
         "id": "suggest-block",
         "name": "Recommend Block Type",
         "description": "Given a use case description, recommend the most appropriate block type and data shape.",
-        "requiredSchemas": ["blocks"],
+        "requiredSchemas": [
+          "blocks"
+        ],
         "workflow": "Read blocks section → match x-ai-use-when to user description → check x-ai-avoid-when for exclusions → return block type + data template"
       },
       {
         "id": "generate-form",
         "name": "Generate Form Schema",
         "description": "Create a FormPanelBlockData schema from a form description.",
-        "requiredSchemas": ["blocks"],
+        "requiredSchemas": [
+          "blocks"
+        ],
         "workflow": "Read fields section → choose field components → organize into sections/groups → set validation rules → output FormSchemaNode[]"
       }
     ]
