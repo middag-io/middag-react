@@ -13,7 +13,7 @@ name: Notify schemas updated
 #
 # Auth: GitHub App installation token (no PATs), via the org-level dispatch
 # bot app:
-#   vars.MIDDAG_DISPATCH_BOT_APP_ID       — the GitHub App's numeric App ID
+#   vars.MIDDAG_DISPATCH_BOT_CLIENT_ID    — the GitHub App's Client ID
 #   secrets.MIDDAG_DISPATCH_BOT_PRIVATE_KEY — the App's PEM private key
 # The App is installed on middag-io with access to middag-react-pro and holds
 # Repository permission "Contents: Read and write" (repository_dispatch
@@ -36,11 +36,11 @@ jobs:
       - name: Check App credentials
         id: creds
         env:
-          APP_ID: ${{ vars.MIDDAG_DISPATCH_BOT_APP_ID }}
+          CLIENT_ID: ${{ vars.MIDDAG_DISPATCH_BOT_CLIENT_ID }}
           APP_KEY: ${{ secrets.MIDDAG_DISPATCH_BOT_PRIVATE_KEY }}
         run: |
-          if [ -z "${APP_ID}" ] || [ -z "${APP_KEY}" ]; then
-            echo "::notice::MIDDAG_DISPATCH_BOT_APP_ID / MIDDAG_DISPATCH_BOT_PRIVATE_KEY not visible to this repo — skipping dispatch (MCP Worker may go stale until they are)."
+          if [ -z "${CLIENT_ID}" ] || [ -z "${APP_KEY}" ]; then
+            echo "::notice::MIDDAG_DISPATCH_BOT_CLIENT_ID / MIDDAG_DISPATCH_BOT_PRIVATE_KEY not visible to this repo — skipping dispatch (MCP Worker may go stale until they are)."
             echo "present=false" >> "$GITHUB_OUTPUT"
           else
             echo "present=true" >> "$GITHUB_OUTPUT"
@@ -51,7 +51,7 @@ jobs:
         if: steps.creds.outputs.present == 'true'
         uses: actions/create-github-app-token@v2
         with:
-          app-id: ${{ vars.MIDDAG_DISPATCH_BOT_APP_ID }}
+          client-id: ${{ vars.MIDDAG_DISPATCH_BOT_CLIENT_ID }}
           private-key: ${{ secrets.MIDDAG_DISPATCH_BOT_PRIVATE_KEY }}
           owner: middag-io
           repositories: middag-react-pro
