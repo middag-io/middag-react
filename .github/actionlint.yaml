@@ -1,0 +1,12 @@
+# actionlint configuration for this repository.
+#
+# False-positive suppression (2026-07-20, app-id -> client-id migration):
+# actionlint <=1.7.12 bundles a stale snapshot of actions/create-github-app-token
+# in which v3 still requires "app-id" and does not know "client-id". Upstream
+# action.yml at v3 defines client-id as valid and deprecates app-id. Remove once
+# actionlint ships an updated snapshot.
+paths:
+  .github/workflows/**/*.yml:
+    ignore:
+      - '^missing input "app-id" which is required by action "actions/create-github-app-token@v3"'
+      - '^input "client-id" is not defined in action "actions/create-github-app-token@v3"'

@@ -49,11 +49,9 @@ jobs:
       - name: Mint installation token
         id: app-token
         if: steps.creds.outputs.present == 'true'
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
-          # The action's `app-id` input accepts a GitHub App Client ID.
-          # (`client-id` is not a defined input — the step fails without app-id.)
-          app-id: ${{ vars.MIDDAG_DISPATCH_BOT_CLIENT_ID }}
+          client-id: ${{ vars.MIDDAG_DISPATCH_BOT_CLIENT_ID }}
           private-key: ${{ secrets.MIDDAG_DISPATCH_BOT_PRIVATE_KEY }}
           owner: middag-io
           repositories: middag-react-pro
