@@ -38,12 +38,25 @@ jobs:
     permissions:
       contents: read
       packages: write
+      # OIDC for npm Trusted Publishing (public npm channel). This repository
+      # is public, so npm also generates provenance/attestation automatically.
+      id-token: write
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
           node-version: 24
           registry-url: https://npm.pkg.github.com
+      # Trusted publishing needs npm >= 11.5.2 (OIDC detection fixes). Node 24
+      # bundles a recent npm, but the exact 24.x is resolved at run time —
+      # assert instead of assuming.
+      - name: Ensure npm >= 11.5.2 (OIDC trusted publishing)
+        run: |
+          npm install -g npm@latest
+          NPMV=$(npm --version)
+          echo "npm $NPMV"
+          node -e "const [a,b,c]='$NPMV'.split('.').map(Number); process.exit((a>11||(a===11&&(b>5||(b===5&&c>=2))))?0:1)" \
+            || { echo "::error::npm $NPMV < 11.5.2 — trusted publishing unsupported"; exit 1; }
       - run: npm ci
       - run: npx tsc --noEmit
       - name: Contracts drift gate (generated TS/zod + wire schemas in sync with php-ui mirror)
@@ -109,9 +122,11 @@ jobs:
           cp README.md "$TEMP_DIR/"
           cp LICENSE "$TEMP_DIR/"
 
-          # Override scoped registry to point to public npm
+          # Override scoped registry to point to public npm. NO _authToken line:
+          # auth comes from npm Trusted Publishing (OIDC, id-token: write above).
+          # Any _authToken configured for registry.npmjs.org — even an env
+          # placeholder — disables OIDC detection and sends a garbage bearer.
           echo "@middag-io:registry=https://registry.npmjs.org" > "$TEMP_DIR/.npmrc"
-          echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" >> "$TEMP_DIR/.npmrc"
 
           # Publish to public npm (treat "already published" as success)
           cd "$TEMP_DIR"
@@ -124,8 +139,6 @@ jobs:
             fi
             exit $EXIT_CODE
           fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   # ADR-016: after a real publish, build the versioned docs payload and sync it
   # to Cloudflare R2. Gated on a confirmed release so it runs exactly once per
