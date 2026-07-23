@@ -18,8 +18,11 @@
 /** HTTP method, including PATCH (php-ui HttpMethod). */
 export type ResolvedActionMethod = "get" | "post" | "put" | "patch" | "delete";
 
-/** Discriminated target kind — mirror of php-ui ActionTargetKind. */
-export type ActionTargetKind = "link" | "route" | "request";
+/**
+ * Discriminated target kind — mirror of php-ui ActionTargetKind, plus the free
+ * `panel` kind that opens the editable-panel side drawer for the acting row.
+ */
+export type ActionTargetKind = "link" | "route" | "request" | "panel";
 
 /**
  * Canonical discriminated target (php-ui ActionTarget VO). Defined locally for the
@@ -118,6 +121,15 @@ export function resolveActionTarget(action: ResolvableAction): ResolvedActionTar
           kind: "request",
           url: target.endpoint ?? target.href ?? "",
           method: normalizeMethod(target.method, "post"),
+          external: false,
+        };
+      case "panel":
+        // The editable panel resolves its data from the page-level `editablePanel`
+        // config keyed by row id; the action target carries no URL of its own.
+        return {
+          kind: "panel",
+          url: "",
+          method: "get",
           external: false,
         };
     }

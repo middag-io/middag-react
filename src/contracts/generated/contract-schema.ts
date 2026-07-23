@@ -9,7 +9,7 @@
  *
  * @source middag-php-ui/schema/{page-contract,fragment}.json
  * @contract-version 1
- * @hash b0540f41dc0f8958
+ * @hash 9271be91edf64102
  */
 import { z } from "zod";
 
@@ -144,7 +144,7 @@ export const pageContractSchemaCore = z.object({ "version": z.literal("1"), "she
       });
     }
   }), "target": z.any().superRefine((x, ctx) => {
-    const schemas = [z.object({ "kind": z.literal("link"), "href": z.string(), "external": z.literal(true).optional() }), z.object({ "kind": z.literal("route"), "route": z.string(), "params": z.record(z.string(), z.any()).optional() }), z.object({ "kind": z.literal("request"), "endpoint": z.string(), "method": z.enum(["get","post","put","patch","delete"]) })];
+    const schemas = [z.object({ "kind": z.literal("link"), "href": z.string(), "external": z.literal(true).optional() }), z.object({ "kind": z.literal("route"), "route": z.string(), "params": z.record(z.string(), z.any()).optional() }), z.object({ "kind": z.literal("request"), "endpoint": z.string(), "method": z.enum(["get","post","put","patch","delete"]) }), z.object({ "kind": z.literal("panel") })];
     const { errors, failed } = schemas.reduce<{
       errors: z.core.$ZodIssue[];
       failed: number;
@@ -433,7 +433,7 @@ export const pageContractSchemaCore = z.object({ "version": z.literal("1"), "she
       });
     }
   }), "target": z.any().superRefine((x, ctx) => {
-    const schemas = [z.object({ "kind": z.literal("link"), "href": z.string(), "external": z.literal(true).optional() }), z.object({ "kind": z.literal("route"), "route": z.string(), "params": z.record(z.string(), z.any()).optional() }), z.object({ "kind": z.literal("request"), "endpoint": z.string(), "method": z.enum(["get","post","put","patch","delete"]) })];
+    const schemas = [z.object({ "kind": z.literal("link"), "href": z.string(), "external": z.literal(true).optional() }), z.object({ "kind": z.literal("route"), "route": z.string(), "params": z.record(z.string(), z.any()).optional() }), z.object({ "kind": z.literal("request"), "endpoint": z.string(), "method": z.enum(["get","post","put","patch","delete"]) }), z.object({ "kind": z.literal("panel") })];
     const { errors, failed } = schemas.reduce<{
       errors: z.core.$ZodIssue[];
       failed: number;
@@ -784,7 +784,7 @@ export const pageContractSchemaCore = z.object({ "version": z.literal("1"), "she
       });
     }
   }), "target": z.any().superRefine((x, ctx) => {
-    const schemas = [z.object({ "kind": z.literal("link"), "href": z.string(), "external": z.literal(true).optional() }), z.object({ "kind": z.literal("route"), "route": z.string(), "params": z.record(z.string(), z.any()).optional() }), z.object({ "kind": z.literal("request"), "endpoint": z.string(), "method": z.enum(["get","post","put","patch","delete"]) })];
+    const schemas = [z.object({ "kind": z.literal("link"), "href": z.string(), "external": z.literal(true).optional() }), z.object({ "kind": z.literal("route"), "route": z.string(), "params": z.record(z.string(), z.any()).optional() }), z.object({ "kind": z.literal("request"), "endpoint": z.string(), "method": z.enum(["get","post","put","patch","delete"]) }), z.object({ "kind": z.literal("panel") })];
     const { errors, failed } = schemas.reduce<{
       errors: z.core.$ZodIssue[];
       failed: number;
@@ -1043,7 +1043,7 @@ export const fragmentSchemaCore = z.object({ "version": z.literal("1"), "kind": 
       });
     }
   }), "target": z.any().superRefine((x, ctx) => {
-    const schemas = [z.object({ "kind": z.literal("link"), "href": z.string(), "external": z.literal(true).optional() }), z.object({ "kind": z.literal("route"), "route": z.string(), "params": z.record(z.string(), z.any()).optional() }), z.object({ "kind": z.literal("request"), "endpoint": z.string(), "method": z.enum(["get","post","put","patch","delete"]) })];
+    const schemas = [z.object({ "kind": z.literal("link"), "href": z.string(), "external": z.literal(true).optional() }), z.object({ "kind": z.literal("route"), "route": z.string(), "params": z.record(z.string(), z.any()).optional() }), z.object({ "kind": z.literal("request"), "endpoint": z.string(), "method": z.enum(["get","post","put","patch","delete"]) }), z.object({ "kind": z.literal("panel") })];
     const { errors, failed } = schemas.reduce<{
       errors: z.core.$ZodIssue[];
       failed: number;

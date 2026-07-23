@@ -321,6 +321,14 @@ export { ImmersiveShell } from "@/base/shell/ImmersiveShell";
 
 export { NavErrorBoundary } from "@/base/shell/partials/NavErrorBoundary";
 export { useInspector, type InspectorResponse } from "@/base/shell/partials/InspectorContext";
+// Editable panel — free contract-driven side drawer (context + provider + renderer).
+export {
+  useEditablePanel,
+  type EditablePanelConfig,
+  type EditablePanelDescriptor,
+} from "@/base/shell/partials/EditablePanelContext";
+export { EditablePanelProvider } from "@/base/shell/partials/EditablePanelProvider";
+export { InlineEditablePanel } from "@/base/shell/partials/InlineEditablePanel";
 
 // ── ReUI components (for consumer/mock shells) ────────────────────────────
 // These must be exported from the barrel so dist-mock can externalize them
