@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.39.0](https://github.com/middag-io/middag-react/compare/v0.38.0...v0.39.0) (2026-07-24)
+
+
+### Features
+
+* **shell:** add editable_panel primitive (contract-driven side drawer) ([97505b6](https://github.com/middag-io/middag-react/commit/97505b6e8e039d8331a3e9c464f49de8c04d9b65))
+* **shell:** editable_panel primitive (contract-driven side drawer) ([5be166d](https://github.com/middag-io/middag-react/commit/5be166db89e762d74ab1f2ab463f75e42dbc8031))
+
+
+### Bug Fixes
+
+* **ci:** use GitHub App client-id for dispatch bot token minting ([b0c123d](https://github.com/middag-io/middag-react/commit/b0c123dcc69f54b5f06fe838788ad19eaf976cdd))
+
+
+### Documentation
+
+* canonical AGENTS.md via scaffold BL-P1-06 (+ CLAUDE.md symlink) ([f79ecd8](https://github.com/middag-io/middag-react/commit/f79ecd81a49a0ef5c40944460588db58a4fb03b9))
+
 ## [0.38.0](https://github.com/middag-io/middag-react/compare/v0.37.1...v0.38.0) (2026-07-13)
 
 
