@@ -9,7 +9,7 @@
  *
  * @source middag-php-ui/schema/{page-contract,fragment}.json
  * @contract-version 1
- * @hash b0540f41dc0f8958
+ * @hash 9271be91edf64102
  */
 export type Label = string | Translatable;
 export type ActionTarget =
@@ -29,6 +29,9 @@ export type ActionTarget =
       kind: "request";
       endpoint: string;
       method: HttpMethod;
+    }
+  | {
+      kind: "panel";
     };
 export type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
 export type ActionIntent =
@@ -290,7 +293,7 @@ export type OptionFieldProps = FieldPropsBase & {
   }[];
 };
 export type RegionUpdateMode = "replace" | "append" | "prepend" | "remove" | "update";
-export type ActionTargetKind = "link" | "route" | "request";
+export type ActionTargetKind = "link" | "route" | "request" | "panel";
 export type ChartType = "line" | "bar" | "area";
 export type ConditionOperator =
   | "eq"
@@ -509,6 +512,12 @@ export interface InspectorDescriptor {
   endpoint: string;
   width: number;
   poll?: PollConfig;
+}
+export interface EditablePanelDescriptor {
+  endpoint: string;
+  submitEndpoint?: string;
+  submitMethod: "post" | "put" | "patch";
+  width: number;
 }
 export interface NavigationNode {
   key: string;

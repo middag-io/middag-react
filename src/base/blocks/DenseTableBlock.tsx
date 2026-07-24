@@ -14,6 +14,7 @@ import { usePolling } from "@/base/hooks/usePolling";
 import { ConfirmationDialog } from "@/base/partials/ConfirmationDialog";
 import { DataTable } from "@/base/partials/DataTable";
 import type { DataTableParamChange } from "@/base/partials/DataTable/types";
+import { useEditablePanel } from "@/base/shell/partials/EditablePanelContext";
 import { useInspector } from "@/base/shell/partials/InspectorContext";
 import { evaluateCondition } from "@/base/utils/conditions";
 import { interpolate } from "@/base/utils/interpolate";
@@ -40,6 +41,7 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
       : "";
 
   const { select, selectedId, enabled: inspectorEnabled } = useInspector();
+  const { open: openPanel, enabled: panelEnabled } = useEditablePanel();
 
   usePolling(block.poll);
 
@@ -192,6 +194,16 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
       variant: action.variant,
       onAction: (row: Record<string, unknown>) => {
         const resolvedHref = interpolate(target.url, row);
+
+        // Editable panel: open the side drawer for this row (data resolved from
+        // the page-level `editablePanel` config). No navigation, no confirmation.
+        if (target.kind === "panel") {
+          if (panelEnabled) {
+            const id = row[rowKeyField];
+            if (id != null) openPanel(id as string | number);
+          }
+          return;
+        }
 
         if (action.confirmation) {
           setConfirmDialog({

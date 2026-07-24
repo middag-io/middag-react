@@ -9,7 +9,7 @@
  *
  * @source middag-php-ui/schema/{page-contract,fragment}.json
  * @contract-version 1
- * @hash b0540f41dc0f8958
+ * @hash 9271be91edf64102
  */
 export * from "./contract-types";
 export { pageContractSchemaCore, fragmentSchemaCore } from "./contract-schema";

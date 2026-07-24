@@ -153,6 +153,7 @@
   "middag.ui.form.file_max_size": "Max size:",
   "middag.ui.form.multiselect_remove": "Remove {label}",
   "middag.ui.form.multiselect_search": "Search options...",
+  "middag.ui.editable_panel.close": "Close panel",
   "middag.ui.form.multiselect_selected": "{count} selected",
   "middag.ui.form.no_fields": "No fields configured for this form.",
   "middag.ui.form.phone_placeholder": "Phone number",

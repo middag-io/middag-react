@@ -98,6 +98,18 @@ describe("resolveActionTarget — canonical target shape", () => {
   });
 });
 
+describe("resolveActionTarget — panel kind", () => {
+  it("resolves a panel target to a no-url, non-navigation GET", () => {
+    const r = resolveActionTarget({ target: { kind: "panel" } });
+    expect(r).toEqual({ kind: "panel", url: "", method: "get", external: false });
+  });
+
+  it("is not a navigation target (the shell opens the drawer, no route change)", () => {
+    const r = resolveActionTarget({ target: { kind: "panel" } });
+    expect(isNavigationTarget(r)).toBe(false);
+  });
+});
+
 describe("isNavigationTarget", () => {
   it("is true for link and route, false for request", () => {
     expect(isNavigationTarget(resolveActionTarget({ href: "/x" }))).toBe(true);
