@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.39.1](https://github.com/middag-io/middag-react/compare/v0.39.0...v0.39.1) (2026-07-24)
+
+
+### Bug Fixes
+
+* **icons:** keep the icon registry a singleton across barrel and subpaths ([#19](https://github.com/middag-io/middag-react/issues/19)) ([cf5bd2c](https://github.com/middag-io/middag-react/commit/cf5bd2c4a15a78b4bd7f7ab47200f9709cec7fc4))
+
 ## [0.39.0](https://github.com/middag-io/middag-react/compare/v0.38.0...v0.39.0) (2026-07-24)
 
 
