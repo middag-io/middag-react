@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.40.0](https://github.com/middag-io/middag-react/compare/v0.39.1...v0.40.0) (2026-07-27)
+
+
+### Features
+
+* **schemas:** registrar o bloco customform_render no contrato de IA ([71e4b7e](https://github.com/middag-io/middag-react/commit/71e4b7ef01f5bba469afd086e8277b114ef10ad5))
+* **schemas:** registrar o bloco customform_render no contrato de IA ([e5fc8c7](https://github.com/middag-io/middag-react/commit/e5fc8c7f17d2d80d35c4ba5a4ed16db52105898b))
+
 ## [0.39.1](https://github.com/middag-io/middag-react/compare/v0.39.0...v0.39.1) (2026-07-24)
 
 
