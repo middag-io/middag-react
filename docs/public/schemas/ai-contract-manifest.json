@@ -568,6 +568,19 @@
       "x-ai-validation-hints": "action (string URL), method (post|put|patch), schema (FormSchemaNode[]), values (Record<string,unknown>), errors (Record<string,string>) are all required. Schema nodes are: FormFieldNode (kind:'field'), FormSectionNode (kind:'section'), FormGroupNode (kind:'group'), FormHeaderNode (kind:'header')."
     },
     {
+      "type": "customform_render",
+      "tier": "pro",
+      "category": "Forms",
+      "description": "Public fill surface for a form authored with form_builder.",
+      "dataInterface": "CustomformRenderBlockData",
+      "lazyLoaded": true,
+      "heavyDependencies": [],
+      "x-ai-purpose": "Render an authored form for the person answering it, and POST the answers.",
+      "x-ai-use-when": "Public/end-user fill of a form built with form_builder; shares that block's renderer, so preview and real form stay identical.",
+      "x-ai-avoid-when": "Ad-hoc data entry not backed by a form definition (use form_panel instead).",
+      "x-ai-generation-priority": "low"
+    },
+    {
       "type": "form_builder",
       "tier": "pro",
       "category": "Forms",
