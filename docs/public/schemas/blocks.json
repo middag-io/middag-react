@@ -7,13 +7,19 @@
   "properties": {
     "blocks": {
       "type": "array",
-      "items": { "$ref": "#/$defs/BlockDefinition" }
+      "items": {
+        "$ref": "#/$defs/BlockDefinition"
+      }
     }
   },
   "$defs": {
     "BlockDefinition": {
       "type": "object",
-      "required": ["type", "description", "regions"],
+      "required": [
+        "type",
+        "description",
+        "regions"
+      ],
       "properties": {
         "type": {
           "type": "string",
@@ -25,7 +31,9 @@
         },
         "regions": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Layout regions where this block can be placed"
         },
         "dataShape": {
@@ -47,7 +55,10 @@
         "type": "dense_table",
         "tier": "community",
         "description": "Sortable data table with pagination, filters, row actions, and bulk selection. Primary data display block.",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "columns": "DataTableColumn[] — key, label, sortable?, hideable? (default true), visible? (default true), minWidth?, variant? (status|boolean|timestamp|progress|link|actions|rich_status|html|link_group), timestampFormat? (relative|datetime|date|time|iso — applies when variant=timestamp)",
           "progressCell": "when variant=progress the cell value is { value, max?, label?, appearance? } (a bare number is treated as a percent out of 100)",
@@ -69,7 +80,9 @@
         "type": "metric_card",
         "tier": "community",
         "description": "KPI card with value, delta, and trend icon. Used in dashboard metrics region.",
-        "regions": ["metrics"],
+        "regions": [
+          "metrics"
+        ],
         "dataShape": {
           "label": "string",
           "value": "string | number",
@@ -82,7 +95,10 @@
         "type": "status_strip",
         "tier": "community",
         "description": "Health overview with score and status items. Compact status display for aside panels.",
-        "regions": ["aside", "content"],
+        "regions": [
+          "aside",
+          "content"
+        ],
         "dataShape": {
           "score?": "number (0-100)",
           "tone?": "success | warning | destructive | info",
@@ -93,7 +109,11 @@
         "type": "detail_panel",
         "tier": "community",
         "description": "Sectioned key-value detail view with field kinds (text, status, timestamp, boolean, link, code, email).",
-        "regions": ["aside", "content", "main"],
+        "regions": [
+          "aside",
+          "content",
+          "main"
+        ],
         "dataShape": {
           "sections": "{ id, title, fields: DetailField[] }[]",
           "DetailField": "{ key, label, value, kind?: text|status|timestamp|boolean|link|code|email, copyable?, href? }"
@@ -106,7 +126,10 @@
         "type": "activity_timeline",
         "tier": "community",
         "description": "Chronological event timeline with actors, actions, and expandable details.",
-        "regions": ["content", "aside"],
+        "regions": [
+          "content",
+          "aside"
+        ],
         "dataShape": {
           "entries": "{ id, actor, action, timestamp, details?, icon?, tone? }[]"
         }
@@ -115,7 +138,10 @@
         "type": "form_panel",
         "tier": "community",
         "description": "Schema-driven form with react-hook-form + Zod client validation and Inertia server submission.",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "action": "string — form submit URL",
           "method": "post | put | patch",
@@ -133,7 +159,10 @@
         "type": "card_grid",
         "tier": "community",
         "description": "Grid of cards with icon, title, and metadata. Used for connector/integration listings.",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "variant?": "string",
           "columns": "{ key, label, kind?: status }[]",
@@ -144,7 +173,9 @@
         "type": "action_grid",
         "tier": "community",
         "description": "Grid of action buttons/cards that trigger server operations.",
-        "regions": ["content"],
+        "regions": [
+          "content"
+        ],
         "dataShape": {
           "actions": "{ id, label, description?, icon?, intent?: primary|danger, endpoint, method?, confirmMessage? }[]"
         }
@@ -153,7 +184,10 @@
         "type": "link_list",
         "tier": "community",
         "description": "Navigation link list with icons and descriptions.",
-        "regions": ["content", "aside"],
+        "regions": [
+          "content",
+          "aside"
+        ],
         "dataShape": {
           "items": "{ label, href, icon?, description? }[]"
         }
@@ -162,7 +196,9 @@
         "type": "tabs",
         "tier": "community",
         "description": "Tabbed container with nested blocks per tab.",
-        "regions": ["content"],
+        "regions": [
+          "content"
+        ],
         "dataShape": {
           "defaultTab": "string — key of initially active tab",
           "tabs": "{ id, label, icon?, blocks: BlockDescriptor[] }[]"
@@ -172,7 +208,10 @@
         "type": "chart",
         "tier": "community",
         "description": "Line, bar, or area chart rendering categorical series over a shared x-axis.",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "chartType": "line | bar | area",
           "categoryKey": "string — field key on each data row used for the x-axis category",
@@ -185,7 +224,10 @@
         "type": "empty_state",
         "tier": "community",
         "description": "Placeholder for empty data states with optional action button.",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "title?": "string",
           "description?": "string",
@@ -197,7 +239,11 @@
         "type": "markdown_panel",
         "tier": "community",
         "description": "Rendered markdown content with syntax highlighting and copy buttons.",
-        "regions": ["content", "main", "aside"],
+        "regions": [
+          "content",
+          "main",
+          "aside"
+        ],
         "dataShape": {
           "content": "string — markdown text"
         }
@@ -206,7 +252,9 @@
         "type": "condition_tree",
         "tier": "pro",
         "description": "Nested AND/OR condition tree for rule builders (segments, workflows).",
-        "regions": ["content"],
+        "regions": [
+          "content"
+        ],
         "dataShape": {
           "operator": "and | or",
           "rules": "{ id, field, operator, value }[]",
@@ -217,7 +265,9 @@
         "type": "sentence_builder",
         "tier": "pro",
         "description": "Natural language segment rule builder. Renders rules as human-readable sentences.",
-        "regions": ["content"],
+        "regions": [
+          "content"
+        ],
         "dataShape": {
           "groups": "{ id, rules: { id, field, operator, value }[] }[]",
           "audienceEstimate?": "{ matched: number, total: number }"
@@ -227,17 +277,35 @@
         "type": "flow_editor",
         "tier": "pro",
         "description": "Visual workflow editor with nodes and edges (React Flow).",
-        "regions": ["content"],
+        "regions": [
+          "content"
+        ],
         "dataShape": {
           "nodes": "ReactFlow Node[]",
           "edges": "ReactFlow Edge[]"
         }
       },
       {
+        "type": "customform_render",
+        "tier": "pro",
+        "description": "Public fill surface for a form authored with form_builder.",
+        "regions": [
+          "content"
+        ],
+        "dataShape": {
+          "formName": "string",
+          "steps": "{ id, code, title, fields[] }[]",
+          "submitHref": "string (POST target for the answers)",
+          "uploadHref": "string? (draft-area endpoint for file fields)"
+        }
+      },
+      {
         "type": "form_builder",
         "tier": "pro",
         "description": "Drag-and-drop form builder with field palette and preview.",
-        "regions": ["content"],
+        "regions": [
+          "content"
+        ],
         "dataShape": {
           "fields": "{ id, type, label, required? }[]",
           "palette": "{ type, label, icon? }[]"
@@ -247,7 +315,10 @@
         "type": "workflow_progress",
         "tier": "pro",
         "description": "Linear workflow state indicator with timestamps. Shows ordered states and highlights the current one.",
-        "regions": ["content", "header"],
+        "regions": [
+          "content",
+          "header"
+        ],
         "dataShape": {
           "states": "{ key, label, timestamp? }[] — ordered list of workflow states",
           "currentState": "string — key of the currently active state"
@@ -257,7 +328,10 @@
         "type": "chart_panel",
         "tier": "pro",
         "description": "Multi-series chart supporting bar, line, area, and pie chart types. Uses Recharts under the hood (lazy-loaded, ~555 KB).",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "chartType": "'bar' | 'line' | 'area' | 'pie'",
           "data": "Record<string, unknown>[] — data points with category key + numeric values per series",
@@ -276,7 +350,10 @@
         "type": "kanban_board",
         "tier": "pro",
         "description": "Drag-and-drop kanban board with columns and cards. Cards can be moved between columns via Inertia endpoint. Uses @dnd-kit (lazy-loaded, ~15 KB).",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "columns": "{ id, title, cards: KanbanCard[] }[] — board columns",
           "moveEndpoint": "string? — Inertia POST URL for card move operations"
@@ -291,7 +368,10 @@
         "type": "gradebook",
         "tier": "pro",
         "description": "Editable row × column data matrix (virtualized grid). Cells are edited in place and saved as a batch with an optimistic-concurrency revision.",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "columns": "{ id, label, type, editable, options? }[] — grid columns",
           "rows": "{ id, label }[] — row headers",
@@ -306,7 +386,10 @@
         "type": "report_composer",
         "tier": "pro",
         "description": "Drag-drop canvas of chart | metric | table widgets on a fixed column grid. The layout persists as a full { revision, widgets } snapshot.",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "widgets": "{ id, type: chart|metric|table, layout: { x, y, w, h }, title?, chart?, metric?, table? }[]",
           "revision": "string — optimistic-concurrency token (required)",
@@ -320,7 +403,10 @@
         "type": "rich_document",
         "tier": "pro",
         "description": "Lexical WYSIWYG document editor. content is opaque serialized editor state; the client never emits HTML. Uses Lexical (lazy-loaded, ~300 KB).",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "content": "object — serialized Lexical editor state (opaque)",
           "revision": "string — optimistic-concurrency token (required)",
@@ -338,7 +424,10 @@
         "type": "scheduler",
         "tier": "pro",
         "description": "Event calendar across month, week, agenda and resource-lane views. Every change POSTs immediately (save-on-drop) with an optimistic-concurrency revision.",
-        "regions": ["content", "main"],
+        "regions": [
+          "content",
+          "main"
+        ],
         "dataShape": {
           "events": "{ id, title, start, end, allDay?, resourceId?, color?, href?, editable?, recurrence? }[] — start/end are ISO strings",
           "revision": "string — optimistic-concurrency token (required)",
