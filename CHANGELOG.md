@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.40.1](https://github.com/middag-io/middag-react/compare/v0.40.0...v0.40.1) (2026-07-29)
+
+
+### Bug Fixes
+
+* **form:** menu do select abre abaixo do campo, nao sobre ele ([4220b21](https://github.com/middag-io/middag-react/commit/4220b212d1796688015e5004ebce91fe9156d3b2))
+* **form:** menu do select abre abaixo do campo, não sobre ele ([a0f0890](https://github.com/middag-io/middag-react/commit/a0f0890798adb3a8a2a31ff4b8dd5576d26ed9bb))
+
 ## [0.40.0](https://github.com/middag-io/middag-react/compare/v0.39.1...v0.40.0) (2026-07-27)
 
 
