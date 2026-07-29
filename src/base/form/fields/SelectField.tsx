@@ -60,7 +60,11 @@ export function SelectField({
       >
         <SelectValue placeholder={placeholder ?? t("middag.ui.form.select_placeholder")} />
       </SelectTrigger>
-      <SelectContent>
+      {/* popper, not the primitive's item-aligned default: item-aligned lays the
+          list over the trigger (aligning the selected option to it), so in a form
+          the open menu covers the field it belongs to and reads as a misplaced
+          overlay. A form field should drop its options below itself. */}
+      <SelectContent position="popper" sideOffset={4} align="start" className="w-full">
         {options.map((opt) => (
           <SelectItem key={opt.value} value={opt.value}>
             {opt.label}
