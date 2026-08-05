@@ -26,6 +26,7 @@ import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/primitives/r
 import { Badge } from "@/primitives/reui/badge";
 import { Button } from "@/primitives/reui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/primitives/reui/card";
+import { Spinner } from "@/primitives/reui/spinner";
 
 export function ActionGridBlock({ block }: BlockProps<ActionGridBlockData>): ReactElement {
   const { t } = useTranslation();
@@ -106,7 +107,19 @@ function ActionCard({ item }: { item: ActionGridBlockData["items"][number] }): R
         </div>
       </CardHeader>
       <CardContent>
-        <Button variant="outline" size="sm" className="w-full" onClick={handleClick}>
+        {/* `loading`/`disabled` já fazem parte do contrato Action (gerado de
+            Middag\Ui) mas eram ignorados aqui: o servidor podia sinalizar uma
+            ação em andamento e o botão seguia inerte e clicável. `loading`
+            implica desabilitado — reenviar durante o processamento é o que a
+            sinalização existe para evitar. */}
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full"
+          onClick={handleClick}
+          disabled={item.disabled === true || item.loading === true}
+        >
+          {item.loading === true && <Spinner className="mr-2 size-4" />}
           {renderLabel(item.label, t)}
         </Button>
         {item.confirmation && (
