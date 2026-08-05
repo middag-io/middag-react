@@ -135,6 +135,10 @@ export type DataTableBulkAction = ExecutableAction;
 // ---------------------------------------------------------------------------
 
 export interface DataTableParamChange {
+  /**
+   * 0-based page index, matching TanStack's `pageIndex` — not the 1-based `page`
+   * of the block contract. Consumers that bridge to that contract must add 1.
+   */
   page?: number;
   perPage?: number;
   sort?: DataTableSort | null;

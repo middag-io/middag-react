@@ -96,7 +96,12 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
     (params: DataTableParamChange) => {
       const queryParams: Record<string, string | number> = {};
 
-      if (params.page !== undefined) queryParams.page = params.page;
+      // DataTable speaks 0-based pageIndex; the block contract is 1-based (see the
+      // `page - 1` when feeding `pagination` below, and `'page' => 1` for a first
+      // page in the PHP builders). Without this conversion the block read 1-based
+      // and wrote 0-based, so paging never advanced: the server echoed page N, the
+      // block rendered it as N-1, and the next click re-sent the same N.
+      if (params.page !== undefined) queryParams.page = params.page + 1;
       if (params.perPage !== undefined) queryParams.per_page = params.perPage;
       if (params.sort?.key) {
         queryParams.sort = params.sort.key;
