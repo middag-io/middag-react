@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.41.0](https://github.com/middag-io/middag-react/compare/v0.40.1...v0.41.0) (2026-08-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **blocks:** o parâmetro `page` enviado ao servidor passa a ser 1-based. Consumidores que compensavam a assimetria — recebendo 0-based na borda HTTP e devolvendo 1-based no contrato — devem remover essa adaptação e tratar `page` como 1-based nas duas direções.
+
+### Bug Fixes
+
+* **blocks:** ActionGrid respeita loading e disabled do contrato Action ([4e6ac99](https://github.com/middag-io/middag-react/commit/4e6ac99c043cf316785996eb550b1198de142ab6))
+* **blocks:** DenseTable emite a página em 1-based, como o contrato declara ([642f75d](https://github.com/middag-io/middag-react/commit/642f75d2b8b9bad334296d3a6341848e1cda833c))
+* **blocks:** paginação 1-based no DenseTable e loading/disabled no ActionGrid ([853a086](https://github.com/middag-io/middag-react/commit/853a086ee925b7a7fcd30a4986a8d8bf4977f881))
+
 ## [0.40.1](https://github.com/middag-io/middag-react/compare/v0.40.0...v0.40.1) (2026-07-29)
 
 
