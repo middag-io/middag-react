@@ -135,6 +135,19 @@ export interface DenseTableBlockData {
   bulkActions?: ExecutableAction[];
   searchPlaceholder?: string;
   emptyState?: EmptyStateDef;
+  /**
+   * The toolbar's "save as view" control.
+   *
+   * Absent, the control does not render — it has no meaning on a table whose
+   * page has nowhere to keep a view. Present, it fires this action, and the
+   * page decides what saving means: the table knows the current query, but not
+   * that views exist.
+   *
+   * `saveViewActive` fills the star, for pages where the control toggles rather
+   * than only creates.
+   */
+  saveViewAction?: ExecutableAction;
+  saveViewActive?: boolean;
 }
 
 // ── MetricCardBlock ──────────────────────────────────────────────────────────

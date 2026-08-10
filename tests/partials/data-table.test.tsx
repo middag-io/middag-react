@@ -115,14 +115,28 @@ describe("DataTable toolbar controls", () => {
     expect(comfortable.getAttribute("aria-pressed")).toBe("false");
   });
 
-  it("exposes the save-view control with an accessible name", () => {
-    render(
+  it("renders the save-view control only when a handler is wired", () => {
+    const onSaveView = vi.fn();
+
+    const { rerender } = render(
       <I18nProvider>
         <DataTable columns={columns} rows={rows} rowKey={(r) => r.id} />
       </I18nProvider>,
     );
 
-    expect(screen.getByRole("button", { name: "Save as view" })).toBeDefined();
+    // The control used to render unconditionally, with a title, an aria-label
+    // and no onClick — an accessible name for an action that never happened.
+    expect(screen.queryByRole("button", { name: "Save as view" })).toBeNull();
+
+    rerender(
+      <I18nProvider>
+        <DataTable columns={columns} rows={rows} rowKey={(r) => r.id} onSaveView={onSaveView} />
+      </I18nProvider>,
+    );
+
+    const control = screen.getByRole("button", { name: "Save as view" });
+    fireEvent.click(control);
+    expect(onSaveView).toHaveBeenCalledTimes(1);
   });
 
   it("renders filter removal as a keyboard-operable button, not a span", () => {

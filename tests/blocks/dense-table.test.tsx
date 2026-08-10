@@ -138,4 +138,103 @@ describe("DenseTableBlock", () => {
     expect(await screen.findByRole("dialog")).toBeDefined();
     expect(screen.getByText("Archive the selected courses?")).toBeDefined();
   });
+
+  it("sends a cleared filter as an empty value instead of dropping the key", async () => {
+    const { DenseTableBlock } = await import("@/base/blocks/DenseTableBlock");
+    const { I18nProvider } = await import("@/i18n/I18nProvider");
+    const { mockRouter } = await import("../setup");
+
+    const data = {
+      ...denseTableData(),
+      filters: {
+        available: [
+          {
+            key: "status",
+            label: "Status",
+            type: "select" as const,
+            options: [{ value: "active", label: "Active" }],
+          },
+        ],
+        applied: { status: "active" },
+      },
+    };
+
+    render(
+      <I18nProvider>
+        <DenseTableBlock block={block("dense_table", "test-table-filter-clear", data)} />
+      </I18nProvider>,
+    );
+
+    mockRouter.get.mockClear();
+    fireEvent.click(screen.getByRole("button", { name: /Remove filter Status/ }));
+
+    // The request is a partial patch merged onto the query the server already
+    // holds. Omitting the key reads as "no opinion" and leaves the old value in
+    // place, so the only active filter could never be cleared.
+    const params = mockRouter.get.mock.calls[0][1] as Record<string, unknown>;
+    expect(params["filter[status]"]).toBe("");
+  });
+
+  it("hides the save-as-view control until the contract declares its action", async () => {
+    const { DenseTableBlock } = await import("@/base/blocks/DenseTableBlock");
+    const { I18nProvider } = await import("@/i18n/I18nProvider");
+
+    const { rerender } = render(
+      <I18nProvider>
+        <DenseTableBlock block={block("dense_table", "test-table-no-star", denseTableData())} />
+      </I18nProvider>,
+    );
+
+    // No action, no button — it used to render always, with no onClick at all.
+    expect(screen.queryByRole("button", { name: /Save as view/ })).toBeNull();
+
+    const withAction = {
+      ...denseTableData(),
+      saveViewAction: {
+        id: "fav",
+        label: "Favorite this view",
+        intent: "secondary" as const,
+        target: { kind: "request" as const, endpoint: "/x/fav", method: "post" as const },
+      },
+      saveViewActive: true,
+    };
+    rerender(
+      <I18nProvider>
+        <DenseTableBlock block={block("dense_table", "test-table-star", withAction)} />
+      </I18nProvider>,
+    );
+
+    // The action's own label names the control, and the active state is exposed.
+    const star = screen.getByRole("button", { name: "Favorite this view" });
+    expect(star.getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("caps a column at maxWidth and keeps the full value in the title", async () => {
+    const { DenseTableBlock } = await import("@/base/blocks/DenseTableBlock");
+    const { I18nProvider } = await import("@/i18n/I18nProvider");
+
+    const long = "A".repeat(200);
+    const base = denseTableData();
+    const data = {
+      ...base,
+      columns: [{ key: "name", label: "Name", maxWidth: 300 }, ...base.columns.slice(1)],
+      rows: [
+        { id: 1, name: long, email: "a@b.c", status: { label: "Active", appearance: "success" } },
+      ],
+    };
+
+    const { container } = render(
+      <I18nProvider>
+        <DenseTableBlock block={block("dense_table", "test-table-maxwidth", data)} />
+      </I18nProvider>,
+    );
+
+    const cell = container.querySelector("tbody span[title]") as HTMLElement | null;
+    expect(cell).not.toBeNull();
+    // Clipped in CSS, not shortened in the data: the whole value is still here.
+    expect(cell!.getAttribute("title")).toBe(long);
+    expect(cell!.textContent).toBe(long);
+    expect(cell!.style.maxWidth).toBe("300px");
+    expect(cell!.className).toContain("truncate");
+  });
 });

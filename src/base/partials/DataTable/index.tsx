@@ -495,6 +495,9 @@ export function DataTable<TData extends object>({
   emptyStateCTA,
   onParamChange,
   onBulkAction,
+  onSaveView,
+  savedView = false,
+  saveViewLabel,
   onRowClick,
   selectedRowKey,
   remember = false,
@@ -1050,23 +1053,40 @@ export function DataTable<TData extends object>({
           );
         })()}
 
-        {/* Save as view */}
-        <button
-          type="button"
-          className="border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground inline-flex h-[30px] w-[30px] items-center justify-center rounded-[5px] border transition-colors"
-          title={t("middag.ui.table.save_view")}
-          aria-label={t("middag.ui.table.save_view")}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            className="h-3.5 w-3.5"
+        {/*
+          Save as view — rendered only when the consumer wired a handler. It used
+          to render unconditionally with no `onClick` at all: a button carrying a
+          title and an aria-label, promising an action it never performed.
+
+          `savedView` fills the star so the control reports state instead of only
+          accepting a click, and `aria-pressed` says the same thing to a screen
+          reader.
+        */}
+        {onSaveView && (
+          <button
+            type="button"
+            onClick={onSaveView}
+            aria-pressed={savedView}
+            className={cn(
+              "inline-flex h-[30px] w-[30px] items-center justify-center rounded-[5px] border transition-colors",
+              savedView
+                ? "border-primary text-primary"
+                : "border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground",
+            )}
+            title={saveViewLabel ?? t("middag.ui.table.save_view")}
+            aria-label={saveViewLabel ?? t("middag.ui.table.save_view")}
           >
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-          </svg>
-        </button>
+            <svg
+              viewBox="0 0 24 24"
+              fill={savedView ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth={2}
+              className="h-3.5 w-3.5"
+            >
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Table or Empty State */}
