@@ -664,11 +664,10 @@ export function DataTable<TData extends object>({
             <span
               className={cn(
                 "block text-[13px]",
-                col.maxWidth ? "truncate" : "break-words",
+                col.maxWidth ? "w-full truncate" : "break-words",
                 isFirstDataCol && "font-medium",
                 isNumeric && "text-right tabular-nums",
               )}
-              style={col.maxWidth ? { maxWidth: col.maxWidth } : undefined}
               title={full}
             >
               {renderCellValue(col, row.original)}
@@ -811,6 +810,13 @@ export function DataTable<TData extends object>({
     () => Object.keys(rowSelection).filter((k) => rowSelection[k]),
     [rowSelection],
   );
+  // Teto de largura por coluna, por id — o `<th>` e o `<td>` o aplicam, e a
+  // célula preenche o que a coluna tiver.
+  const columnMaxWidth = useCallback(
+    (id: string) => columns.find((c) => c.key === id)?.maxWidth,
+    [columns],
+  );
+
   const hasSelection = selectedKeys.length > 0;
 
   const handleBulkAction = useCallback(
@@ -1131,7 +1137,10 @@ export function DataTable<TData extends object>({
                       key={header.id}
                       scope="col"
                       className="text-muted-foreground h-8 px-4 text-left text-[11px] font-semibold tracking-[0.04em] uppercase"
-                      style={header.getSize() !== 150 ? { width: header.getSize() } : undefined}
+                      style={{
+                        ...(header.getSize() !== 150 ? { width: header.getSize() } : {}),
+                        maxWidth: columnMaxWidth(header.column.id),
+                      }}
                       aria-sort={
                         header.column.getCanSort()
                           ? header.column.getIsSorted() === "asc"
@@ -1189,6 +1198,12 @@ export function DataTable<TData extends object>({
                           className="border-border/50 truncate overflow-hidden border-b px-4 align-middle text-[13px] whitespace-nowrap"
                           style={{
                             height: DENSITY_HEIGHTS[density],
+                            // The cap belongs to the column, not to the text. Held on
+                            // the cell, it bounds how wide the column can grow; held on
+                            // the text, the column still took its share of any surplus
+                            // width and the clipped value sat short of the next column
+                            // — 170px of dead space at 1920.
+                            maxWidth: columnMaxWidth(cell.column.id),
                           }}
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}

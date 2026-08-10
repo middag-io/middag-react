@@ -229,12 +229,23 @@ describe("DenseTableBlock", () => {
       </I18nProvider>,
     );
 
-    const cell = container.querySelector("tbody span[title]") as HTMLElement | null;
-    expect(cell).not.toBeNull();
+    const text = container.querySelector("tbody span[title]") as HTMLElement | null;
+    expect(text).not.toBeNull();
     // Clipped in CSS, not shortened in the data: the whole value is still here.
-    expect(cell!.getAttribute("title")).toBe(long);
-    expect(cell!.textContent).toBe(long);
-    expect(cell!.style.maxWidth).toBe("300px");
-    expect(cell!.className).toContain("truncate");
+    expect(text!.getAttribute("title")).toBe(long);
+    expect(text!.textContent).toBe(long);
+
+    // The cap sits on the cell and the text fills it. Held on the text instead,
+    // the column still claimed its share of any surplus table width while the
+    // clipped value stayed pinned to the cap — a growing gap before the next
+    // column, 170px of it at 1920.
+    const td = text!.closest("td") as HTMLElement;
+    expect(td.style.maxWidth).toBe("300px");
+    expect(text!.className).toContain("w-full");
+    expect(text!.className).toContain("truncate");
+
+    // The header is bounded too, so the column cannot outgrow the cap.
+    const th = container.querySelectorAll("thead th")[0] as HTMLElement;
+    expect(th.style.maxWidth).toBe("300px");
   });
 });
