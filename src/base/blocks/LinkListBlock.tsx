@@ -1,7 +1,8 @@
 /**
  * LinkListBlock — vertical list of links with icon, label, and description.
  *
- * Items with href: null are hidden. External links open in new tab.
+ * Items with href: null are hidden. Internal destinations navigate through
+ * Inertia; external links stay plain anchors and open in a new tab.
  *
  * @see ADR-807 block catalog
  */
@@ -9,6 +10,7 @@
 import type { ReactElement } from "react";
 import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { Link } from "@inertiajs/react";
 
 import { getIcon } from "@/base/utils/icons";
 import type { LinkListBlockData } from "@/contracts/block-data";
@@ -27,37 +29,45 @@ export function LinkListBlock({ block }: BlockProps<LinkListBlockData>): ReactEl
 
   return (
     <div className={cn(borderless ? "space-y-0.5" : "divide-border divide-y rounded-lg border")}>
-      {visible.map((item, index) => (
-        <a
-          key={`${item.href}-${index}`}
-          href={item.href!}
-          target={item.external ? "_blank" : undefined}
-          rel={item.external ? "noopener noreferrer" : undefined}
-          className={cn(
-            "flex items-start gap-3 px-4 py-3 transition-colors",
-            borderless ? "hover:bg-accent/50 rounded-md" : "hover:bg-accent/50",
-          )}
-        >
-          {item.icon && (
-            <HugeiconsIcon
-              icon={getIcon(item.icon) as unknown as IconSvgElement}
-              className="text-muted-foreground mt-0.5 size-4"
-            />
-          )}
-          <div className="flex-1">
-            <span className="text-sm font-medium">{item.label}</span>
-            {item.description && (
-              <p className="text-muted-foreground text-xs">{item.description}</p>
+      {visible.map((item, index) => {
+        // Internal destinations go through Inertia so the page swaps instead of
+        // reloading; a raw anchor threw away the whole document — and with it the
+        // scroll position and every bit of client state — to move one link away.
+        // External ones stay anchors: Inertia would try to render the response as
+        // a page.
+        const Anchor = item.external ? "a" : Link;
+        return (
+          <Anchor
+            key={`${item.href}-${index}`}
+            href={item.href!}
+            target={item.external ? "_blank" : undefined}
+            rel={item.external ? "noopener noreferrer" : undefined}
+            className={cn(
+              "flex items-start gap-3 px-4 py-3 transition-colors",
+              borderless ? "hover:bg-accent/50 rounded-md" : "hover:bg-accent/50",
             )}
-          </div>
-          {item.external && (
-            <HugeiconsIcon
-              icon={ArrowUpRight01Icon as unknown as IconSvgElement}
-              className="text-muted-foreground mt-0.5 size-3"
-            />
-          )}
-        </a>
-      ))}
+          >
+            {item.icon && (
+              <HugeiconsIcon
+                icon={getIcon(item.icon) as unknown as IconSvgElement}
+                className="text-muted-foreground mt-0.5 size-4"
+              />
+            )}
+            <div className="flex-1">
+              <span className="text-sm font-medium">{item.label}</span>
+              {item.description && (
+                <p className="text-muted-foreground text-xs">{item.description}</p>
+              )}
+            </div>
+            {item.external && (
+              <HugeiconsIcon
+                icon={ArrowUpRight01Icon as unknown as IconSvgElement}
+                className="text-muted-foreground mt-0.5 size-3"
+              />
+            )}
+          </Anchor>
+        );
+      })}
     </div>
   );
 }
