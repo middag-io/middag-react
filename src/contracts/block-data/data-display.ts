@@ -296,6 +296,22 @@ export interface LinkListItem {
   icon?: string;
   description?: string;
   external?: boolean;
+  /**
+   * Short text pinned to the right of the row — a count, a total, a shortcut.
+   *
+   * A facet list reads as two columns: what it is on the left, how many on the
+   * right. Folded into the label it becomes part of the name and the eye has to
+   * parse each row to find the number.
+   */
+  trailing?: string;
+  /**
+   * Marks the row as the current selection, drawn as a filled background.
+   *
+   * A list that filters something needs to say which entry is doing it. Without
+   * this the only way to state it is inside the label text, which reads as part
+   * of the name rather than as state.
+   */
+  active?: boolean;
 }
 
 export interface LinkListBlockData {

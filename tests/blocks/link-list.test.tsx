@@ -62,4 +62,37 @@ describe("LinkListBlock", () => {
     expect(sameKeyWarned).toBe(false);
     errorSpy.mockRestore();
   });
+
+  it("pins trailing text to the right and marks the active row", async () => {
+    const { LinkListBlock } = await import("@/base/blocks/LinkListBlock");
+    const data = {
+      items: [
+        { label: "All", href: "/all", trailing: "14" },
+        { label: "Blocked", href: "/blocked", trailing: "6", active: true },
+      ],
+    };
+    const { container } = render(<LinkListBlock block={block("link_list", "test-facets", data)} />);
+
+    // The count is its own element, not part of the label — a facet list reads
+    // as two columns, and folded into the label it becomes part of the name.
+    expect(screen.getByText("14")).toBeDefined();
+
+    const rows = container.querySelectorAll("a");
+    expect(rows[0].getAttribute("aria-current")).toBeNull();
+    expect(rows[1].getAttribute("aria-current")).toBe("true");
+  });
+
+  it("tightens the rows when meta.dense is set", async () => {
+    const { LinkListBlock } = await import("@/base/blocks/LinkListBlock");
+    const data = { items: [{ label: "All", href: "/all" }] };
+
+    const loose = render(<LinkListBlock block={block("link_list", "test-loose", data)} />);
+    expect(loose.container.querySelector("a")!.className).toContain("py-3");
+    loose.unmount();
+
+    const tight = render(
+      <LinkListBlock block={block("link_list", "test-dense", data, { meta: { dense: true } })} />,
+    );
+    expect(tight.container.querySelector("a")!.className).toContain("py-1.5");
+  });
 });
