@@ -79,9 +79,18 @@ export function ConfirmationDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>
-            <span dangerouslySetInnerHTML={{ __html: message }} />
-          </DialogDescription>
+          {/*
+            Rendered as text, never as HTML.
+
+            The message is interpolated with row data before it gets here (see
+            DenseTableBlock), so it carries values this component does not
+            control. Injecting it as HTML turned a row field — a saved view's
+            name, a course title, anything a user can type — into live DOM.
+
+            `whitespace-pre-line` keeps the one formatting need this actually
+            had: a newline in the message still breaks the line.
+          */}
+          <DialogDescription className="whitespace-pre-line">{message}</DialogDescription>
         </DialogHeader>
 
         {waiting && waitingMessage && (
