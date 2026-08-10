@@ -175,6 +175,8 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
     timestampFormat: col.timestampFormat,
     sortable: col.sortable,
     minWidth: col.minWidth,
+    maxWidth: col.maxWidth,
+    statusMap: col.statusMap,
     href: col.href,
     entityType: col.entity?.type,
     entityIdField: col.entity?.id,

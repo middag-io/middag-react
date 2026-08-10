@@ -46,6 +46,8 @@ export interface DataTableColumn<TData> {
   width?: number;
   /** Min width in pixels. */
   minWidth?: number;
+  /** Max width in pixels. Longer content clips to one line with an ellipsis. */
+  maxWidth?: number;
   /** URL pattern for link cells. Interpolated per row (e.g. "/organizations/{organizationId}"). */
   href?: string;
   /** Entity type for link resolution (from PageContract.entities map). */

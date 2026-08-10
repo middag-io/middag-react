@@ -650,19 +650,31 @@ export function DataTable<TData extends object>({
         id: col.key,
         accessorFn: (row: TData) => getRowValue(row, col.key),
         header: ({ column }) => <MinimalColumnHeader column={column} title={col.label} />,
-        cell: ({ row }) => (
-          <span
-            className={cn(
-              "block text-[13px] break-words",
-              isFirstDataCol && "font-medium",
-              isNumeric && "text-right tabular-nums",
-            )}
-          >
-            {renderCellValue(col, row.original)}
-          </span>
-        ),
+        cell: ({ row }) => {
+          // Capped columns clip to one line; uncapped ones keep wrapping, which
+          // is what every column did before the cap existed. The untouched value
+          // rides along as `title` so hovering still reveals it in full — the
+          // point of clipping in CSS rather than shortening the data.
+          const raw = col.maxWidth ? getRowValue(row.original, col.key) : undefined;
+          const full = typeof raw === "string" || typeof raw === "number" ? String(raw) : undefined;
+          return (
+            <span
+              className={cn(
+                "block text-[13px]",
+                col.maxWidth ? "truncate" : "break-words",
+                isFirstDataCol && "font-medium",
+                isNumeric && "text-right tabular-nums",
+              )}
+              style={col.maxWidth ? { maxWidth: col.maxWidth } : undefined}
+              title={full}
+            >
+              {renderCellValue(col, row.original)}
+            </span>
+          );
+        },
         size: col.width,
         minSize: col.minWidth ?? 80,
+        maxSize: col.maxWidth ?? Number.MAX_SAFE_INTEGER,
         enableSorting: col.sortable ?? false,
         enableHiding: col.hideable !== false,
         meta: {

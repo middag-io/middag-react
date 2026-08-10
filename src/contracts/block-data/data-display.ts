@@ -37,7 +37,30 @@ export interface DenseTableColumnDef {
   /** Entity reference for link resolution via PageContract.entities map. */
   entity?: EntityRef;
   minWidth?: number;
+  /**
+   * Cap in pixels. Longer content is clipped to one line with an ellipsis, and
+   * the full value stays in the DOM as the cell's `title`.
+   *
+   * Without a cap a column grows until the widest value fits, so a single long
+   * row can push the table past the width of the page. Capping in the column
+   * keeps the value intact — selectable, searchable by the browser, readable on
+   * hover — where trimming it in the data would not.
+   */
+  maxWidth?: number;
+  /**
+   * Status value → semantic intent, for `variant: "status"` and `"badge"`.
+   *
+   * Those variants resolve their colour by looking the displayed text up in a
+   * built-in English map, so a translated label matches nothing and every row
+   * renders neutral. Supplying the mapping for the labels this column actually
+   * shows is what lets a localized status column keep its colours. Keys are
+   * matched case-insensitively.
+   */
+  statusMap?: Record<string, StatusIntent>;
 }
+
+/** Semantic intents a status cell can resolve to. */
+export type StatusIntent = "success" | "warning" | "destructive" | "secondary" | "info" | "default";
 
 export interface DenseTablePagination {
   page: number;
