@@ -34,6 +34,8 @@ import { useTranslation } from "@/i18n/useTranslation";
 import { Label } from "@/primitives/reui/label";
 import { Skeleton } from "@/primitives/reui/skeleton";
 
+import { resolveFieldComponent } from "./fields/field-registry";
+
 /** Lazy-loaded PhoneField — libphonenumber-js (~40KB) loads only when a phone field renders. */
 const LazyPhoneField = lazy(() =>
   import("@/base/form/fields/PhoneField").then((m) => ({ default: m.PhoneField })),
@@ -575,7 +577,30 @@ function renderField(
         />
       );
 
-    default:
+    default: {
+      /**
+       * A component this file has never heard of, resolved from the registry.
+       *
+       * `registerFieldComponent` has been public, and documented as the way to
+       * add a field without editing this file, while nothing ever read the
+       * registry back — registering one had no effect at all. This is where that
+       * promise comes true.
+       *
+       * The lookup belongs *here* and not before the switch, even though earlier
+       * would also let a consumer replace a built-in: `registerDefaultFields`
+       * puts every shipped field in the same registry, and those expect their own
+       * explicit props, which the cases above supply. Resolving from the registry
+       * first would hand `select` a `fieldProps` bag instead of its `options` and
+       * break every form in the library.
+       *
+       * A custom field gets the whole bag, per `FieldComponentProps` — this file
+       * cannot know what a field it does not recognise needs.
+       */
+      const Registered = resolveFieldComponent(component);
+      if (Registered) {
+        return <Registered {...common} value={value} onChange={onChange} fieldProps={props} />;
+      }
       return <p className="text-destructive text-xs">Unknown field component: {component}</p>;
+    }
   }
 }
