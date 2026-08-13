@@ -495,6 +495,9 @@ export function DataTable<TData extends object>({
   emptyStateCTA,
   onParamChange,
   onBulkAction,
+  onSaveView,
+  savedView = false,
+  saveViewLabel,
   onRowClick,
   selectedRowKey,
   remember = false,
@@ -650,19 +653,30 @@ export function DataTable<TData extends object>({
         id: col.key,
         accessorFn: (row: TData) => getRowValue(row, col.key),
         header: ({ column }) => <MinimalColumnHeader column={column} title={col.label} />,
-        cell: ({ row }) => (
-          <span
-            className={cn(
-              "block text-[13px] break-words",
-              isFirstDataCol && "font-medium",
-              isNumeric && "text-right tabular-nums",
-            )}
-          >
-            {renderCellValue(col, row.original)}
-          </span>
-        ),
+        cell: ({ row }) => {
+          // Capped columns clip to one line; uncapped ones keep wrapping, which
+          // is what every column did before the cap existed. The untouched value
+          // rides along as `title` so hovering still reveals it in full — the
+          // point of clipping in CSS rather than shortening the data.
+          const raw = col.maxWidth ? getRowValue(row.original, col.key) : undefined;
+          const full = typeof raw === "string" || typeof raw === "number" ? String(raw) : undefined;
+          return (
+            <span
+              className={cn(
+                "block text-[13px]",
+                col.maxWidth ? "w-full truncate" : "break-words",
+                isFirstDataCol && "font-medium",
+                isNumeric && "text-right tabular-nums",
+              )}
+              title={full}
+            >
+              {renderCellValue(col, row.original)}
+            </span>
+          );
+        },
         size: col.width,
         minSize: col.minWidth ?? 80,
+        maxSize: col.maxWidth ?? Number.MAX_SAFE_INTEGER,
         enableSorting: col.sortable ?? false,
         enableHiding: col.hideable !== false,
         meta: {
@@ -796,6 +810,13 @@ export function DataTable<TData extends object>({
     () => Object.keys(rowSelection).filter((k) => rowSelection[k]),
     [rowSelection],
   );
+  // Teto de largura por coluna, por id — o `<th>` e o `<td>` o aplicam, e a
+  // célula preenche o que a coluna tiver.
+  const columnMaxWidth = useCallback(
+    (id: string) => columns.find((c) => c.key === id)?.maxWidth,
+    [columns],
+  );
+
   const hasSelection = selectedKeys.length > 0;
 
   const handleBulkAction = useCallback(
@@ -1038,23 +1059,40 @@ export function DataTable<TData extends object>({
           );
         })()}
 
-        {/* Save as view */}
-        <button
-          type="button"
-          className="border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground inline-flex h-[30px] w-[30px] items-center justify-center rounded-[5px] border transition-colors"
-          title={t("middag.ui.table.save_view")}
-          aria-label={t("middag.ui.table.save_view")}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            className="h-3.5 w-3.5"
+        {/*
+          Save as view — rendered only when the consumer wired a handler. It used
+          to render unconditionally with no `onClick` at all: a button carrying a
+          title and an aria-label, promising an action it never performed.
+
+          `savedView` fills the star so the control reports state instead of only
+          accepting a click, and `aria-pressed` says the same thing to a screen
+          reader.
+        */}
+        {onSaveView && (
+          <button
+            type="button"
+            onClick={onSaveView}
+            aria-pressed={savedView}
+            className={cn(
+              "inline-flex h-[30px] w-[30px] items-center justify-center rounded-[5px] border transition-colors",
+              savedView
+                ? "border-primary text-primary"
+                : "border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground",
+            )}
+            title={saveViewLabel ?? t("middag.ui.table.save_view")}
+            aria-label={saveViewLabel ?? t("middag.ui.table.save_view")}
           >
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-          </svg>
-        </button>
+            <svg
+              viewBox="0 0 24 24"
+              fill={savedView ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth={2}
+              className="h-3.5 w-3.5"
+            >
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Table or Empty State */}
@@ -1099,7 +1137,10 @@ export function DataTable<TData extends object>({
                       key={header.id}
                       scope="col"
                       className="text-muted-foreground h-8 px-4 text-left text-[11px] font-semibold tracking-[0.04em] uppercase"
-                      style={header.getSize() !== 150 ? { width: header.getSize() } : undefined}
+                      style={{
+                        ...(header.getSize() !== 150 ? { width: header.getSize() } : {}),
+                        maxWidth: columnMaxWidth(header.column.id),
+                      }}
                       aria-sort={
                         header.column.getCanSort()
                           ? header.column.getIsSorted() === "asc"
@@ -1157,6 +1198,12 @@ export function DataTable<TData extends object>({
                           className="border-border/50 truncate overflow-hidden border-b px-4 align-middle text-[13px] whitespace-nowrap"
                           style={{
                             height: DENSITY_HEIGHTS[density],
+                            // The cap belongs to the column, not to the text. Held on
+                            // the cell, it bounds how wide the column can grow; held on
+                            // the text, the column still took its share of any surplus
+                            // width and the clipped value sat short of the next column
+                            // — 170px of dead space at 1920.
+                            maxWidth: columnMaxWidth(cell.column.id),
                           }}
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}

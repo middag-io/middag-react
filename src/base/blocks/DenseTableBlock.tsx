@@ -109,6 +109,17 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
       }
       if (params.search !== undefined) queryParams.search = params.search;
       if (params.filters) {
+        // A filter the user just cleared has to be sent as an empty value, not
+        // left out. This request is a partial patch merged onto the query the
+        // server already holds, so a key that merely stops appearing is
+        // indistinguishable from one this request had no opinion about — the old
+        // value survives and clearing does nothing on screen. Removing the only
+        // active filter sends `filters: {}`, which used to produce no key at all.
+        // Seed every currently applied key as empty, then let the ones that
+        // survived overwrite their own entry.
+        Object.keys(data.filters?.applied ?? {}).forEach((k) => {
+          queryParams[`filter[${k}]`] = "";
+        });
         Object.entries(params.filters).forEach(([k, v]) => {
           queryParams[`filter[${k}]`] = Array.isArray(v) ? v.join(",") : v;
         });
@@ -120,8 +131,26 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
         only: [reloadKey],
       });
     },
-    [reloadKey],
+    [reloadKey, data.filters?.applied],
   );
+
+  // The toolbar's star. The action comes from the contract already carrying the
+  // current view in its target, so the block does not have to know what a view
+  // is — it resolves the target the same way every other action here does.
+  const handleSaveView = useCallback(() => {
+    const action = data.saveViewAction;
+    if (!action) return;
+    const target = resolveActionTarget(action);
+    if (target.kind === "link") {
+      router.visit(target.url, { preserveState: true, preserveScroll: true });
+      return;
+    }
+    router[target.method as "post" | "put" | "patch" | "delete"](
+      target.url,
+      {},
+      { preserveState: true, preserveScroll: true },
+    );
+  }, [data.saveViewAction]);
 
   const handleBulkAction = useCallback(
     (actionId: string, selectedKeys: string[]) => {
@@ -175,6 +204,8 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
     timestampFormat: col.timestampFormat,
     sortable: col.sortable,
     minWidth: col.minWidth,
+    maxWidth: col.maxWidth,
+    statusMap: col.statusMap,
     href: col.href,
     entityType: col.entity?.type,
     entityIdField: col.entity?.id,
@@ -335,6 +366,11 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
         }
         onParamChange={clientSide ? undefined : handleParamChange}
         onBulkAction={handleBulkAction}
+        onSaveView={data.saveViewAction ? handleSaveView : undefined}
+        savedView={data.saveViewActive ?? false}
+        saveViewLabel={
+          data.saveViewAction ? renderLabel(data.saveViewAction.label, t) || undefined : undefined
+        }
         remember={block.remember ?? false}
         rememberKey={key}
         clientSide={clientSide}

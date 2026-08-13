@@ -37,7 +37,30 @@ export interface DenseTableColumnDef {
   /** Entity reference for link resolution via PageContract.entities map. */
   entity?: EntityRef;
   minWidth?: number;
+  /**
+   * Cap in pixels. Longer content is clipped to one line with an ellipsis, and
+   * the full value stays in the DOM as the cell's `title`.
+   *
+   * Without a cap a column grows until the widest value fits, so a single long
+   * row can push the table past the width of the page. Capping in the column
+   * keeps the value intact — selectable, searchable by the browser, readable on
+   * hover — where trimming it in the data would not.
+   */
+  maxWidth?: number;
+  /**
+   * Status value → semantic intent, for `variant: "status"` and `"badge"`.
+   *
+   * Those variants resolve their colour by looking the displayed text up in a
+   * built-in English map, so a translated label matches nothing and every row
+   * renders neutral. Supplying the mapping for the labels this column actually
+   * shows is what lets a localized status column keep its colours. Keys are
+   * matched case-insensitively.
+   */
+  statusMap?: Record<string, StatusIntent>;
 }
+
+/** Semantic intents a status cell can resolve to. */
+export type StatusIntent = "success" | "warning" | "destructive" | "secondary" | "info" | "default";
 
 export interface DenseTablePagination {
   page: number;
@@ -112,6 +135,19 @@ export interface DenseTableBlockData {
   bulkActions?: ExecutableAction[];
   searchPlaceholder?: string;
   emptyState?: EmptyStateDef;
+  /**
+   * The toolbar's "save as view" control.
+   *
+   * Absent, the control does not render — it has no meaning on a table whose
+   * page has nowhere to keep a view. Present, it fires this action, and the
+   * page decides what saving means: the table knows the current query, but not
+   * that views exist.
+   *
+   * `saveViewActive` fills the star, for pages where the control toggles rather
+   * than only creates.
+   */
+  saveViewAction?: ExecutableAction;
+  saveViewActive?: boolean;
 }
 
 // ── MetricCardBlock ──────────────────────────────────────────────────────────
@@ -260,6 +296,22 @@ export interface LinkListItem {
   icon?: string;
   description?: string;
   external?: boolean;
+  /**
+   * Short text pinned to the right of the row — a count, a total, a shortcut.
+   *
+   * A facet list reads as two columns: what it is on the left, how many on the
+   * right. Folded into the label it becomes part of the name and the eye has to
+   * parse each row to find the number.
+   */
+  trailing?: string;
+  /**
+   * Marks the row as the current selection, drawn as a filled background.
+   *
+   * A list that filters something needs to say which entry is doing it. Without
+   * this the only way to state it is inside the label text, which reads as part
+   * of the name rather than as state.
+   */
+  active?: boolean;
 }
 
 export interface LinkListBlockData {

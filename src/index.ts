@@ -65,6 +65,7 @@ export type {
   DenseTableSort,
   DenseTableFilterDef,
   DenseTableBlockData,
+  StatusIntent,
   // Rich column values
   RichStatusValue,
   LinkGroupItem,

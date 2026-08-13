@@ -46,6 +46,8 @@ export interface DataTableColumn<TData> {
   width?: number;
   /** Min width in pixels. */
   minWidth?: number;
+  /** Max width in pixels. Longer content clips to one line with an ellipsis. */
+  maxWidth?: number;
   /** URL pattern for link cells. Interpolated per row (e.g. "/organizations/{organizationId}"). */
   href?: string;
   /** Entity type for link resolution (from PageContract.entities map). */
@@ -196,6 +198,20 @@ export interface DataTableProps<TData> {
   onParamChange?: (params: DataTableParamChange) => void;
   /** Callback when a bulk action is triggered. Receives action id + selected row keys. */
   onBulkAction?: (actionId: string, selectedKeys: string[]) => void;
+
+  /**
+   * Callback for the "save as view" control. The control only renders when this
+   * is supplied — a toolbar button that does nothing is worse than no button.
+   */
+  onSaveView?: () => void;
+  /** Renders the "save as view" control in its active state. */
+  savedView?: boolean;
+  /**
+   * Overrides the control's tooltip and accessible name. The consumer decides
+   * what saving means here, so it also gets to say so — the built-in "Save as
+   * view" would describe the wrong gesture on a page that toggles a favourite.
+   */
+  saveViewLabel?: string;
 
   /** Callback when a row is clicked (e.g. to open inspector). */
   onRowClick?: (row: TData) => void;
