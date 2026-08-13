@@ -6,7 +6,7 @@
  * @see NV-05-ux-blocks.md §1.2 toolbar anatomy
  */
 
-import { useState, type ReactElement } from "react";
+import { Fragment, useState, type ReactElement } from "react";
 import { FilterIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
@@ -162,6 +162,47 @@ export function FilterBar({
                         />
                         <span className="min-w-0 flex-1 truncate">{opt.label}</span>
                       </label>
+                    );
+                  })}
+                </div>
+              )}
+              {/*
+                `date_range` had been in `FilterDef` from the start with nothing
+                drawing it — the same hole `multiselect` had, and it survived the
+                fix to that one because each type is its own branch and nobody
+                was looking for the sibling.
+
+                Two native date inputs rather than a calendar popover: the value
+                is a pair of days, both ends need to be typeable, and a popover
+                inside a popover is a second layer to dismiss.
+
+                The pair travels as `[from, to]`, and an end left blank stays an
+                empty string rather than collapsing the array — position is what
+                says which end it is, so dropping one would silently turn "up to
+                March" into "from March". Both ends empty removes the filter, for
+                the same reason unchecking the last box does.
+              */}
+              {filter.type === "date_range" && (
+                <div className="flex items-center gap-1.5">
+                  {([0, 1] as const).map((end) => {
+                    const current = applied[filter.key];
+                    const pair = Array.isArray(current) ? current : ["", ""];
+                    return (
+                      <Fragment key={end}>
+                        {end === 1 && <span className="text-muted-foreground text-xs">—</span>}
+                        <input
+                          type="date"
+                          className="border-input bg-background h-8 min-w-0 flex-1 rounded-md border px-2 text-xs"
+                          aria-label={`${filter.label} ${end === 0 ? t("middag.ui.filter.date_from") : t("middag.ui.filter.date_to")}`}
+                          value={pair[end] ?? ""}
+                          onChange={(event) => {
+                            const next = [pair[0] ?? "", pair[1] ?? ""];
+                            next[end] = event.target.value;
+                            if (next[0] === "" && next[1] === "") onRemove(filter.key);
+                            else onApply(filter.key, next);
+                          }}
+                        />
+                      </Fragment>
                     );
                   })}
                 </div>
