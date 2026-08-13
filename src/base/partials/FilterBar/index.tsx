@@ -13,6 +13,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslation } from "@/i18n/useTranslation";
 import { Badge } from "@/primitives/reui/badge";
 import { Button } from "@/primitives/reui/button";
+import { Checkbox } from "@/primitives/reui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/primitives/reui/popover";
 import {
   Select,
@@ -89,7 +90,21 @@ export function FilterBar({
             </Button>
           )}
         </PopoverTrigger>
-        <PopoverContent className="w-72 space-y-4 p-4" align="start">
+        {/*
+          Capped and scrollable: the panel grows with the number of fields and,
+          once a field draws a checkbox per option instead of one closed select,
+          it outgrows the window — measured at 1093px in a 900px viewport, with
+          the last options below the fold and no way to reach them.
+
+          The cap is Radix's own available-height variable rather than a `vh`
+          fraction: the panel opens below its trigger, so the room it actually
+          has depends on where that trigger sits. From a trigger halfway down the
+          page the variable read 590px where `70vh` gave 630 — 40px past the fold.
+        */}
+        <PopoverContent
+          className="max-h-[var(--radix-popover-content-available-height)] w-72 space-y-4 overflow-y-auto p-4"
+          align="start"
+        >
           <p className="text-sm font-semibold">{t("middag.ui.filter.title")}</p>
           {filters.map((filter) => (
             <div key={filter.key} className="space-y-1.5">
@@ -110,6 +125,46 @@ export function FilterBar({
                     ))}
                   </SelectContent>
                 </Select>
+              )}
+
+              {/*
+                `multiselect` has been in `FilterDef` from the start and nothing
+                drew it — the field rendered as a label with no control under it,
+                so a consumer that asked for one silently got a filter nobody
+                could set. Checkboxes rather than a multi-value select: the whole
+                point is seeing several values on at once, and a closed trigger
+                hides exactly that.
+
+                Unchecking the last value removes the filter instead of applying
+                an empty list, which would read as "match nothing" and show an
+                empty table where the user meant to stop filtering.
+              */}
+              {filter.type === "multiselect" && filter.options && (
+                <div className="space-y-1.5">
+                  {filter.options.map((opt) => {
+                    const current = applied[filter.key];
+                    const values = Array.isArray(current) ? current : current ? [current] : [];
+                    const checked = values.includes(opt.value);
+                    return (
+                      <label
+                        key={opt.value}
+                        className="hover:bg-accent/40 flex cursor-pointer items-center gap-2 rounded px-1 py-0.5 text-xs"
+                      >
+                        <Checkbox
+                          checked={checked}
+                          onCheckedChange={() => {
+                            const next = checked
+                              ? values.filter((value) => value !== opt.value)
+                              : [...values, opt.value];
+                            if (next.length === 0) onRemove(filter.key);
+                            else onApply(filter.key, next);
+                          }}
+                        />
+                        <span className="min-w-0 flex-1 truncate">{opt.label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
               )}
             </div>
           ))}
