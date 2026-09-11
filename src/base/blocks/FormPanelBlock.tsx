@@ -296,47 +296,59 @@ export function FormPanelBlock({ block }: BlockProps<FormPanelBlockData>): React
   );
 
   const onSubmit = useCallback(
-    (payload: DynamicFormValues) => {
-      // Clear stale form-level errors from a previous attempt.
-      setSubmitFormErrors({});
+    (payload: DynamicFormValues) =>
+      new Promise<void>((resolve) => {
+        // Clear stale form-level errors from a previous attempt.
+        setSubmitFormErrors({});
 
-      // Filter to visible fields only
-      const visibleFields = allFields.filter((f) => isFieldVisible(f, payload));
-      const visiblePayload = Object.fromEntries(visibleFields.map((f) => [f.key, payload[f.key]]));
+        // Filter to visible fields only
+        const visibleFields = allFields.filter((f) => isFieldVisible(f, payload));
+        const visiblePayload = Object.fromEntries(visibleFields.map((f) => [f.key, payload[f.key]]));
 
-      // Force multipart encoding when any value is a File so Inertia streams
-      // the upload (and onProgress reports real bytes-sent percentages).
-      const hasFile = Object.values(visiblePayload).some(
-        (v) => v instanceof File || (Array.isArray(v) && v.some((item) => item instanceof File)),
-      );
+        // Force multipart encoding when any value is a File so Inertia streams
+        // the upload (and onProgress reports real bytes-sent percentages).
+        const hasFile = Object.values(visiblePayload).some(
+          (v) => v instanceof File || (Array.isArray(v) && v.some((item) => item instanceof File)),
+        );
 
-      const method = data.method === "put" ? "put" : data.method === "patch" ? "patch" : "post";
-      router[method](data.action, visiblePayload as Record<string, string>, {
-        forceFormData: hasFile,
-        onProgress: (event) => {
-          if (event && typeof event.percentage === "number") {
-            setUploadProgress(Math.round(event.percentage));
-          }
-        },
-        onError: (errors) => {
-          // Inertia types page-prop errors as flat strings, but v0.11.0 sends
-          // structured FieldError objects on the wire — cast through unknown.
-          const nonField: FormErrors = {};
-          for (const [field, err] of Object.entries(errors as unknown as FormErrors)) {
-            if (fieldKeys.has(field)) {
-              form.setError(field, { type: "server", message: resolveFieldError(err, t) });
-            } else {
-              // Form-level / dotted / unknown keys: surface via the alert, not RHF.
-              nonField[field] = err;
+        const method = data.method === "put" ? "put" : data.method === "patch" ? "patch" : "post";
+        router[method](data.action, visiblePayload as Record<string, string>, {
+          forceFormData: hasFile,
+          onProgress: (event) => {
+            if (event && typeof event.percentage === "number") {
+              setUploadProgress(Math.round(event.percentage));
             }
-          }
-          if (Object.keys(nonField).length > 0) {
-            setSubmitFormErrors((prev) => ({ ...prev, ...nonField }));
-          }
-        },
-        onFinish: () => setUploadProgress(null),
-      });
-    },
+          },
+          onError: (errors) => {
+            // Inertia types page-prop errors as flat strings, but v0.11.0 sends
+            // structured FieldError objects on the wire — cast through unknown.
+            const nonField: FormErrors = {};
+            for (const [field, err] of Object.entries(errors as unknown as FormErrors)) {
+              if (fieldKeys.has(field)) {
+                form.setError(field, { type: "server", message: resolveFieldError(err, t) });
+              } else {
+                // Form-level / dotted / unknown keys: surface via the alert, not RHF.
+                nonField[field] = err;
+              }
+            }
+            if (Object.keys(nonField).length > 0) {
+              setSubmitFormErrors((prev) => ({ ...prev, ...nonField }));
+            }
+          },
+          // onFinish fires on success, error AND a same-page redirect-back —
+          // it's the one callback that always runs, so it's what resolves
+          // this promise and lets react-hook-form's isSubmitting track the
+          // real request lifecycle instead of flipping false the instant
+          // router.post() is called (fire-and-forget, no promise returned).
+          // Without this the Salvar button re-enabled instantly on click,
+          // well before the redirect/reload actually completed seconds
+          // later — read as "nothing happened" even though the save worked.
+          onFinish: () => {
+            setUploadProgress(null);
+            resolve();
+          },
+        });
+      }),
     [allFields, data, form, t, fieldKeys],
   );
 

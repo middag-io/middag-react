@@ -15,11 +15,13 @@
 "use client";
 
 import { useMemo, type ReactElement } from "react";
+import { router } from "@inertiajs/core";
 import { Link } from "@inertiajs/react";
 
 import { useInspector } from "@/base/shell/partials/InspectorContext";
 import type { CardGridBlockData, CardGridColumnDef } from "@/contracts/block-data";
 import type { BlockProps } from "@/engine/registries";
+import { interpolate } from "@/base/utils/interpolate";
 import { cn } from "@/lib/utils";
 
 export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactElement {
@@ -58,20 +60,52 @@ export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactEl
         const id = row.id as string | number | undefined;
         const key = id != null ? String(id) : `row-${index}`;
         const isSelected = enabled && id != null && selectedId === id;
+        // Nested <button> inside <button> is invalid HTML, so the card itself
+        // is a div acting as a button (role + keyboard handling) once an edit
+        // affordance needs its own real, independently-clickable button.
+        const editUrl = data.editHref ? interpolate(data.editHref, row) : null;
 
         return (
-          <button
+          <div
             key={key}
-            type="button"
+            role="button"
+            tabIndex={0}
             onClick={() => enabled && id != null && select(id)}
+            onKeyDown={(e) => {
+              if (e.key !== "Enter" && e.key !== " ") return;
+              e.preventDefault();
+              if (enabled && id != null) select(id);
+            }}
             className={cn(
-              "bg-card text-card-foreground cursor-pointer rounded-lg border p-5 text-left transition-all",
+              "group bg-card text-card-foreground relative cursor-pointer rounded-lg border p-5 text-left transition-all",
               "hover:border-primary/50 hover:shadow-sm",
               isSelected && "border-primary ring-primary/20 ring-2",
             )}
           >
+            {editUrl && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.visit(editUrl);
+                }}
+                className="text-muted-foreground hover:text-foreground hover:bg-muted absolute top-3 right-3 rounded p-1 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                aria-label="Edit"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  className="h-3.5 w-3.5"
+                >
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+              </button>
+            )}
             <CardContent row={row} columns={data.columns} variant={variant} />
-          </button>
+          </div>
         );
       })}
     </div>
