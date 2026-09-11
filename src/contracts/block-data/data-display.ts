@@ -250,6 +250,8 @@ export interface CardGridBlockData {
   rows: Record<string, unknown>[];
   variant?: "default" | "store" | "connector";
   emptyState?: EmptyStateDef;
+  /** URL pattern for the per-card edit affordance. Interpolated per row (e.g. "/stores/{id}/edit"). */
+  editHref?: string;
 }
 
 // ── LinkListBlock ───────────────────────────────────────────────────────────

@@ -320,7 +320,26 @@ export { ImmersiveShell } from "@/base/shell/ImmersiveShell";
 // ── Shell partials (Community building blocks for custom shells) ────────────
 
 export { NavErrorBoundary } from "@/base/shell/partials/NavErrorBoundary";
-export { useInspector, type InspectorResponse } from "@/base/shell/partials/InspectorContext";
+// InspectorContext (the raw Context object) and InspectorSectionContent are
+// exported here too, not just useInspector: @middag-io/react-pro's
+// InspectorProvider/InlineInspector need them to fill this same context
+// instance. They used to reach in via the deep subpath
+// "@middag-io/react/shell/partials/InspectorContext", which the PRO runtime
+// build (ui/vite.config.runtime-pro.ts) does NOT externalize (only the bare
+// "@middag-io/react" specifier is) — so that deep import got bundled from
+// PRO's own prebuilt dist-lib, creating a SECOND createContext() instance.
+// CardGridBlock/DenseTableBlock (bundled from the externalized bare barrel)
+// read the original context and never see the Provider PRO mounts on its
+// private copy — Provider and Consumer split, clicks silently no-op. Routing
+// PRO through this bare export (already externalized, single instance) fixes
+// it without touching the ~30 legitimately-duplicated PRO-internal subpaths.
+export {
+  useInspector,
+  InspectorContext,
+  InspectorSectionContent,
+  type InspectorResponse,
+  type InspectorContextValue,
+} from "@/base/shell/partials/InspectorContext";
 // Editable panel — free contract-driven side drawer (context + provider + renderer).
 export {
   useEditablePanel,
