@@ -70,7 +70,8 @@ export function TabsBlock({ block }: BlockProps<TabsBlockData>): ReactElement {
           <TabsTrigger
             key={tab.id}
             value={tab.id}
-            className="data-[state=active]:text-primary data-[state=active]:after:bg-primary px-4 py-3 text-sm data-[state=active]:font-medium"
+            disabled={tab.disabled ?? false}
+            className="data-[state=active]:text-primary data-[state=active]:after:bg-primary px-4 py-3 text-sm disabled:pointer-events-none disabled:opacity-50 data-[state=active]:font-medium"
           >
             {renderLabel(tab.label, t)}
           </TabsTrigger>

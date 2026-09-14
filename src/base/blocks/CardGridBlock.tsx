@@ -14,18 +14,50 @@
 
 "use client";
 
-import { useMemo, type ReactElement } from "react";
+import { useMemo, useState, type ReactElement } from "react";
+import { router } from "@inertiajs/core";
 import { Link } from "@inertiajs/react";
 
+import { ConfirmationDialog } from "@/base/partials/ConfirmationDialog";
 import { useInspector } from "@/base/shell/partials/InspectorContext";
-import type { CardGridBlockData, CardGridColumnDef } from "@/contracts/block-data";
+import { interpolate } from "@/base/utils/interpolate";
+import type {
+  ActionConfirmation,
+  CardGridBlockData,
+  CardGridColumnDef,
+} from "@/contracts/block-data";
 import type { BlockProps } from "@/engine/registries";
+import { renderLabel } from "@/i18n/render-label";
+import { useTranslation } from "@/i18n/useTranslation";
+import { resolveActionTarget } from "@/lib/actions/resolve-action-target";
 import { cn } from "@/lib/utils";
+
+// Confirmation dialog state for a pending row action (parallels
+// DenseTableBlock's own confirmDialog state — same pattern, no polling/bulk
+// support needed here since card grids only ever act on a single row).
+interface PendingRowAction {
+  href: string;
+  method: "post" | "put" | "patch" | "delete";
+  confirmation: ActionConfirmation;
+}
 
 export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactElement {
   const { data } = block;
   const { select, selectedId, enabled } = useInspector();
+  const { t } = useTranslation();
   const variant = data.variant ?? "default";
+  const [pendingAction, setPendingAction] = useState<PendingRowAction | null>(null);
+
+  const handleConfirm = () => {
+    if (!pendingAction) return;
+    const { href, method } = pendingAction;
+    setPendingAction(null);
+    if (method === "delete") {
+      router.delete(href, { preserveState: true });
+    } else {
+      router[method](href, {}, { preserveState: true });
+    }
+  };
 
   if (data.rows.length === 0 && data.emptyState) {
     return (
@@ -49,32 +81,134 @@ export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactEl
   }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-      {data.rows.map((row, index) => {
-        // Preserve the row id verbatim — it may be a string/UUID, not just a
-        // number — so selection works for non-numeric ids. Rows without an id
-        // fall back to the index for a stable, unique React key and are not
-        // selectable.
-        const id = row.id as string | number | undefined;
-        const key = id != null ? String(id) : `row-${index}`;
-        const isSelected = enabled && id != null && selectedId === id;
+    <>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
+        {data.rows.map((row, index) => {
+          // Preserve the row id verbatim — it may be a string/UUID, not just a
+          // number — so selection works for non-numeric ids. Rows without an id
+          // fall back to the index for a stable, unique React key and are not
+          // selectable.
+          const id = row.id as string | number | undefined;
+          const key = id != null ? String(id) : `row-${index}`;
+          const isSelected = enabled && id != null && selectedId === id;
+          // Nested <button> inside <button> is invalid HTML, so the card itself
+          // is a div acting as a button (role + keyboard handling) once an edit
+          // affordance needs its own real, independently-clickable button.
+          const editUrl = data.editHref ? interpolate(data.editHref, row) : null;
 
-        return (
-          <button
-            key={key}
-            type="button"
-            onClick={() => enabled && id != null && select(id)}
-            className={cn(
-              "bg-card text-card-foreground cursor-pointer rounded-lg border p-5 text-left transition-all",
-              "hover:border-primary/50 hover:shadow-sm",
-              isSelected && "border-primary ring-primary/20 ring-2",
-            )}
-          >
-            <CardContent row={row} columns={data.columns} variant={variant} />
-          </button>
-        );
-      })}
-    </div>
+          return (
+            <div
+              key={key}
+              role="button"
+              tabIndex={0}
+              onClick={() => enabled && id != null && select(id)}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.preventDefault();
+                if (enabled && id != null) select(id);
+              }}
+              className={cn(
+                "group bg-card text-card-foreground relative cursor-pointer rounded-lg border p-5 text-left transition-all",
+                "hover:border-primary/50 hover:shadow-sm",
+                isSelected && "border-primary ring-primary/20 ring-2",
+              )}
+            >
+              <div className="pointer-events-none absolute top-3 right-3 flex items-center gap-1 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 focus-within:pointer-events-auto focus-within:opacity-100">
+                {editUrl && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.visit(editUrl);
+                    }}
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted rounded p-1"
+                    aria-label="Edit"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      className="h-3.5 w-3.5"
+                    >
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                  </button>
+                )}
+                {data.rowActions?.map((action) => {
+                  const target = resolveActionTarget(action);
+                  const href = interpolate(target.url, row);
+                  const isDanger = action.intent === "danger";
+
+                  return (
+                    <button
+                      key={action.id}
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (action.confirmation) {
+                          setPendingAction({
+                            href,
+                            method: target.method === "get" ? "post" : target.method,
+                            confirmation: action.confirmation,
+                          });
+                          return;
+                        }
+                        if (target.method === "delete") {
+                          router.delete(href, { preserveState: true });
+                        } else if (target.kind === "link") {
+                          router.visit(href);
+                        } else {
+                          const method = target.method as "post" | "put" | "patch";
+                          router[method](href, {}, { preserveState: true });
+                        }
+                      }}
+                      className={cn(
+                        "rounded p-1",
+                        isDanger
+                          ? "text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                      )}
+                      aria-label={renderLabel(action.label, t)}
+                      title={renderLabel(action.label, t)}
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        className="h-3.5 w-3.5"
+                      >
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                      </svg>
+                    </button>
+                  );
+                })}
+              </div>
+              <CardContent row={row} columns={data.columns} variant={variant} />
+            </div>
+          );
+        })}
+      </div>
+
+      {pendingAction && (
+        <ConfirmationDialog
+          open
+          onClose={() => setPendingAction(null)}
+          onConfirm={handleConfirm}
+          title={renderLabel(pendingAction.confirmation.title, t)}
+          message={renderLabel(pendingAction.confirmation.message, t)}
+          intent={pendingAction.confirmation.intent}
+          confirmLabel={renderLabel(pendingAction.confirmation.confirmLabel, t) || undefined}
+          cancelLabel={renderLabel(pendingAction.confirmation.cancelLabel, t) || undefined}
+        />
+      )}
+    </>
   );
 }
 
