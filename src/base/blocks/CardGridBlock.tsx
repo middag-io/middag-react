@@ -256,6 +256,7 @@ function CardContent({
 }
 
 function StoreCard({ row }: { row: Record<string, unknown> }): ReactElement {
+  const { t } = useTranslation();
   const provider = String(row.provider_type ?? row.idnumber ?? "");
   const status = String(row.status ?? "inactive");
   const initial = provider.charAt(0).toUpperCase() || "S";
@@ -303,7 +304,7 @@ function StoreCard({ row }: { row: Record<string, unknown> }): ReactElement {
           )}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-current" />
-          {status}
+          {t(`middag.ui.card.status.${status}`, { defaultValue: status })}
         </span>
       </div>
     </>
@@ -311,6 +312,7 @@ function StoreCard({ row }: { row: Record<string, unknown> }): ReactElement {
 }
 
 function ConnectorCard({ row }: { row: Record<string, unknown> }): ReactElement {
+  const { t } = useTranslation();
   const type = String(row.connector_type ?? "");
   const extension = String(row.extension ?? "");
   const status = String(row.status ?? "unconfigured");
@@ -364,7 +366,7 @@ function ConnectorCard({ row }: { row: Record<string, unknown> }): ReactElement 
           )}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-current" />
-          {status}
+          {t(`middag.ui.card.status.${status}`, { defaultValue: status })}
         </span>
         <span className="text-muted-foreground text-xs">{latency}</span>
       </div>
