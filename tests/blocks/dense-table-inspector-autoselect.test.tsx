@@ -15,8 +15,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import "../setup";
 
-import { block, denseTableData } from "../helpers";
 import { InspectorContext } from "@/base/shell/partials/InspectorContext";
+
+import { block, denseTableData } from "../helpers";
 
 vi.mock("@/base/hooks/usePolling", () => ({
   usePolling: vi.fn(),
