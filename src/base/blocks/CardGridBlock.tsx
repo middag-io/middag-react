@@ -140,8 +140,8 @@ export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactEl
         return (
           <div
             key={key}
-            role={canSelect ? "button" : undefined}
-            tabIndex={canSelect ? 0 : undefined}
+            role="button"
+            tabIndex={0}
             onClick={() => canSelect && select(id as string | number)}
             onKeyDown={(e) => {
               if (canSelect && (e.key === "Enter" || e.key === " ")) {
@@ -151,7 +151,7 @@ export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactEl
             }}
             className={cn(
               "bg-card text-card-foreground relative rounded-lg border p-5 text-left transition-all",
-              canSelect && "cursor-pointer",
+              "cursor-pointer",
               "hover:border-primary/50 hover:shadow-sm",
               isSelected && "border-primary ring-primary/20 ring-2",
             )}
