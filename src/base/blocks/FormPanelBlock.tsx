@@ -311,30 +311,42 @@ export function FormPanelBlock({ block }: BlockProps<FormPanelBlockData>): React
       );
 
       const method = data.method === "put" ? "put" : data.method === "patch" ? "patch" : "post";
-      router[method](data.action, visiblePayload as Record<string, string>, {
-        forceFormData: hasFile,
-        onProgress: (event) => {
-          if (event && typeof event.percentage === "number") {
-            setUploadProgress(Math.round(event.percentage));
-          }
-        },
-        onError: (errors) => {
-          // Inertia types page-prop errors as flat strings, but v0.11.0 sends
-          // structured FieldError objects on the wire — cast through unknown.
-          const nonField: FormErrors = {};
-          for (const [field, err] of Object.entries(errors as unknown as FormErrors)) {
-            if (fieldKeys.has(field)) {
-              form.setError(field, { type: "server", message: resolveFieldError(err, t) });
-            } else {
-              // Form-level / dotted / unknown keys: surface via the alert, not RHF.
-              nonField[field] = err;
+
+      // react-hook-form's isSubmitting stays true only while the promise
+      // returned by onSubmit is pending — router[method]() itself is
+      // fire-and-forget, so without wrapping it in a promise resolved from
+      // onFinish, isSubmitting flips back to false on the next microtask,
+      // well before the actual request completes: the Save button's loading
+      // state never visibly shows.
+      return new Promise<void>((resolve) => {
+        router[method](data.action, visiblePayload as Record<string, string>, {
+          forceFormData: hasFile,
+          onProgress: (event) => {
+            if (event && typeof event.percentage === "number") {
+              setUploadProgress(Math.round(event.percentage));
             }
-          }
-          if (Object.keys(nonField).length > 0) {
-            setSubmitFormErrors((prev) => ({ ...prev, ...nonField }));
-          }
-        },
-        onFinish: () => setUploadProgress(null),
+          },
+          onError: (errors) => {
+            // Inertia types page-prop errors as flat strings, but v0.11.0 sends
+            // structured FieldError objects on the wire — cast through unknown.
+            const nonField: FormErrors = {};
+            for (const [field, err] of Object.entries(errors as unknown as FormErrors)) {
+              if (fieldKeys.has(field)) {
+                form.setError(field, { type: "server", message: resolveFieldError(err, t) });
+              } else {
+                // Form-level / dotted / unknown keys: surface via the alert, not RHF.
+                nonField[field] = err;
+              }
+            }
+            if (Object.keys(nonField).length > 0) {
+              setSubmitFormErrors((prev) => ({ ...prev, ...nonField }));
+            }
+          },
+          onFinish: () => {
+            setUploadProgress(null);
+            resolve();
+          },
+        });
       });
     },
     [allFields, data, form, t, fieldKeys],
