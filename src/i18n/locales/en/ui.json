@@ -23,6 +23,7 @@
   "middag.ui.block.unknown_type": "Unknown block type:",
   "middag.ui.boost_search.placeholder": "Search pages, actions, connectors…",
   "middag.ui.cancel": "Cancel",
+  "middag.ui.card.edit": "Edit",
   "middag.ui.close": "Close",
   "middag.ui.command.close": "close",
   "middag.ui.command.navigate": "navigate",

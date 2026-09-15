@@ -176,6 +176,7 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
     sortable: col.sortable,
     minWidth: col.minWidth,
     href: col.href,
+    statusMap: col.statusMap,
     entityType: col.entity?.type,
     entityIdField: col.entity?.id,
   }));

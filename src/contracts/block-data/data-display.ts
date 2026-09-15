@@ -37,6 +37,11 @@ export interface DenseTableColumnDef {
   /** Entity reference for link resolution via PageContract.entities map. */
   entity?: EntityRef;
   minWidth?: number;
+  /** Status-to-semantic override for `variant: "status"` columns. Merged over the cell's built-in default map. */
+  statusMap?: Record<
+    string,
+    "success" | "warning" | "destructive" | "secondary" | "info" | "default"
+  >;
 }
 
 export interface DenseTablePagination {
@@ -250,6 +255,10 @@ export interface CardGridBlockData {
   rows: Record<string, unknown>[];
   variant?: "default" | "store" | "connector";
   emptyState?: EmptyStateDef;
+  /** URL pattern for an edit shortcut icon on each card. Interpolated per row (e.g. "/stores/{id}/edit"). */
+  editHref?: string;
+  /** Per-card action buttons (e.g. delete), rendered alongside the edit shortcut. */
+  rowActions?: ConditionalAction[];
 }
 
 // ── LinkListBlock ───────────────────────────────────────────────────────────
