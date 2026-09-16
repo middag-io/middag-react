@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.42.0](https://github.com/middag-io/middag-react/compare/v0.41.1...v0.42.0) (2026-09-16)
+
+
+### Features
+
+* **blocks:** TabsBlock disables a tab trigger when Tab.disabled is set ([4941735](https://github.com/middag-io/middag-react/commit/494173576d8b6074462dee87eb7edfa655a28620))
+* **blocks:** TabsBlock disables a tab trigger when Tab.disabled is set ([90601e3](https://github.com/middag-io/middag-react/commit/90601e3626eace04ff70cda944f5268081921923))
+
 ## [0.41.1](https://github.com/middag-io/middag-react/compare/v0.41.0...v0.41.1) (2026-09-16)
 
 
