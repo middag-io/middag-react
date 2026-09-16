@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.41.1](https://github.com/middag-io/middag-react/compare/v0.41.0...v0.41.1) (2026-09-16)
+
+
+### Bug Fixes
+
+* **blocks:** CardGrid status badges translate instead of showing the raw value ([9e33ce0](https://github.com/middag-io/middag-react/commit/9e33ce0fbf128b0267126272f2821085445d4159))
+* **blocks:** DenseTable statusMap passthrough, CardGrid row actions, barrel exports InspectorContext ([6656506](https://github.com/middag-io/middag-react/commit/6656506fefcdb5e577b5fafdd8e80c0af89f1b2d))
+* **blocks:** DenseTable statusMap, CardGrid row actions, InspectorContext barrel export ([bac21e9](https://github.com/middag-io/middag-react/commit/bac21e9a90392fc065cfc14674a6f0b6a618994c))
+* **blocks:** inspector drawer's close button no longer reopens itself ([219adcb](https://github.com/middag-io/middag-react/commit/219adcba4c11e5ef02558017a7cec19d4565f31e))
+* **form:** Save button loading state now persists through the actual request ([366e35e](https://github.com/middag-io/middag-react/commit/366e35e3e3477254013c96333eae7dfeef67f764))
+
 ## [0.41.0](https://github.com/middag-io/middag-react/compare/v0.40.1...v0.41.0) (2026-08-05)
 
 
