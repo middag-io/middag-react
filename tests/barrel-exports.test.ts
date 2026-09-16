@@ -142,6 +142,8 @@ const EXPECTED_EXPORTS = [
   "InertiaErrorReporter",
   "InlineEditablePanel",
   "Input",
+  "InspectorContext",
+  "InspectorSectionContent",
   "Label",
   "LazyBlock",
   "LinkCell",

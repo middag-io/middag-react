@@ -320,7 +320,13 @@ export { ImmersiveShell } from "@/base/shell/ImmersiveShell";
 // ── Shell partials (Community building blocks for custom shells) ────────────
 
 export { NavErrorBoundary } from "@/base/shell/partials/NavErrorBoundary";
-export { useInspector, type InspectorResponse } from "@/base/shell/partials/InspectorContext";
+export {
+  useInspector,
+  InspectorContext,
+  InspectorSectionContent,
+  type InspectorResponse,
+  type InspectorContextValue,
+} from "@/base/shell/partials/InspectorContext";
 // Editable panel — free contract-driven side drawer (context + provider + renderer).
 export {
   useEditablePanel,

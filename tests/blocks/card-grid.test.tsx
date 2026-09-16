@@ -139,4 +139,29 @@ describe("CardGridBlock", () => {
     fireEvent.click(screen.getAllByRole("button")[0]);
     expect(mockSelect).not.toHaveBeenCalled();
   });
+
+  it("translates the store card's status badge instead of showing the raw value", async () => {
+    const { CardGridBlock } = await import("@/base/blocks/CardGridBlock");
+    const { I18nProvider } = await import("@/i18n/I18nProvider");
+    const data = {
+      columns: [{ key: "status", label: "Status" }],
+      variant: "store" as const,
+      // Lowercase, matching the raw value the PHP side actually sends
+      // (ecommerce_store_interface::get_status()).
+      rows: [{ id: 1, fullname: "Loja 1", provider_type: "woocommerce", status: "active" }],
+    };
+    const descriptor = block("card_grid", "test-store-status", data);
+
+    render(
+      <I18nProvider>
+        <CardGridBlock block={descriptor} />
+      </I18nProvider>,
+    );
+
+    // Regression: StoreCard used to render {status} verbatim — the raw
+    // lowercase server value ("active"), never translated. "Active" (the
+    // dictionary label) only appears once the badge goes through t().
+    expect(screen.queryByText("active")).not.toBeInTheDocument();
+    expect(screen.getByText("Active")).toBeInTheDocument();
+  });
 });

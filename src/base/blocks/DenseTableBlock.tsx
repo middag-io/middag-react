@@ -83,14 +83,20 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
     [inspectorEnabled, rowKeyField, select, data.rowHref],
   );
 
-  // Auto-select first row when inspector is enabled and page loads
+  // Auto-select first row once, when the inspector is enabled and the page
+  // first loads. Gated on a ref rather than `selectedId == null` — closing
+  // the drawer also sets selectedId back to null, and re-running on that
+  // would immediately re-select the first row, making the drawer's close
+  // button appear to do nothing.
+  const hasAutoSelectedRef = useRef(false);
   useEffect(() => {
-    if (inspectorEnabled && data.rows.length > 0 && selectedId == null) {
+    if (!hasAutoSelectedRef.current && inspectorEnabled && data.rows.length > 0) {
+      hasAutoSelectedRef.current = true;
       const firstRow = data.rows[0];
       const id = firstRow.id ?? firstRow[rowKeyField];
       if (id != null) select(id as string | number);
     }
-  }, [inspectorEnabled, data.rows, rowKeyField, select, selectedId]);
+  }, [inspectorEnabled, data.rows, rowKeyField, select]);
 
   const handleParamChange = useCallback(
     (params: DataTableParamChange) => {
@@ -176,6 +182,7 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
     sortable: col.sortable,
     minWidth: col.minWidth,
     href: col.href,
+    statusMap: col.statusMap,
     entityType: col.entity?.type,
     entityIdField: col.entity?.id,
   }));

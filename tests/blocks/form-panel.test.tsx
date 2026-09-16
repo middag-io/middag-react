@@ -524,6 +524,48 @@ describe("FormPanelBlock", () => {
     expect(screen.getByText("bad email")).toBeInTheDocument(); // shown per-field
   });
 
+  it("keeps the Save button in its loading state until the request actually finishes", async () => {
+    const { FormPanelBlock } = await import("@/base/blocks/FormPanelBlock");
+    const { I18nProvider } = await import("@/i18n/I18nProvider");
+
+    let resolveRequest: () => void = () => {};
+    mockRouter.post.mockImplementation(
+      (_url: string, _data: unknown, opts: { onFinish?: () => void }) => {
+        // Simulates a real in-flight Inertia request: onFinish only fires
+        // once something else (here, the test) decides the request is done —
+        // never synchronously, unlike the other mocks in this file.
+        resolveRequest = () => opts.onFinish?.();
+      },
+    );
+    const data: FormPanelBlockData = {
+      action: "/api/x",
+      method: "post",
+      schema: [{ kind: "field", key: "name", component: "text", props: { label: "Name" } }],
+      values: {},
+      errors: {},
+      meta: { submitLabel: "Save", validation: "both" },
+    };
+
+    render(
+      <I18nProvider>
+        <FormPanelBlock block={block("form_panel", "loading-state-form", data)} />
+      </I18nProvider>,
+    );
+
+    fireEvent.submit(screen.getByRole("form"));
+
+    // Regression: onSubmit used to be fire-and-forget (no promise returned),
+    // so react-hook-form's isSubmitting flipped back to false on the next
+    // microtask — the button never visibly showed "Saving...".
+    const button = await screen.findByText("Saving...");
+    expect(button).toHaveAttribute("aria-busy", "true");
+    expect(button).toBeDisabled();
+
+    resolveRequest();
+
+    await waitFor(() => expect(screen.getByRole("button", { name: "Save" })).not.toBeDisabled());
+  });
+
   it("surfaces a non-field error returned by the submit (onError) in the alert", async () => {
     const { FormPanelBlock } = await import("@/base/blocks/FormPanelBlock");
     const { I18nProvider } = await import("@/i18n/I18nProvider");

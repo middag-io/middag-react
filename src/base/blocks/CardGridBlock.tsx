@@ -14,18 +14,92 @@
 
 "use client";
 
-import { useMemo, type ReactElement } from "react";
+import { useCallback, useMemo, useState, type ReactElement } from "react";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { router } from "@inertiajs/core";
 import { Link } from "@inertiajs/react";
 
+import { ConfirmationDialog } from "@/base/partials/ConfirmationDialog";
 import { useInspector } from "@/base/shell/partials/InspectorContext";
-import type { CardGridBlockData, CardGridColumnDef } from "@/contracts/block-data";
+import { getIcon } from "@/base/utils/icons";
+import { interpolate } from "@/base/utils/interpolate";
+import type {
+  ActionConfirmation,
+  CardGridBlockData,
+  CardGridColumnDef,
+} from "@/contracts/block-data";
 import type { BlockProps } from "@/engine/registries";
+import { renderLabel } from "@/i18n/render-label";
+import { useTranslation } from "@/i18n/useTranslation";
+import { resolveActionTarget } from "@/lib/actions/resolve-action-target";
 import { cn } from "@/lib/utils";
+import { Button } from "@/primitives/reui/button";
 
 export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactElement {
+  const { t } = useTranslation();
   const { data } = block;
   const { select, selectedId, enabled } = useInspector();
   const variant = data.variant ?? "default";
+  const reloadKey = block.key;
+
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    confirmation: ActionConfirmation;
+    row: Record<string, unknown>;
+    href?: string;
+    method?: string;
+    isNavigation?: boolean;
+  } | null>(null);
+
+  const handleConfirm = useCallback(() => {
+    if (!confirmDialog) return;
+    const { href, method, isNavigation } = confirmDialog;
+    setConfirmDialog(null);
+
+    if (!href) return;
+    if (isNavigation) {
+      router.visit(href);
+    } else if (method === "delete") {
+      router.delete(href, { preserveState: true, only: [reloadKey] });
+    } else {
+      const reqMethod = (method ?? "post") as "post" | "put" | "patch";
+      router[reqMethod](href, {} as never, { preserveState: true, only: [reloadKey] });
+    }
+  }, [confirmDialog, reloadKey]);
+
+  const handleCloseConfirm = useCallback(() => setConfirmDialog(null), []);
+
+  const runRowAction = useCallback(
+    (
+      action: NonNullable<CardGridBlockData["rowActions"]>[number],
+      row: Record<string, unknown>,
+    ) => {
+      const target = resolveActionTarget(action);
+      const resolvedHref = interpolate(target.url, row);
+
+      if (action.confirmation) {
+        setConfirmDialog({
+          open: true,
+          confirmation: action.confirmation,
+          row,
+          href: resolvedHref,
+          method: target.method,
+          isNavigation: target.kind === "link",
+        });
+        return;
+      }
+
+      if (target.kind === "link") {
+        router.visit(resolvedHref);
+      } else if (target.method === "delete") {
+        router.delete(resolvedHref, { preserveState: true, only: [reloadKey] });
+      } else {
+        const method = target.method as "post" | "put" | "patch";
+        router[method](resolvedHref, {} as never, { preserveState: true, only: [reloadKey] });
+      }
+    },
+    [reloadKey],
+  );
 
   if (data.rows.length === 0 && data.emptyState) {
     return (
@@ -59,21 +133,89 @@ export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactEl
         const key = id != null ? String(id) : `row-${index}`;
         const isSelected = enabled && id != null && selectedId === id;
 
+        const canSelect = enabled && id != null;
+        const editHref = data.editHref ? interpolate(data.editHref, row) : undefined;
+        const hasActions = editHref != null || (data.rowActions?.length ?? 0) > 0;
+
         return (
-          <button
+          <div
             key={key}
-            type="button"
-            onClick={() => enabled && id != null && select(id)}
+            role="button"
+            tabIndex={0}
+            onClick={() => canSelect && select(id as string | number)}
+            onKeyDown={(e) => {
+              if (canSelect && (e.key === "Enter" || e.key === " ")) {
+                e.preventDefault();
+                select(id as string | number);
+              }
+            }}
             className={cn(
-              "bg-card text-card-foreground cursor-pointer rounded-lg border p-5 text-left transition-all",
+              "bg-card text-card-foreground relative rounded-lg border p-5 text-left transition-all",
+              "cursor-pointer",
               "hover:border-primary/50 hover:shadow-sm",
               isSelected && "border-primary ring-primary/20 ring-2",
             )}
           >
+            {hasActions && (
+              <div
+                className="absolute top-3 right-3 flex items-center gap-1"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {editHref && (
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    asChild
+                    aria-label={t("middag.ui.card.edit")}
+                  >
+                    <Link href={editHref}>
+                      <HugeiconsIcon
+                        icon={getIcon("edit") as unknown as IconSvgElement}
+                        className="size-3.5"
+                      />
+                    </Link>
+                  </Button>
+                )}
+                {data.rowActions?.map((action) => (
+                  <Button
+                    key={action.id}
+                    variant="ghost"
+                    size="icon-xs"
+                    className={cn(
+                      action.intent === "danger" && "text-destructive hover:text-destructive",
+                    )}
+                    title={renderLabel(action.label, t)}
+                    onClick={() => runRowAction(action, row)}
+                  >
+                    {action.icon && (
+                      <HugeiconsIcon
+                        icon={getIcon(action.icon) as unknown as IconSvgElement}
+                        className="size-3.5"
+                      />
+                    )}
+                  </Button>
+                ))}
+              </div>
+            )}
             <CardContent row={row} columns={data.columns} variant={variant} />
-          </button>
+          </div>
         );
       })}
+      {confirmDialog && (
+        <ConfirmationDialog
+          open={confirmDialog.open}
+          onClose={handleCloseConfirm}
+          onConfirm={handleConfirm}
+          title={renderLabel(confirmDialog.confirmation.title, t)}
+          message={interpolate(
+            renderLabel(confirmDialog.confirmation.message, t),
+            confirmDialog.row,
+          )}
+          intent={confirmDialog.confirmation.intent}
+          confirmLabel={renderLabel(confirmDialog.confirmation.confirmLabel, t) || undefined}
+          cancelLabel={renderLabel(confirmDialog.confirmation.cancelLabel, t) || undefined}
+        />
+      )}
     </div>
   );
 }
@@ -114,6 +256,7 @@ function CardContent({
 }
 
 function StoreCard({ row }: { row: Record<string, unknown> }): ReactElement {
+  const { t } = useTranslation();
   const provider = String(row.provider_type ?? row.idnumber ?? "");
   const status = String(row.status ?? "inactive");
   const initial = provider.charAt(0).toUpperCase() || "S";
@@ -161,7 +304,7 @@ function StoreCard({ row }: { row: Record<string, unknown> }): ReactElement {
           )}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-current" />
-          {status}
+          {t(`middag.ui.card.status.${status}`, { defaultValue: status })}
         </span>
       </div>
     </>
@@ -169,6 +312,7 @@ function StoreCard({ row }: { row: Record<string, unknown> }): ReactElement {
 }
 
 function ConnectorCard({ row }: { row: Record<string, unknown> }): ReactElement {
+  const { t } = useTranslation();
   const type = String(row.connector_type ?? "");
   const extension = String(row.extension ?? "");
   const status = String(row.status ?? "unconfigured");
@@ -222,7 +366,7 @@ function ConnectorCard({ row }: { row: Record<string, unknown> }): ReactElement 
           )}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-current" />
-          {status}
+          {t(`middag.ui.card.status.${status}`, { defaultValue: status })}
         </span>
         <span className="text-muted-foreground text-xs">{latency}</span>
       </div>
