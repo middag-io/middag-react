@@ -9,7 +9,7 @@
  *
  * @source middag-php-ui/schema/{page-contract,fragment}.json
  * @contract-version 1
- * @hash 9271be91edf64102
+ * @hash aadc7e2b4a0f7724
  */
 export type Label = string | Translatable;
 export type ActionTarget =
@@ -584,6 +584,7 @@ export interface Tab {
   id: string;
   label: Label;
   blocks: BlockDescriptor[];
+  disabled?: boolean;
 }
 export interface FormStep {
   id: string;

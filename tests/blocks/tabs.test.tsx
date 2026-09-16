@@ -52,6 +52,26 @@ describe("TabsBlock", () => {
     expect(generalTrigger!.getAttribute("data-state")).toBe("active");
   });
 
+  it("disables a tab trigger marked disabled and leaves the rest enabled", async () => {
+    const { TabsBlock } = await import("@/base/blocks/TabsBlock");
+    const { I18nProvider } = await import("@/i18n/I18nProvider");
+    const data = tabsData();
+    data.tabs[1] = { ...data.tabs[1], disabled: true };
+    const descriptor = block("tabs", "test-tabs-disabled", data);
+
+    render(
+      <I18nProvider>
+        <TabsBlock block={descriptor} />
+      </I18nProvider>,
+    );
+
+    const generalTrigger = screen.getByText("General").closest("[role='tab']");
+    const advancedTrigger = screen.getByText("Advanced").closest("[role='tab']");
+
+    expect(generalTrigger).not.toHaveAttribute("disabled");
+    expect(advancedTrigger).toHaveAttribute("disabled");
+  });
+
   it("renders empty div when tabs array is empty", async () => {
     const { TabsBlock } = await import("@/base/blocks/TabsBlock");
     const { I18nProvider } = await import("@/i18n/I18nProvider");
