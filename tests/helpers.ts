@@ -208,11 +208,13 @@ export function tabsData() {
             data: { description: "General content" },
           } as BlockDescriptor,
         ],
+        disabled: false,
       },
       {
         id: "advanced",
         label: "Advanced",
         blocks: [] as BlockDescriptor[],
+        disabled: false,
       },
     ],
   };
