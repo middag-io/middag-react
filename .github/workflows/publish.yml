@@ -173,14 +173,16 @@ jobs:
   # docs-middag-legal) is out of reach; the same steps run inline here until a
   # public home for the component exists. Credentials come from repository
   # secrets, as in docs-middag-legal, recorded from an existing 1Password item;
-  # bucket and endpoint come from repository variables. Per-version
+  # the bucket comes from a repository variable. Unlike docs-middag-legal, the
+  # endpoint is a secret here: it carries the account id, variables render
+  # unmasked in build logs, and this repository's logs are public. Per-version
   # immutability is enforced before publishing; the sync is additive (never
   # --delete).
   #
-  # Repository variables (no value is written here):
+  # Repository variable (no value is written here):
   #   CLOUDFLARE_R2_DOCS_PUBLISH_BUCKET    bucket of the public documentation packages
-  #   CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT  S3 endpoint of the account (https://host)
   # Secrets:
+  #   CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT           S3 endpoint of the account (https://host)
   #   CLOUDFLARE_R2_DOCS_PUBLISH_ACCESS_KEY_ID      S3 access key with read and write on the bucket
   #   CLOUDFLARE_R2_DOCS_PUBLISH_SECRET_ACCESS_KEY  its secret
   sync-docs:
@@ -194,7 +196,7 @@ jobs:
       PACKAGE_NAME: middag-react
       AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_SECRET_ACCESS_KEY }}
-      AWS_ENDPOINT_URL: ${{ vars.CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT }}
+      AWS_ENDPOINT_URL: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT }}
       # Cloudflare R2 + aws-cli v2 (>= 2.23) integrity-checksum compatibility.
       # Newer aws-cli sends CRC32 checksums with aws-chunked encoding by default,
       # which the R2 S3 API rejects. Restrict checksum behaviour to when_required.
@@ -211,7 +213,7 @@ jobs:
         run: |
           set -euo pipefail
           : "${BUCKET:?repository variable CLOUDFLARE_R2_DOCS_PUBLISH_BUCKET is not set}"
-          : "${AWS_ENDPOINT_URL:?repository variable CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT is not set}"
+          : "${AWS_ENDPOINT_URL:?secret CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT is not set}"
           : "${AWS_ACCESS_KEY_ID:?secret CLOUDFLARE_R2_DOCS_PUBLISH_ACCESS_KEY_ID is not set}"
           : "${AWS_SECRET_ACCESS_KEY:?secret CLOUDFLARE_R2_DOCS_PUBLISH_SECRET_ACCESS_KEY is not set}"
           echo "R2 configuration present."
