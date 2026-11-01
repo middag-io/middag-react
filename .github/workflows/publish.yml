@@ -167,11 +167,22 @@ jobs:
           include-hidden-files: true
 
   # Inline R2 sync (ADR-016 Build-Time Aggregation via Edge Storage). This
-  # repository is public, so it cannot call the private reusable workflow in
-  # middag-io/.github-private — the same logic runs inline here instead:
-  # credentials from 1Password at run time (org secret OP_SERVICE_ACCOUNT_TOKEN
-  # must be made available to this repo), per-version immutability enforced
-  # before publishing, additive sync (never --delete).
+  # repository is public, and GitHub lets only private repositories use actions
+  # and reusable workflows of a private repository, so the
+  # cloudflare-r2-docs-publish component of middag-io/actions-private (used by
+  # docs-middag-legal) is out of reach; the same steps run inline here until a
+  # public home for the component exists. Credentials come from repository
+  # secrets, as in docs-middag-legal, recorded from an existing 1Password item;
+  # bucket and endpoint come from repository variables. Per-version
+  # immutability is enforced before publishing; the sync is additive (never
+  # --delete).
+  #
+  # Repository variables (no value is written here):
+  #   CLOUDFLARE_R2_DOCS_PUBLISH_BUCKET    bucket of the public documentation packages
+  #   CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT  S3 endpoint of the account (https://host)
+  # Secrets:
+  #   CLOUDFLARE_R2_DOCS_PUBLISH_ACCESS_KEY_ID      S3 access key with read and write on the bucket
+  #   CLOUDFLARE_R2_DOCS_PUBLISH_SECRET_ACCESS_KEY  its secret
   sync-docs:
     name: Publish docs to R2
     needs: build-docs
@@ -179,8 +190,11 @@ jobs:
     permissions:
       contents: read
     env:
-      BUCKET: middag-docs-public
+      BUCKET: ${{ vars.CLOUDFLARE_R2_DOCS_PUBLISH_BUCKET }}
       PACKAGE_NAME: middag-react
+      AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_SECRET_ACCESS_KEY }}
+      AWS_ENDPOINT_URL: ${{ vars.CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT }}
       # Cloudflare R2 + aws-cli v2 (>= 2.23) integrity-checksum compatibility.
       # Newer aws-cli sends CRC32 checksums with aws-chunked encoding by default,
       # which the R2 S3 API rejects. Restrict checksum behaviour to when_required.
@@ -193,23 +207,14 @@ jobs:
           name: docs-dist
           path: ./.docs-payload
 
-      - name: Load R2 credentials
-        uses: 1password/load-secrets-action@v4
-        with:
-          export-env: true
-        env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          AWS_ACCESS_KEY_ID: "op://CI-SHARED/CLOUDFLARE-R2-middag-docs/S3 Credentials/Access Key ID"
-          AWS_SECRET_ACCESS_KEY: "op://CI-SHARED/CLOUDFLARE-R2-middag-docs/S3 Credentials/Secret Access Key"
-          AWS_ENDPOINT_URL: "op://CI-SHARED/CLOUDFLARE-R2-middag-docs/S3 Credentials/Default ENDPOINT"
-
-      - name: Verify R2 credentials loaded
+      - name: Verify R2 configuration
         run: |
           set -euo pipefail
-          : "${AWS_ACCESS_KEY_ID:?R2 access key not loaded — check OP_SERVICE_ACCOUNT_TOKEN org secret availability for this repo}"
-          : "${AWS_SECRET_ACCESS_KEY:?R2 secret key not loaded — check 1Password item field labels}"
-          : "${AWS_ENDPOINT_URL:?R2 endpoint not loaded — check 1Password item field label 'S3 Credentials/Default ENDPOINT'}"
-          echo "R2 credentials present."
+          : "${BUCKET:?repository variable CLOUDFLARE_R2_DOCS_PUBLISH_BUCKET is not set}"
+          : "${AWS_ENDPOINT_URL:?repository variable CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT is not set}"
+          : "${AWS_ACCESS_KEY_ID:?secret CLOUDFLARE_R2_DOCS_PUBLISH_ACCESS_KEY_ID is not set}"
+          : "${AWS_SECRET_ACCESS_KEY:?secret CLOUDFLARE_R2_DOCS_PUBLISH_SECRET_ACCESS_KEY is not set}"
+          echo "R2 configuration present."
 
       - name: Enforce version immutability
         run: |
