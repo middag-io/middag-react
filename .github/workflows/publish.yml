@@ -166,118 +166,31 @@ jobs:
           # .docs-dist is a dot-dir; upload-artifact@v4+ excludes hidden paths by default.
           include-hidden-files: true
 
-  # Inline R2 sync (ADR-016 Build-Time Aggregation via Edge Storage). This
-  # repository is public, and GitHub lets only private repositories use actions
-  # and reusable workflows of a private repository, so the
-  # cloudflare-r2-docs-publish component of middag-io/actions-private (used by
-  # docs-middag-legal) is out of reach; the same steps run inline here until a
-  # public home for the component exists. Credentials come from repository
-  # secrets, as in docs-middag-legal, recorded from an existing 1Password item;
-  # the bucket comes from a repository variable. Unlike docs-middag-legal, the
-  # endpoint is a secret here: it carries the account id, variables render
-  # unmasked in build logs, and this repository's logs are public. Per-version
-  # immutability is enforced before publishing; the sync is additive (never
-  # --delete).
+  # R2 publication (ADR-016 Build-Time Aggregation via Edge Storage) through the
+  # cloudflare-r2-docs-publish component of the public middag-io/actions
+  # repository, pinned by the commit SHA of its release tag. The component
+  # refuses a version whose prefix already holds an object under any kind
+  # (docs, xref, schemas), writes each object with a conditional PUT, never
+  # deletes, and writes manifest.json (the mutable latest pointer) last.
   #
-  # Repository variable (no value is written here):
+  # Repository variable (no value is written here), read by the component as
+  # the default of its bucket input:
   #   CLOUDFLARE_R2_DOCS_PUBLISH_BUCKET    bucket of the public documentation packages
-  # Secrets:
+  # Secrets (the endpoint carries the account id; this repository's logs are
+  # public):
   #   CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT           S3 endpoint of the account (https://host)
   #   CLOUDFLARE_R2_DOCS_PUBLISH_ACCESS_KEY_ID      S3 access key with read and write on the bucket
   #   CLOUDFLARE_R2_DOCS_PUBLISH_SECRET_ACCESS_KEY  its secret
   sync-docs:
     name: Publish docs to R2
     needs: build-docs
-    runs-on: ubuntu-latest
     permissions:
       contents: read
-    env:
-      BUCKET: ${{ vars.CLOUDFLARE_R2_DOCS_PUBLISH_BUCKET }}
-      PACKAGE_NAME: middag-react
-      AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_SECRET_ACCESS_KEY }}
-      AWS_ENDPOINT_URL: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT }}
-      # Cloudflare R2 + aws-cli v2 (>= 2.23) integrity-checksum compatibility.
-      # Newer aws-cli sends CRC32 checksums with aws-chunked encoding by default,
-      # which the R2 S3 API rejects. Restrict checksum behaviour to when_required.
-      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
-      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
-    steps:
-      - name: Download docs payload
-        uses: actions/download-artifact@v7
-        with:
-          name: docs-dist
-          path: ./.docs-payload
-
-      - name: Verify R2 configuration
-        run: |
-          set -euo pipefail
-          : "${BUCKET:?repository variable CLOUDFLARE_R2_DOCS_PUBLISH_BUCKET is not set}"
-          : "${AWS_ENDPOINT_URL:?secret CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT is not set}"
-          : "${AWS_ACCESS_KEY_ID:?secret CLOUDFLARE_R2_DOCS_PUBLISH_ACCESS_KEY_ID is not set}"
-          : "${AWS_SECRET_ACCESS_KEY:?secret CLOUDFLARE_R2_DOCS_PUBLISH_SECRET_ACCESS_KEY is not set}"
-          echo "R2 configuration present."
-
-      - name: Enforce version immutability
-        run: |
-          set -euo pipefail
-          MANIFEST="./.docs-payload/manifest.json"
-          # The version being published is owned by the artifact: read it from
-          # manifest.json (.latest).
-          if [ ! -f "${MANIFEST}" ]; then
-            echo "::error::manifest.json not found in artifact at: ${MANIFEST}"
-            exit 1
-          fi
-          VERSION=$(jq -r '.latest // empty' "${MANIFEST}")
-          case "${VERSION}" in
-            ""|*[!a-zA-Z0-9._-]*)
-              echo "::error::manifest .latest is missing or invalid: '${VERSION}'"
-              exit 1
-              ;;
-          esac
-          echo "Manifest version (.latest): ${VERSION}"
-          # A published {version} is immutable: refuse if it already exists under
-          # any kind. Fail CLOSED — list-objects-v2 exits non-zero only on a real
-          # error (auth/endpoint/network), never merely because the prefix is empty.
-          for KIND in docs xref schemas; do
-            PREFIX="${PACKAGE_NAME}/${KIND}/${VERSION}/"
-            DEST="s3://${BUCKET}/${PREFIX}"
-            if ! COUNT=$(aws s3api list-objects-v2 \
-                  --bucket "${BUCKET}" \
-                  --prefix "${PREFIX}" \
-                  --max-items 1 \
-                  --endpoint-url "${AWS_ENDPOINT_URL}" \
-                  --region auto \
-                  --query 'length(Contents || `[]`)' \
-                  --output text); then
-              echo "::error::Could not verify destination state — refusing to publish to protect immutability: ${DEST}"
-              exit 1
-            fi
-            if [ "${COUNT}" != "None" ] && [ "${COUNT}" != "0" ]; then
-              echo "::error::Version already published and is immutable: ${DEST}"
-              echo "::error::Ship a new version instead."
-              exit 1
-            fi
-          done
-          echo "Version ${VERSION} not yet published — OK to publish."
-
-      - name: Sync payload to R2
-        run: |
-          set -euo pipefail
-          SRC="./.docs-payload"
-          DEST="s3://${BUCKET}/${PACKAGE_NAME}/"
-          if [ -z "$(ls -A "${SRC}" 2>/dev/null)" ]; then
-            echo "::error::Source directory is empty, nothing to publish: ${SRC}"
-            exit 1
-          fi
-          echo "Syncing ${SRC} -> ${DEST}"
-          # NO --delete. The payload carries only the current release's version
-          # directories, so deleting at the package root would erase previously
-          # published, immutable versions. Additive sync preserves history;
-          # per-version immutability is enforced above; manifest.json (the
-          # mutable 'latest' pointer) is intentionally overwritten each release.
-          aws s3 sync "${SRC}" "${DEST}" \
-            --endpoint-url "${AWS_ENDPOINT_URL}" \
-            --region auto \
-            --no-progress
-          echo "Published ${PACKAGE_NAME} payload to ${BUCKET}"
+    uses: middag-io/actions/.github/workflows/cloudflare-r2-docs-publish.yml@d1fdac26508dd2950dd6ab24a9c11ecbb300cbb8 # cloudflare-r2-docs-publish-v1.0.0
+    with:
+      artifact-name: docs-dist
+      package-name: middag-react
+    secrets:
+      endpoint: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_ENDPOINT }}
+      access-key-id: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_ACCESS_KEY_ID }}
+      secret-access-key: ${{ secrets.CLOUDFLARE_R2_DOCS_PUBLISH_SECRET_ACCESS_KEY }}
