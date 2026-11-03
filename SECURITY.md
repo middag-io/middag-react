@@ -12,7 +12,7 @@ Please do **not** open a public GitHub issue for security vulnerabilities.
 
 - Preferred: use GitHub's [private vulnerability reporting](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability)
   on this repository ("Report a vulnerability" under the Security tab).
-- Alternatively, email **security@middag.com.br** with a description, steps to
+- Alternatively, email **security@middag.io** with a description, steps to
   reproduce, and the affected version(s).
 
 You should receive an acknowledgement within 5 business days. We will keep you
