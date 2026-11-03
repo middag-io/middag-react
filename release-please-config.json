@@ -15,6 +15,7 @@
     { "type": "ci", "section": "CI", "hidden": true },
     { "type": "style", "section": "Styles", "hidden": true }
   ],
+  "exclude-paths": ["docs/guides", "docs/reference"],
   "packages": {
     ".": {
       "release-type": "node",
