@@ -5,27 +5,27 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
+  # release-please owns versioning: it reads Conventional Commits on main,
+  # keeps the release PR (package.json + CHANGELOG.md) up to date and, on
+  # merge, cuts the vX.Y.Z tag and GitHub release (see release-please-config.json).
+  # The release GitHub App token makes the release PR trigger the CI workflow.
   release:
-    runs-on: ubuntu-latest
+    uses: middag-io/actions/.github/workflows/release-please.yml@c448e654322ecb3905afe697ad63ef6ae822bf94 # release-please-v1.0.0
+    # contents: read only checks out the release-please configuration; every
+    # write (release PR, tag, release) uses the release GitHub App token.
     permissions:
-      contents: write
-      pull-requests: write
-    outputs:
-      published: ${{ steps.release.outputs.release_created }}
-    steps:
-      # release-please owns versioning: it scans Conventional Commits on main,
-      # opens/updates the release PR (root package.json + CHANGELOG.md) and, on
-      # merge, cuts the vX.Y.Z tag + GitHub release. Commit types decide the
-      # bump (0.x rule: feat/breaking = minor, fix = patch — see
-      # release-please-config.json). Root-only: this repository holds a single
-      # publishable package, no lockstep sync needed.
-      - name: Run release-please
-        id: release
-        uses: googleapis/release-please-action@v5
-        with:
-          config-file: release-please-config.json
-          manifest-file: .release-please-manifest.json
+      contents: read
+    with:
+      app-client-id: ${{ vars.GH_APPS_MIDDAG_CI_RELEASE_CLIENT_ID }}
+    secrets:
+      app-private-key: ${{ secrets.GH_APPS_MIDDAG_CI_RELEASE_PRIVATE_KEY }}
 
   publish:
     name: Publish @middag-io/react
@@ -33,7 +33,7 @@ jobs:
     # workflow_dispatch keeps a manual heal path: every publish step below is
     # idempotent (skips when the version is already on the registry), so a
     # partially failed publish can be re-run without a new release.
-    if: ${{ needs.release.outputs.published == 'true' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ needs.release.outputs.release-created == 'true' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -146,7 +146,7 @@ jobs:
   build-docs:
     name: Build docs payload
     needs: [release, publish]
-    if: ${{ needs.release.outputs.published == 'true' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ needs.release.outputs.release-created == 'true' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
