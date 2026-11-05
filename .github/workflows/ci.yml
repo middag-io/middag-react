@@ -19,6 +19,19 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # npm dependency audit through the node-npm-scan component of the public
+  # middag-io/actions repository, pinned by the commit SHA of its release tag.
+  # It reads package-lock.json only (runtime and dev dependencies) and fails
+  # on a critical or high advisory.
+  audit:
+    name: npm audit
+    permissions:
+      contents: read
+    uses: middag-io/actions/.github/workflows/node-npm-scan.yml@5e6dc3d595edc2bf6134043a2b17067af5f64c25 # node-npm-scan-v1.0.0
+    with:
+      node-version: "24"
+      blocking-severities: critical, high
+
   check:
     name: check + drift + test
     runs-on: ubuntu-latest
