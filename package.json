@@ -210,6 +210,9 @@
     "vitepress": "^2.0.0-alpha.17",
     "vitest": "^4.1.5"
   },
+  "overrides": {
+    "happy-dom": "^21.0.4"
+  },
   "homepage": "https://ui-docs.middag.io",
   "bugs": {
     "url": "https://github.com/middag-io/middag-react/issues"
