@@ -18,9 +18,10 @@ jobs:
   # The release GitHub App token makes the release PR trigger the CI workflow.
   release:
     uses: middag-io/actions/.github/workflows/release-please.yml@c448e654322ecb3905afe697ad63ef6ae822bf94 # release-please-v1.0.0
+    # contents: read only checks out the release-please configuration; every
+    # write (release PR, tag, release) uses the release GitHub App token.
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
     with:
       app-client-id: ${{ vars.GH_APPS_MIDDAG_CI_RELEASE_CLIENT_ID }}
     secrets:
