@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.42.1](https://github.com/middag-io/middag-react/compare/v0.42.0...v0.42.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* **deps:** override happy-dom to 21.0.4 ([f0e967e](https://github.com/middag-io/middag-react/commit/f0e967e650f6b21576a9d463cefc2c7fa156447c))
+* **deps:** update vite to 8.1.6 ([7d4e217](https://github.com/middag-io/middag-react/commit/7d4e217d431dd0439212044350f252c414ba2be2))
+* **deps:** update vulnerable transitive dependencies with npm audit fix ([655c075](https://github.com/middag-io/middag-react/commit/655c075003b9df31f3e22608a9b1ee3aa7bc5681))
+
 ## [0.42.0](https://github.com/middag-io/middag-react/compare/v0.41.1...v0.42.0) (2026-09-16)
 
 
