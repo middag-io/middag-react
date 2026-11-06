@@ -69,6 +69,14 @@ describe("findViolations — deny-list over the final payload", () => {
     expect(findViolations(dist).map((v) => v.path)).toEqual(["docs/0.34.0/CLAUDE.md"]);
   });
 
+  it("flags AGENTS.md at any depth (agent instructions)", () => {
+    const dist = makePayload({
+      ...CLEAN_PAYLOAD,
+      "docs/0.34.0/AGENTS.md": "# agent instructions",
+    });
+    expect(findViolations(dist).map((v) => v.path)).toEqual(["docs/0.34.0/AGENTS.md"]);
+  });
+
   it("flags .planning/ artifacts", () => {
     const dist = makePayload({
       ...CLEAN_PAYLOAD,

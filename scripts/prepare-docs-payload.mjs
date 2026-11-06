@@ -70,7 +70,7 @@ if (hasSchemas) {
 
 // 4. docs — raw narrative Markdown only. Actively excluded from the copy:
 //    - public/      (assets + the schemas handled above; not narrative Markdown)
-//    - CLAUDE.md    (internal agent instructions — must NOT reach the public bucket)
+//    - AGENTS.md    (internal agent instructions — must NOT reach the public bucket)
 //    - superpowers/ (internal dev/implementation plans — must NOT reach the public bucket)
 //    dereference:true resolves symlinks (e.g. changelog.md -> ../CHANGELOG.md) to real content.
 const docsSrc = resolve(ROOT, "docs");
@@ -79,6 +79,7 @@ if (await pathExists(docsSrc)) {
   await mkdir(dirname(docsOut), { recursive: true });
   const INTERNAL_DOCS = [
     resolve(docsSrc, "public"),
+    resolve(docsSrc, "AGENTS.md"),
     resolve(docsSrc, "CLAUDE.md"),
     resolve(docsSrc, "superpowers"),
   ];
@@ -88,7 +89,7 @@ if (await pathExists(docsSrc)) {
     filter: (src) => !INTERNAL_DOCS.some((p) => src === p || src.startsWith(p + sep)),
   });
   console.log(
-    `[docs-payload] copied docs/ (excl. public/, CLAUDE.md, superpowers/) -> .docs-dist/docs/${version}`,
+    `[docs-payload] copied docs/ (excl. public/, AGENTS.md, CLAUDE.md, superpowers/) -> .docs-dist/docs/${version}`,
   );
 }
 

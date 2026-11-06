@@ -20,7 +20,7 @@ import { fileURLToPath } from "node:url";
 
 /** Paths that must NEVER appear in the public docs payload. */
 export const FORBIDDEN = [
-  { re: /(^|\/)CLAUDE\.md$/i, label: "agent instructions (CLAUDE.md)" },
+  { re: /(^|\/)(AGENTS|CLAUDE)\.md$/i, label: "agent instructions (AGENTS.md/CLAUDE.md)" },
   { re: /(^|\/)superpowers(\/|$)/i, label: "internal dev plans (docs/superpowers/)" },
   { re: /(^|\/)\.planning(\/|$)/i, label: "planning artifacts (.planning/)" },
 ];
