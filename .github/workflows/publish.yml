@@ -17,7 +17,7 @@ jobs:
   # merge, cuts the vX.Y.Z tag and GitHub release (see release-please-config.json).
   # The release GitHub App token makes the release PR trigger the CI workflow.
   release:
-    uses: middag-io/actions/.github/workflows/release-please.yml@c448e654322ecb3905afe697ad63ef6ae822bf94 # release-please-v1.0.0
+    uses: middag-io/actions/.github/workflows/release-please.yml@release-please-v1
     # contents: read only checks out the release-please configuration; every
     # write (release PR, tag, release) uses the release GitHub App token.
     permissions:
@@ -168,7 +168,7 @@ jobs:
 
   # R2 publication (ADR-016 Build-Time Aggregation via Edge Storage) through the
   # cloudflare-r2-docs-publish component of the public middag-io/actions
-  # repository, pinned by the commit SHA of its release tag. The component
+  # repository, called by its major tag. The component
   # refuses a version whose prefix already holds an object under any kind
   # (docs, xref, schemas), writes each object with a conditional PUT, never
   # deletes, and writes manifest.json (the mutable latest pointer) last.
@@ -186,7 +186,7 @@ jobs:
     needs: build-docs
     permissions:
       contents: read
-    uses: middag-io/actions/.github/workflows/cloudflare-r2-docs-publish.yml@d1fdac26508dd2950dd6ab24a9c11ecbb300cbb8 # cloudflare-r2-docs-publish-v1.0.0
+    uses: middag-io/actions/.github/workflows/cloudflare-r2-docs-publish.yml@cloudflare-r2-docs-publish-v1
     with:
       artifact-name: docs-dist
       package-name: middag-react
