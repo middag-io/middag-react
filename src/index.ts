@@ -254,6 +254,7 @@ export { I18nProvider, type I18nProviderProps } from "@/i18n/I18nProvider";
 export { useTranslation, type UseTranslationResult } from "@/i18n/useTranslation";
 export { useHostString } from "@/i18n/useHostString";
 export { setHostStringResolver, type HostStringResolver } from "@/i18n/host-resolver";
+export { setHostPendingTracker, trackedFetch, type HostPendingTracker } from "@/lib/host-pending";
 export { renderLabel, isTranslatableLabel } from "@/i18n/render-label";
 export { resolveFieldError } from "@/i18n/resolve-field-error";
 export { i18n, i18nReady, normalizeLocale } from "@/i18n/instance";

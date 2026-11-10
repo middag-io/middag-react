@@ -38,5 +38,24 @@ export default tseslint.config(
             '@typescript-eslint/no-explicit-any': 'warn',
         },
     },
+    {
+        // Raw requests go through trackedFetch (src/lib/host-pending.ts), so a host
+        // that tracks pending work (Moodle's Behat) waits for them.
+        files: ['src/**/*.{ts,tsx}'],
+        rules: {
+            'no-restricted-globals': [
+                'error',
+                { name: 'fetch', message: 'Use trackedFetch from @/lib/host-pending.' },
+            ],
+            'no-restricted-properties': [
+                'error',
+                ...['window', 'globalThis', 'self'].map((object) => ({
+                    object,
+                    property: 'fetch',
+                    message: 'Use trackedFetch from @/lib/host-pending.',
+                })),
+            ],
+        },
+    },
     prettierConfig,
 );
