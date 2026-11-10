@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.43.0](https://github.com/middag-io/middag-react/compare/v0.42.0...v0.43.0) (2026-11-10)
+
+
+### Features
+
+* **lib:** let the host track pending fetch side-calls ([a70ade2](https://github.com/middag-io/middag-react/commit/a70ade2f44500877f6b57399ef7ff0e759467160))
+* **lib:** let the host track pending fetch side-calls ([8389b27](https://github.com/middag-io/middag-react/commit/8389b27fced0473990074b9e165ea3697bf3086f))
+
+
+### Bug Fixes
+
+* **deps:** bump vitest to ^4.1.12 ([a4019da](https://github.com/middag-io/middag-react/commit/a4019daa887a9dcaa34c6a9340160b9dc593e5ef))
+* **deps:** bump vitest to ^4.1.12 ([d2c38ab](https://github.com/middag-io/middag-react/commit/d2c38abdd799afa3d76b48172623bc4569423cb5))
+* **deps:** override happy-dom to 21.0.4 ([f0e967e](https://github.com/middag-io/middag-react/commit/f0e967e650f6b21576a9d463cefc2c7fa156447c))
+* **deps:** update vite to 8.1.6 ([7d4e217](https://github.com/middag-io/middag-react/commit/7d4e217d431dd0439212044350f252c414ba2be2))
+* **deps:** update vulnerable transitive dependencies with npm audit fix ([655c075](https://github.com/middag-io/middag-react/commit/655c075003b9df31f3e22608a9b1ee3aa7bc5681))
+
 ## [0.42.0](https://github.com/middag-io/middag-react/compare/v0.41.1...v0.42.0) (2026-09-16)
 
 
