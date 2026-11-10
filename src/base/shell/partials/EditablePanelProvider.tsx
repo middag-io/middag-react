@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { router } from "@inertiajs/core";
 
+import { trackedFetch } from "@/lib/host-pending";
+
 import {
   EditablePanelContext,
   type EditablePanelConfig,
@@ -64,7 +66,7 @@ export function EditablePanelProvider({ config, children }: EditablePanelProvide
     const url = withId(config.endpoint, selectedId);
     let cancelled = false;
 
-    fetch(url, {
+    trackedFetch(url, {
       headers: { Accept: "application/json", "X-Requested-With": "XMLHttpRequest" },
     })
       .then((r) => r.json())

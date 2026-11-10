@@ -11,6 +11,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from "react";
 
 import { useTranslation } from "@/i18n/useTranslation";
+import { beginPending, trackedFetch } from "@/lib/host-pending";
 import { Avatar, AvatarFallback, AvatarImage } from "@/primitives/reui/avatar";
 import {
   Combobox,
@@ -110,12 +111,17 @@ export function EntityPickerField({
       };
     }
 
+    // Pending from the moment the search is scheduled, not from when the request
+    // leaves: a host waiting on pending work (Moodle's Behat) would otherwise see
+    // an idle page during the debounce and read the still-empty list.
+    const release = beginPending();
+
     debounceRef.current = setTimeout(async () => {
       setIsLoading(true);
       try {
         const url = new URL(autocompleteHref!, window.location.origin);
         url.searchParams.set("q", searchQuery);
-        const res = await fetch(url.toString());
+        const res = await trackedFetch(url.toString());
         if (res.ok) {
           const json = await res.json();
           const items: EntityOption[] = (json.items ?? json.data ?? json).map(
@@ -133,11 +139,13 @@ export function EntityPickerField({
         // Silent — field remains usable
       } finally {
         setIsLoading(false);
+        release();
       }
     }, 300);
 
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
+      release();
     };
   }, [
     searchQuery,
