@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.44.0](https://github.com/middag-io/middag-react/compare/v0.43.0...v0.44.0) (2026-11-11)
+
+
+### Features
+
+* **test:** stable data-testid on blocks, actions, fields, rows and dialogs ([b13ce8b](https://github.com/middag-io/middag-react/commit/b13ce8bbd0257a09405054fdbed289374ebccc83))
+* **test:** stable data-testid on blocks, actions, fields, rows and dialogs ([6190a4d](https://github.com/middag-io/middag-react/commit/6190a4dd0986ef0b922437fe5c4e9ecb529d3b74))
+
 ## [0.43.0](https://github.com/middag-io/middag-react/compare/v0.42.0...v0.43.0) (2026-11-10)
 
 
