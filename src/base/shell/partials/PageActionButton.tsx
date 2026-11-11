@@ -23,6 +23,7 @@ import type { PageAction } from "@/contracts/page-contract";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 import { resolveActionTarget } from "@/lib/actions/resolve-action-target";
+import { actionTestId } from "@/lib/test-ids";
 import { Button } from "@/primitives/reui/button";
 
 type ButtonVariant = "default" | "outline" | "destructive" | "ghost" | "secondary" | "link";
@@ -111,6 +112,7 @@ export function PageActionButton({ action }: { action: PageAction }): ReactEleme
   if (isNavigation && target.url && !confirmation && !action.loading) {
     return (
       <Button
+        data-testid={actionTestId(action.id)}
         variant={variant}
         size="sm"
         asChild
@@ -125,6 +127,7 @@ export function PageActionButton({ action }: { action: PageAction }): ReactEleme
   return (
     <>
       <Button
+        data-testid={actionTestId(action.id)}
         variant={variant}
         size="sm"
         onClick={handleClick}

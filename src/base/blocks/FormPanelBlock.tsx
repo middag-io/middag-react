@@ -30,6 +30,7 @@ import type { BlockProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { resolveFieldError } from "@/i18n/resolve-field-error";
 import { useTranslation } from "@/i18n/useTranslation";
+import { TEST_IDS } from "@/lib/test-ids";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/primitives/reui/alert";
 import { Button } from "@/primitives/reui/button";
@@ -430,6 +431,7 @@ export function FormPanelBlock({ block }: BlockProps<FormPanelBlockData>): React
         <div className="flex gap-3 pt-4">
           <Button
             type="submit"
+            data-testid={TEST_IDS.formSubmit}
             disabled={isSubmitting}
             aria-disabled={isSubmitting}
             aria-busy={isSubmitting}

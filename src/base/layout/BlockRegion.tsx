@@ -10,6 +10,7 @@
 import type { ReactElement } from "react";
 
 import type { BlockDescriptor } from "@/contracts/page-contract";
+import { blockTestId } from "@/lib/test-ids";
 import { cn } from "@/lib/utils";
 
 interface BlockRegionProps {
@@ -24,7 +25,11 @@ export function BlockRegion({ blocks, renderBlock, className }: BlockRegionProps
       {blocks.map((block) => {
         const fullBleed = (block.meta as Record<string, unknown> | undefined)?.fullBleed === true;
         return (
-          <div key={block.key} className={cn(!fullBleed && "px-6")}>
+          <div
+            key={block.key}
+            data-testid={blockTestId(block.key)}
+            className={cn(!fullBleed && "px-6")}
+          >
             {renderBlock(block)}
           </div>
         );

@@ -29,7 +29,7 @@ vi.mock("@inertiajs/react", () => ({
 // renderBlock mock with key prop to suppress React key warnings
 function mockRenderBlock(block: BlockDescriptor): ReactElement {
   return (
-    <div key={block.key} data-testid={`block-${block.key}`}>
+    <div key={block.key} data-testid={`mock-block-${block.key}`}>
       {block.type}
     </div>
   );
@@ -59,8 +59,8 @@ describe("layout render smoke tests", () => {
       },
     });
 
-    expect(screen.getByTestId("block-kpi1")).toBeDefined();
-    expect(screen.getByTestId("block-table1")).toBeDefined();
+    expect(screen.getByTestId("mock-block-kpi1")).toBeDefined();
+    expect(screen.getByTestId("mock-block-table1")).toBeDefined();
   });
 
   it("StackLayout renders with empty regions", async () => {
@@ -81,7 +81,7 @@ describe("layout render smoke tests", () => {
       },
     });
 
-    const block = screen.getByTestId("block-padded");
+    const block = screen.getByTestId("mock-block-padded");
     // Block is wrapped in a div with px-6
     expect(block.parentElement?.className).toContain("px-6");
   });
@@ -102,7 +102,7 @@ describe("layout render smoke tests", () => {
       },
     });
 
-    const block = screen.getByTestId("block-fullbleed");
+    const block = screen.getByTestId("mock-block-fullbleed");
     // Block wrapper should NOT have px-6
     expect(block.parentElement?.className).not.toContain("px-6");
   });
@@ -117,8 +117,8 @@ describe("layout render smoke tests", () => {
       },
     });
 
-    expect(screen.getByTestId("block-main1")).toBeDefined();
-    expect(screen.getByTestId("block-aside1")).toBeDefined();
+    expect(screen.getByTestId("mock-block-main1")).toBeDefined();
+    expect(screen.getByTestId("mock-block-aside1")).toBeDefined();
   });
 
   it("SidebarLayout renders header when present", async () => {
@@ -132,9 +132,9 @@ describe("layout render smoke tests", () => {
       },
     });
 
-    expect(screen.getByTestId("block-h1")).toBeDefined();
-    expect(screen.getByTestId("block-m1")).toBeDefined();
-    expect(screen.getByTestId("block-a1")).toBeDefined();
+    expect(screen.getByTestId("mock-block-h1")).toBeDefined();
+    expect(screen.getByTestId("mock-block-m1")).toBeDefined();
+    expect(screen.getByTestId("mock-block-a1")).toBeDefined();
   });
 
   it("SidebarLayout aside has border styling", async () => {
@@ -165,9 +165,9 @@ describe("layout render smoke tests", () => {
       },
     });
 
-    expect(screen.getByTestId("block-m1")).toBeDefined();
-    expect(screen.getByTestId("block-m2")).toBeDefined();
-    expect(screen.getByTestId("block-c1")).toBeDefined();
+    expect(screen.getByTestId("mock-block-m1")).toBeDefined();
+    expect(screen.getByTestId("mock-block-m2")).toBeDefined();
+    expect(screen.getByTestId("mock-block-c1")).toBeDefined();
   });
 
   it("WizardLayout renders step content", async () => {
@@ -180,6 +180,6 @@ describe("layout render smoke tests", () => {
       },
     });
 
-    expect(screen.getByTestId("block-step1")).toBeDefined();
+    expect(screen.getByTestId("mock-block-step1")).toBeDefined();
   });
 });

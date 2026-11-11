@@ -31,6 +31,7 @@ import { TextareaField } from "@/base/form/fields/TextareaField";
 import { TextField } from "@/base/form/fields/TextField";
 import { isFieldDisabled, isFieldRequired } from "@/base/form/form-utils";
 import { useTranslation } from "@/i18n/useTranslation";
+import { fieldTestId } from "@/lib/test-ids";
 import { Label } from "@/primitives/reui/label";
 import { Skeleton } from "@/primitives/reui/skeleton";
 
@@ -185,7 +186,7 @@ export function FormField({
   );
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-1.5" data-testid={fieldTestId(field.key)}>
       {/* Label */}
       {!isInlineLabel && (
         <Label htmlFor={fieldId}>
