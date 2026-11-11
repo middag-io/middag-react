@@ -16,6 +16,7 @@ import type { BlockDescriptor } from "@/contracts/page-contract";
 import type { LayoutProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
+import { blockTestId } from "@/lib/test-ids";
 import { Card, CardContent, CardHeader, CardTitle } from "@/primitives/reui/card";
 
 function BlockCard({
@@ -27,7 +28,7 @@ function BlockCard({
 }): ReactElement {
   const { t } = useTranslation();
   return (
-    <Card>
+    <Card data-testid={blockTestId(block.key)}>
       {block.title && (
         <CardHeader>
           <CardTitle className="text-sm">{renderLabel(block.title, t)}</CardTitle>
@@ -52,7 +53,9 @@ export function DashboardLayout({ layout, renderBlock }: LayoutProps): ReactElem
       {headerBlocks.length > 0 && (
         <div className="space-y-4">
           {headerBlocks.map((block) => (
-            <div key={block.key}>{renderBlock(block)}</div>
+            <div key={block.key} data-testid={blockTestId(block.key)}>
+              {renderBlock(block)}
+            </div>
           ))}
         </div>
       )}

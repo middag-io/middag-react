@@ -13,6 +13,7 @@ import { ConfirmationDialog } from "@/base/partials/ConfirmationDialog";
 import type { ExecutableAction } from "@/contracts/block-data";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
+import { actionTestId } from "@/lib/test-ids";
 import { Button } from "@/primitives/reui/button";
 
 export interface ActionBarProps {
@@ -72,6 +73,7 @@ export function ActionBar({
         {actions.map((action) => (
           <Button
             key={action.id}
+            data-testid={actionTestId(action.id)}
             variant={action.intent === "danger" ? "destructive" : "outline"}
             size="sm"
             onClick={() => handleAction(action)}

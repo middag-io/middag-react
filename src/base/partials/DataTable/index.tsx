@@ -37,6 +37,7 @@ import { FilterBar } from "@/base/partials/FilterBar";
 import { getIcon } from "@/base/utils/icons";
 import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
+import { rowActionTestId, rowTestId, TEST_IDS } from "@/lib/test-ids";
 import { cn } from "@/lib/utils";
 import { Button } from "@/primitives/reui/button";
 import { Checkbox } from "@/primitives/reui/checkbox";
@@ -99,6 +100,7 @@ function RowActionButtons<TData>({
         return (
           <Button
             key={action.id}
+            data-testid={rowActionTestId(action.id)}
             variant={isButton ? (action.intent === "danger" ? "destructive" : "outline") : "ghost"}
             size={isButton ? "xs" : "icon-xs"}
             onClick={(e) => {
@@ -148,6 +150,7 @@ function RowActionButtons<TData>({
             <Button
               variant="ghost"
               size="icon-xs"
+              data-testid={TEST_IDS.rowActionsMenu}
               aria-label={t("middag.ui.table.row_actions")}
               onClick={(e) => e.stopPropagation()}
             >
@@ -162,6 +165,7 @@ function RowActionButtons<TData>({
               return (
                 <DropdownMenuItem
                   key={action.id}
+                  data-testid={rowActionTestId(action.id)}
                   onClick={() => {
                     if (!isDisabled && !isLoading) action.onAction(row);
                   }}
@@ -226,6 +230,7 @@ function MobileCardView<TData>({
         return (
           <div
             key={key}
+            data-testid={rowTestId(key)}
             className={cn(
               "space-y-2 rounded-lg border p-4 transition-colors",
               clickable && "hover:border-primary/50 cursor-pointer",
@@ -1143,6 +1148,7 @@ export function DataTable<TData extends object>({
                 : table.getRowModel().rows.map((row) => (
                     <tr
                       key={row.id}
+                      data-testid={rowTestId(row.id)}
                       className={cn(
                         "group/row cursor-pointer transition-[background] duration-75",
                         "hover:bg-sidebar-hover",

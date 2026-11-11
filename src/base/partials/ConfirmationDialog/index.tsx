@@ -13,6 +13,7 @@
 import { type ReactElement } from "react";
 
 import { useTranslation } from "@/i18n/useTranslation";
+import { TEST_IDS } from "@/lib/test-ids";
 import { Button } from "@/primitives/reui/button";
 import {
   Dialog,
@@ -76,7 +77,7 @@ export function ConfirmationDialog({
         if (!isOpen && !waiting) onClose();
       }}
     >
-      <DialogContent>
+      <DialogContent data-testid={TEST_IDS.confirmDialog}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
@@ -92,10 +93,22 @@ export function ConfirmationDialog({
         )}
 
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={onClose} disabled={waiting}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            disabled={waiting}
+            data-testid={TEST_IDS.confirmDialogCancel}
+          >
             {cancelLabel ?? t("middag.ui.cancel")}
           </Button>
-          <Button type="button" variant={confirmVariant} onClick={onConfirm} disabled={waiting}>
+          <Button
+            type="button"
+            variant={confirmVariant}
+            onClick={onConfirm}
+            disabled={waiting}
+            data-testid={TEST_IDS.confirmDialogConfirm}
+          >
             {waiting && <Spinner className="mr-2 size-4" />}
             {confirmLabel ?? t("middag.ui.confirm")}
           </Button>
