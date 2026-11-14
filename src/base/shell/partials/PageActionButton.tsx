@@ -108,17 +108,12 @@ export function PageActionButton({ action }: { action: PageAction }): ReactEleme
 
   const label = renderLabel(action.label, t);
 
-  // Simple navigation link (GET, no confirmation)
-  if (isNavigation && target.url && !confirmation && !action.loading) {
+  // Simple navigation link (GET, no confirmation). A disabled action never renders
+  // as an anchor: an <a> keeps its href and ignores `disabled`, so it would stay
+  // navigable and look enabled. It falls through to the locked <button> below.
+  if (isNavigation && target.url && !confirmation && !action.loading && !action.disabled) {
     return (
-      <Button
-        data-testid={actionTestId(action.id)}
-        variant={variant}
-        size="sm"
-        asChild
-        disabled={action.disabled}
-        aria-disabled={action.disabled}
-      >
+      <Button data-testid={actionTestId(action.id)} variant={variant} size="sm" asChild>
         <Link href={target.url}>{label}</Link>
       </Button>
     );
@@ -131,6 +126,7 @@ export function PageActionButton({ action }: { action: PageAction }): ReactEleme
         variant={variant}
         size="sm"
         onClick={handleClick}
+        data-locked={action.disabled ? "true" : undefined}
         disabled={action.disabled || effectiveLoading}
         aria-disabled={action.disabled || effectiveLoading}
       >
