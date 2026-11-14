@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.44.1](https://github.com/middag-io/middag-react/compare/v0.44.0...v0.44.1) (2026-11-14)
+
+
+### Bug Fixes
+
+* disabled PageActionButton navigation renders a locked button without href ([1903b87](https://github.com/middag-io/middag-react/commit/1903b8789c149573b1c755f238b456b7a71e61af))
+* disabled PageActionButton navigation renders a locked button without href ([20ae7c6](https://github.com/middag-io/middag-react/commit/20ae7c6d06c6d573009202840ea38ee104d23874))
+
 ## [0.44.0](https://github.com/middag-io/middag-react/compare/v0.43.0...v0.44.0) (2026-11-11)
 
 
