@@ -134,7 +134,13 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
         });
       }
 
-      router.get(window.location.pathname, queryParams as Record<string, string>, {
+      // Inertia builds the request URL from the href plus these params, with
+      // the params winning on matching keys. Keep the page's own query string
+      // in the href so params the table does not govern (tabs, collection,
+      // groups, ...) survive a sort/search/filter/page change; the table's
+      // values still override any stale copy of them in the current URL.
+      const href = window.location.pathname + window.location.search;
+      router.get(href, queryParams as Record<string, string>, {
         preserveState: true,
         preserveScroll: true,
         only: [reloadKey],

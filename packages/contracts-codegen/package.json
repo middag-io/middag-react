@@ -1,6 +1,6 @@
 {
   "name": "@middag-io/ui-contracts-codegen",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Generates the TypeScript types and zod schemas of a MIDDAG contracts package from the wire JSON Schemas emitted by the PHP value objects.",
   "license": "Apache-2.0",
   "type": "module",

@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.50.0](https://github.com/middag-io/middag-react/compare/v0.49.0...v0.50.0) (2026-11-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **contracts:** 'PageResources' is no longer exported and the page contract has no 'resources'. 'FormErrors' now accepts rich messages inside lists and 'errors' may be a 'FormErrorBags' map.
+
+### Features
+
+* **contracts-codegen:** refuse wire breaks only from a 2.0.0-rc.1 producer on ([baee0ed](https://github.com/middag-io/middag-react/commit/baee0edeca2ee2be74ae47bfbe1905a67cfd10af))
+* **contracts:** adopt the middag-php-ui 1.14.0 contract ([0dfebb7](https://github.com/middag-io/middag-react/commit/0dfebb7a5c263ea98c47006a0473fc1a6115918d))
+* **shell:** render external and targeted nav links as plain anchors ([ff573b4](https://github.com/middag-io/middag-react/commit/ff573b4ee470b3c3e0790b16991ad4ddef9d4df1))
+
+
+### Bug Fixes
+
+* **contracts-codegen:** close the gaps in the release-candidate gate ([ba83a2f](https://github.com/middag-io/middag-react/commit/ba83a2fd8e05f91d9254d7316311609f05391e2e))
+* stop tracking the node_modules symlink ([70ab4b0](https://github.com/middag-io/middag-react/commit/70ab4b0417432325d14ceead79b6a5f26f26291c))
+
 ## [0.49.0](https://github.com/middag-io/middag-react/compare/v0.48.0...v0.49.0) (2026-11-23)
 
 
