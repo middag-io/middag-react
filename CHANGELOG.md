@@ -7,6 +7,10 @@
 
 * drop cleared table sort params from server-mode requests ([79f6de7](https://github.com/middag-io/middag-react/commit/79f6de770fe54c612712fcba873c146b04a86328))
 
+### Consumer impact
+
+None; clearing a server-side table sort works again.
+
 ## [0.51.0](https://github.com/middag-io/middag-react/compare/v0.50.1...v0.51.0) (2026-11-24)
 
 
