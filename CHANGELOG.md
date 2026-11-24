@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.51.0](https://github.com/middag-io/middag-react/compare/v0.50.1...v0.51.0) (2026-11-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **contracts:** 'AdminTabsProps' and 'AdminTabItem' are no longer exported. Import 'AdminTabs' (and its items) from @middag-io/ui-contracts-pro, or from @middag-io/react-pro, which re-exports the contract types.
+
+### Features
+
+* **contracts:** drop AdminTabsProps and AdminTabItem from the engine ([e34bc42](https://github.com/middag-io/middag-react/commit/e34bc42b3c5eb16c81f90a8cf20a1dd765287928))
+
 ## [0.50.1](https://github.com/middag-io/middag-react/compare/v0.50.0...v0.50.1) (2026-11-24)
 
 

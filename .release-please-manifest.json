@@ -1,5 +1,5 @@
 {
-  ".": "0.50.1",
+  ".": "0.51.0",
   "packages/contracts": "0.4.0",
   "packages/contracts-codegen": "0.2.0"
 }
