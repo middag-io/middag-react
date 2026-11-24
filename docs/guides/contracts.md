@@ -42,7 +42,7 @@ The shell wraps the entire page and provides chrome (navigation, header, footer)
 
 The `product` shell provides zero padding on its content area. Layouts and blocks control all spacing (see [Layout Templates](/reference/layouts#padding-model)).
 
-When the Inertia shared prop `admin_tabs` is present, the `product` shell renders a tab bar between the page header and content area.
+When the Inertia shared prop `admin_tabs` is present, the `product` shell renders a tab bar between the page header and content area. The prop is premium wire: its type, `AdminTabs`, is published in `@middag-io/ui-contracts-pro`.
 
 ## Layouts {#layouts}
 

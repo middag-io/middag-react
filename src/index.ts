@@ -28,14 +28,7 @@ export type {
 
 // ── Contracts: Shared Props ─────────────────────────────────────────────────
 
-export type {
-  SharedAuth,
-  SharedTheme,
-  FlashMessages,
-  AdminTabItem,
-  AdminTabsProps,
-  SharedProps,
-} from "@/contracts/shared-props";
+export type { SharedAuth, SharedTheme, FlashMessages, SharedProps } from "@/contracts/shared-props";
 
 // ── Contracts: Navigation ───────────────────────────────────────────────────
 
