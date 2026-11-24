@@ -23,6 +23,28 @@ import { renderLabel } from "@/i18n/render-label";
 import { useTranslation } from "@/i18n/useTranslation";
 import { resolveActionTarget } from "@/lib/actions/resolve-action-target";
 
+/** Query keys the server-mode table writes on every request. */
+const TABLE_OWNED_PARAMS = new Set(["page", "per_page", "sort", "direction", "search"]);
+const TABLE_FILTER_PARAM_PREFIX = "filter[";
+
+function isTableOwnedParam(key: string): boolean {
+  return TABLE_OWNED_PARAMS.has(key) || key.startsWith(TABLE_FILTER_PARAM_PREFIX);
+}
+
+/**
+ * The page's query string without the params the table owns, as `?...` or "".
+ * The table sends its full state on each request, so whatever it leaves out
+ * (a cleared sort, a removed filter) has to be absent from the request too.
+ */
+function pageQueryWithoutTableParams(search: string): string {
+  const kept = new URLSearchParams();
+  new URLSearchParams(search).forEach((value, key) => {
+    if (!isTableOwnedParam(key)) kept.append(key, value);
+  });
+  const query = kept.toString();
+  return query ? `?${query}` : "";
+}
+
 export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): ReactElement {
   const { t } = useTranslation();
   const { data, key, meta } = block;
@@ -137,9 +159,11 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
       // Inertia builds the request URL from the href plus these params, with
       // the params winning on matching keys. Keep the page's own query string
       // in the href so params the table does not govern (tabs, collection,
-      // groups, ...) survive a sort/search/filter/page change; the table's
-      // values still override any stale copy of them in the current URL.
-      const href = window.location.pathname + window.location.search;
+      // groups, ...) survive a sort/search/filter/page change. Strip the keys
+      // the table owns from it first: the params above carry their current
+      // values, and a value the user just cleared (a removed sort) must not
+      // come back from a stale copy in the URL.
+      const href = window.location.pathname + pageQueryWithoutTableParams(window.location.search);
       router.get(href, queryParams as Record<string, string>, {
         preserveState: true,
         preserveScroll: true,

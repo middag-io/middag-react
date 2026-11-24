@@ -16,6 +16,7 @@ vi.mock("@/base/hooks/usePolling", () => ({
 describe("DenseTableBlock", () => {
   afterEach(() => {
     cleanup();
+    history.replaceState(null, "", "/");
   });
 
   it("renders column headers", async () => {
@@ -370,5 +371,96 @@ describe("DenseTableBlock", () => {
     // The table's own params travel as data, which Inertia merges over the
     // href's query — so the stale page=1 in the URL cannot win over page 2.
     expect(params.page).toBe(2);
+  });
+
+  it("replaces the URL's sort with the table's when the sort is set", async () => {
+    const { DenseTableBlock } = await import("@/base/blocks/DenseTableBlock");
+    const { I18nProvider } = await import("@/i18n/I18nProvider");
+    const { mockRouter } = await import("../setup");
+
+    history.replaceState(null, "", "/people?tab=active&sort=name&direction=asc");
+
+    render(
+      <I18nProvider>
+        <DenseTableBlock block={block("dense_table", "test-table-sort-set", denseTableData())} />
+      </I18nProvider>,
+    );
+
+    mockRouter.get.mockClear();
+    // asc -> desc
+    fireEvent.click(screen.getByRole("button", { name: /Name/ }));
+
+    const href = mockRouter.get.mock.calls[0][0] as string;
+    const params = mockRouter.get.mock.calls[0][1] as Record<string, unknown>;
+    const hrefParams = new URLSearchParams(href.split("?")[1] ?? "");
+    expect(params.sort).toBe("name");
+    expect(params.direction).toBe("desc");
+    expect(hrefParams.has("sort")).toBe(false);
+    expect(hrefParams.has("direction")).toBe(false);
+    expect(hrefParams.get("tab")).toBe("active");
+  });
+
+  it("drops sort and direction from the request when the sort is cleared", async () => {
+    const { DenseTableBlock } = await import("@/base/blocks/DenseTableBlock");
+    const { I18nProvider } = await import("@/i18n/I18nProvider");
+    const { mockRouter } = await import("../setup");
+
+    history.replaceState(null, "", "/people?tab=active&collection=staff&sort=name&direction=desc");
+
+    const data = {
+      ...denseTableData(),
+      sort: { column: "name" as string | null, direction: "desc" as "asc" | "desc" | null },
+    };
+
+    render(
+      <I18nProvider>
+        <DenseTableBlock block={block("dense_table", "test-table-sort-cleared", data)} />
+      </I18nProvider>,
+    );
+
+    mockRouter.get.mockClear();
+    // desc -> cleared
+    fireEvent.click(screen.getByRole("button", { name: /Name/ }));
+
+    const href = mockRouter.get.mock.calls[0][0] as string;
+    const params = mockRouter.get.mock.calls[0][1] as Record<string, unknown>;
+    const hrefParams = new URLSearchParams(href.split("?")[1] ?? "");
+    expect(params).not.toHaveProperty("sort");
+    expect(params).not.toHaveProperty("direction");
+    expect(hrefParams.has("sort")).toBe(false);
+    expect(hrefParams.has("direction")).toBe(false);
+    expect(hrefParams.get("tab")).toBe("active");
+    expect(hrefParams.get("collection")).toBe("staff");
+  });
+
+  it("drops a removed filter and stale table params from the href", async () => {
+    const { DenseTableBlock } = await import("@/base/blocks/DenseTableBlock");
+    const { I18nProvider } = await import("@/i18n/I18nProvider");
+    const { mockRouter } = await import("../setup");
+
+    history.replaceState(
+      null,
+      "",
+      "/people?tab=active&page=3&per_page=25&search=old&filter%5Bstatus%5D=active",
+    );
+
+    const data = {
+      ...denseTableData(),
+      pagination: { page: 1, perPage: 10, total: 30, lastPage: 3 },
+    };
+
+    render(
+      <I18nProvider>
+        <DenseTableBlock block={block("dense_table", "test-table-owned-params", data)} />
+      </I18nProvider>,
+    );
+
+    mockRouter.get.mockClear();
+    fireEvent.click(screen.getByRole("button", { name: "Next page" }));
+
+    const href = mockRouter.get.mock.calls[0][0] as string;
+    const hrefParams = new URLSearchParams(href.split("?")[1] ?? "");
+    expect(href.startsWith("/people?")).toBe(true);
+    expect([...hrefParams.keys()]).toEqual(["tab"]);
   });
 });
