@@ -338,4 +338,37 @@ describe("DenseTableBlock", () => {
     const options = mockRouter.get.mock.calls[0][2] as { only: string[] };
     expect(options.only).toEqual(["tickets"]);
   });
+
+  it("keeps the page's own query params in the request href", async () => {
+    const { DenseTableBlock } = await import("@/base/blocks/DenseTableBlock");
+    const { I18nProvider } = await import("@/i18n/I18nProvider");
+    const { mockRouter } = await import("../setup");
+
+    history.replaceState(null, "", "/people?tab=active&collection=staff&page=1");
+
+    const data = {
+      ...denseTableData(),
+      pagination: { page: 1, perPage: 10, total: 30, lastPage: 3 },
+    };
+
+    render(
+      <I18nProvider>
+        <DenseTableBlock block={block("dense_table", "test-table-query-href", data)} />
+      </I18nProvider>,
+    );
+
+    mockRouter.get.mockClear();
+    fireEvent.click(screen.getByRole("button", { name: "Next page" }));
+
+    const href = mockRouter.get.mock.calls[0][0] as string;
+    const params = mockRouter.get.mock.calls[0][1] as Record<string, unknown>;
+    // Inertia builds the final URL from the href plus the data. Passing only
+    // the pathname drops page params the table does not govern, so paginating
+    // resets ?tab= and ?collection= back to their defaults.
+    expect(href).toContain("tab=active");
+    expect(href).toContain("collection=staff");
+    // The table's own params travel as data, which Inertia merges over the
+    // href's query — so the stale page=1 in the URL cannot win over page 2.
+    expect(params.page).toBe(2);
+  });
 });
