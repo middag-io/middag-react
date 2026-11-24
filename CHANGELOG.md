@@ -10,7 +10,6 @@
 
 ### Build System
 
-* **deps:** bump i18next from 26.3.1 to 26.3.4 ([f5f61ee](https://github.com/middag-io/middag-react/commit/f5f61ee9e8c25c69c84142d2156c8e8718575d22))
 * **deps:** bump i18next from 26.3.1 to 26.3.4 ([099f687](https://github.com/middag-io/middag-react/commit/099f6870fc9cf1077dceeac7a14b7d374c503ea9))
 
 ## [0.50.0](https://github.com/middag-io/middag-react/compare/v0.49.0...v0.50.0) (2026-11-24)
