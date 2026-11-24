@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.0](https://github.com/middag-io/middag-react/compare/ui-contracts-v0.3.0...ui-contracts-v0.4.0) (2026-11-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **contracts:** 'PageResources' is no longer exported and the page contract has no 'resources'. 'FormErrors' now accepts rich messages inside lists and 'errors' may be a 'FormErrorBags' map.
+
+### Features
+
+* **contracts:** adopt the middag-php-ui 1.14.0 contract ([0dfebb7](https://github.com/middag-io/middag-react/commit/0dfebb7a5c263ea98c47006a0473fc1a6115918d))
+
 ## [0.3.0](https://github.com/middag-io/middag-react/compare/ui-contracts-v0.2.0...ui-contracts-v0.3.0) (2026-11-23)
 
 
