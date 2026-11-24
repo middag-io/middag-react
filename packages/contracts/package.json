@@ -1,6 +1,6 @@
 {
   "name": "@middag-io/ui-contracts",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "TypeScript types and zod schemas of the MIDDAG UI wire contract, generated from the JSON Schemas emitted by middag-io/ui (PHP).",
   "license": "Apache-2.0",
   "type": "module",
