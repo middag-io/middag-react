@@ -5,7 +5,7 @@
  * Server interactions use Inertia partial reload.
  */
 
-import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from "react";
 import { router } from "@inertiajs/core";
 
 import { usePolling } from "@/base/hooks/usePolling";
@@ -17,6 +17,7 @@ import { useInspector } from "@/base/shell/partials/InspectorContext";
 import { isDangerIntent } from "@/base/utils/action-intent";
 import { evaluateCondition } from "@/base/utils/conditions";
 import { interpolate } from "@/base/utils/interpolate";
+import { knownValue, mapOrUndefined, normalizeFilters, normalizeRows } from "@/base/utils/php-wire";
 import type { ActionConfirmation, DenseTableBlockData } from "@/contracts/block-data";
 import type { BlockProps } from "@/engine/registries";
 import { renderLabel } from "@/i18n/render-label";
@@ -45,9 +46,15 @@ function pageQueryWithoutTableParams(search: string): string {
   return query ? `?${query}` : "";
 }
 
+/** Row action variants the table draws; any other value falls back to the icon. */
+const ROW_ACTION_VARIANTS = ["icon", "button"] as const;
+
 export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): ReactElement {
   const { t } = useTranslation();
   const { data, key, meta } = block;
+  // PHP sends an empty map as `[]`: normalise rows and filters once, here.
+  const rows = useMemo(() => normalizeRows(data.rows), [data.rows]);
+  const filters = useMemo(() => normalizeFilters(data.filters), [data.filters]);
   const isLoading = meta?.loading === true;
   const clientSide = (meta as Record<string, unknown> | undefined)?.clientSide === true;
   const rowKeyField = (meta?.rowKey as string) ?? "id";
@@ -115,13 +122,13 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
   // button appear to do nothing.
   const hasAutoSelectedRef = useRef(false);
   useEffect(() => {
-    if (!hasAutoSelectedRef.current && inspectorEnabled && data.rows.length > 0) {
+    if (!hasAutoSelectedRef.current && inspectorEnabled && rows.length > 0) {
       hasAutoSelectedRef.current = true;
-      const firstRow = data.rows[0];
+      const firstRow = rows[0];
       const id = firstRow.id ?? firstRow[rowKeyField];
       if (id != null) select(id as string | number);
     }
-  }, [inspectorEnabled, data.rows, rowKeyField, select]);
+  }, [inspectorEnabled, rows, rowKeyField, select]);
 
   const handleParamChange = useCallback(
     (params: DataTableParamChange) => {
@@ -148,7 +155,7 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
         // active filter sends `filters: {}`, which used to produce no key at all.
         // Seed every currently applied key as empty, then let the ones that
         // survived overwrite their own entry.
-        Object.keys(data.filters?.applied ?? {}).forEach((k) => {
+        Object.keys(filters?.applied ?? {}).forEach((k) => {
           queryParams[`filter[${k}]`] = "";
         });
         Object.entries(params.filters).forEach(([k, v]) => {
@@ -170,7 +177,7 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
         only: [reloadKey],
       });
     },
-    [reloadKey, data.filters?.applied],
+    [reloadKey, filters?.applied],
   );
 
   // The toolbar's star. The action comes from the contract already carrying the
@@ -244,7 +251,7 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
     sortable: col.sortable,
     minWidth: col.minWidth,
     maxWidth: col.maxWidth,
-    statusMap: col.statusMap,
+    statusMap: mapOrUndefined(col.statusMap),
     href: col.href,
     entityType: col.entity?.type,
     entityIdField: col.entity?.id,
@@ -266,7 +273,7 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
       label: renderLabel(action.label, t),
       icon: action.icon,
       intent: isDangerIntent(action.intent) ? ("danger" as const) : ("default" as const),
-      variant: action.variant,
+      variant: knownValue(action.variant, ROW_ACTION_VARIANTS),
       onAction: (row: Record<string, unknown>) => {
         const resolvedHref = interpolate(target.url, row);
 
@@ -371,7 +378,7 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
     <>
       <DataTable
         columns={columns}
-        rows={data.rows}
+        rows={rows}
         rowKey={rowKeyField}
         pagination={
           data.pagination
@@ -382,8 +389,8 @@ export function DenseTableBlock({ block }: BlockProps<DenseTableBlockData>): Rea
             : undefined
         }
         sort={sort}
-        filters={data.filters?.available}
-        appliedFilters={data.filters?.applied}
+        filters={filters?.available}
+        appliedFilters={filters?.applied}
         rowActions={rowActions}
         actionsAlwaysVisible={meta?.actionsAlwaysVisible === true}
         bulkActions={data.bulkActions}

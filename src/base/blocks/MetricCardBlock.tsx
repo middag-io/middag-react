@@ -8,6 +8,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Link } from "@inertiajs/react";
 
 import { getIcon } from "@/base/utils/icons";
+import { knownValue } from "@/base/utils/php-wire";
 import type { MetricCardBlockData } from "@/contracts/block-data";
 import type { BlockProps } from "@/engine/registries";
 import { useTranslation } from "@/i18n/useTranslation";
@@ -40,6 +41,9 @@ function formatValue(value: string | number, locale = "pt-BR", compact = false):
   return new Intl.NumberFormat(locale).format(value);
 }
 
+/** Delta directions the card colours; any other value is inferred from the delta sign. */
+const DELTA_DIRECTIONS = ["positive", "negative", "neutral"] as const;
+
 const DELTA_STYLES = {
   positive: "text-success-text",
   negative: "text-destructive",
@@ -50,7 +54,10 @@ export function MetricCardBlock({ block }: BlockProps<MetricCardBlockData>): Rea
   const { t } = useTranslation();
   const { data, meta } = block;
   const isLoading = meta?.loading === true;
-  const direction = inferDeltaDirection(data.delta, data.deltaDirection);
+  const direction = inferDeltaDirection(
+    data.delta,
+    knownValue(data.deltaDirection, DELTA_DIRECTIONS),
+  );
 
   if (isLoading) {
     return (

@@ -7,9 +7,9 @@
  * Regenerate:  npm run gen:contracts
  * Drift gate:  npm run gen:contracts:check
  *
- * @source middag-io/middag-php-ui@v1.14.0 schema/{page-contract.json,fragment.json,shared-props.json}
+ * @source middag-io/middag-php-ui@v2.0.0-rc.2 schema/{page-contract.json,fragment.json,shared-props.json}
  * @contract-version 2
- * @hash ed3b25557c7c82c7
+ * @hash 78e6ca38e09436d5
  */
 import { z } from "zod";
 import type { NavigationNode, FormSectionNode, FormGroupNode, FormSchemaNode } from "./types.js";
@@ -114,6 +114,12 @@ export const NotificationSchema = z.object({
   "action": ActionSchema.optional(),
 });
 
+export const InspectorDescriptorSchema = z.object({
+  "endpoint": z.string(),
+  "width": z.number().int(),
+  "poll": PollConfigSchema.optional(),
+});
+
 export const PageContractSchema = z.object({
   "version": z.literal("2"),
   "shell": z.string(),
@@ -121,6 +127,12 @@ export const PageContractSchema = z.object({
   "layout": LayoutDescriptorSchema,
   "notifications": z.array(NotificationSchema).optional(),
   "entities": z.record(z.string(), z.string()).optional(),
+  "help": z.object({
+    "title": z.string(),
+    "body": z.string(),
+    "learnMore": z.string().optional(),
+  }).optional(),
+  "inspector": InspectorDescriptorSchema.optional(),
 });
 
 export const FragmentKindSchema = z.enum(["block", "region", "table", "form", "detail", "inspector", "notifications", "custom"]);
@@ -131,12 +143,6 @@ export const FragmentSchema = z.object({
   "payload": z.record(z.string(), z.unknown()).optional(),
   "notifications": z.array(NotificationSchema).optional(),
   "customType": z.string().optional(),
-});
-
-export const InspectorDescriptorSchema = z.object({
-  "endpoint": z.string(),
-  "width": z.number().int(),
-  "poll": PollConfigSchema.optional(),
 });
 
 export const EditablePanelDescriptorSchema = z.object({
@@ -570,9 +576,306 @@ export const ActionResultSchema = z.object({
   "fragments": z.array(FragmentSchema).optional(),
 });
 
-export const ActionTargetKindSchema = z.enum(["link", "route", "request", "panel"]);
+export const ConditionalActionVariantSchema = z.union([z.enum(["icon", "button"]), z.string()]);
+
+export const ConditionalActionSchema = z.object({
+  "id": z.string(),
+  "label": LabelSchema,
+  "target": ActionTargetSchema,
+  "intent": ActionIntentSchema,
+  "icon": z.string().optional(),
+  "confirmation": ConfirmationSchema.optional(),
+  "capability": z.string().optional(),
+  "disabled": z.literal(true).optional(),
+  "loading": z.literal(true).optional(),
+  "variant": ConditionalActionVariantSchema.optional(),
+  "visible_when": FormConditionSchema.optional(),
+  "disabled_when": FormConditionSchema.optional(),
+  "loading_when": FormConditionSchema.optional(),
+  "disabled_reason_field": z.string().optional(),
+});
+
+export const EmptyStateDefSchema = z.object({
+  "icon": z.string().optional(),
+  "title": z.string().optional(),
+  "description": z.string().optional(),
+  "cta": z.object({
+    "label": z.string(),
+    "href": z.string(),
+  }).optional(),
+});
+
+export const CardGridColumnDefSchema = z.object({
+  "key": z.string(),
+  "label": z.string(),
+  "kind": z.enum(["text", "status", "badge", "boolean", "timestamp", "number"]).optional(),
+});
+
+export const CardGridVariantSchema = z.union([z.enum(["default", "store", "connector"]), z.string()]);
+
+export const CardGridBlockDataSchema = z.object({
+  "columns": z.array(CardGridColumnDefSchema),
+  "rows": z.array(z.union([z.record(z.string(), z.unknown()), z.array(z.unknown()).max(0)])),
+  "variant": CardGridVariantSchema.optional(),
+  "emptyState": EmptyStateDefSchema.optional(),
+  "editHref": z.string().optional(),
+  "rowActions": z.array(ConditionalActionSchema).optional(),
+});
+
+export const EntityRefSchema = z.object({
+  "type": z.string(),
+  "id": z.string(),
+});
+
+export const TimestampFormatSchema = z.union([z.enum(["relative", "datetime", "date", "time", "iso"]), z.string()]);
+
+export const StatusIntentSchema = z.union([z.enum(["success", "warning", "destructive", "secondary", "info", "default"]), z.string()]);
+
+export const DenseTableColumnDefSchema = z.object({
+  "key": z.string(),
+  "label": z.string(),
+  "sortable": z.boolean().optional(),
+  "searchable": z.boolean().optional(),
+  "variant": z.union([ColumnVariantSchema, z.string()]).optional(),
+  "timestampFormat": TimestampFormatSchema.optional(),
+  "href": z.string().optional(),
+  "entity": EntityRefSchema.optional(),
+  "minWidth": z.number().optional(),
+  "maxWidth": z.number().optional(),
+  "statusMap": z.union([z.record(z.string(), StatusIntentSchema), z.array(z.unknown()).max(0)]).optional(),
+  "format": ValueFormatSchema.optional(),
+  "formatOptions": z.union([z.record(z.string(), z.unknown()), z.array(z.unknown()).max(0)]).optional(),
+  "options": z.union([z.record(z.string(), z.unknown()), z.array(z.unknown()).max(0)]).optional(),
+});
+
+export const DenseTablePaginationSchema = z.object({
+  "page": z.number().int(),
+  "perPage": z.number().int(),
+  "total": z.number().int(),
+  "lastPage": z.number().int(),
+});
+
+export const DenseTableSortSchema = z.object({
+  "column": z.union([z.string(), z.null()]),
+  "direction": z.union([z.literal("asc"), z.literal("desc"), z.literal(null)]),
+});
+
+export const DenseTableFilterDefSchema = z.object({
+  "key": z.string(),
+  "label": z.string(),
+  "type": z.enum(["select", "multiselect", "date_range"]),
+  "options": z.array(z.object({
+    "value": z.string(),
+    "label": z.string(),
+  })).optional(),
+});
+
+export const DenseTableBlockDataSchema = z.object({
+  "columns": z.array(DenseTableColumnDefSchema),
+  "rows": z.array(z.union([z.record(z.string(), z.unknown()), z.array(z.unknown()).max(0)])),
+  "pagination": DenseTablePaginationSchema.optional(),
+  "sort": DenseTableSortSchema.optional(),
+  "filters": z.union([z.object({
+    "available": z.array(DenseTableFilterDefSchema),
+    "applied": z.union([z.record(z.string(), z.union([z.string(), z.array(z.string())])), z.array(z.unknown()).max(0)]),
+  }), z.array(z.unknown()).max(0)]).optional(),
+  "rowHref": z.string().optional(),
+  "rowActions": z.array(ConditionalActionSchema).optional(),
+  "bulkActions": z.array(ActionSchema).optional(),
+  "searchPlaceholder": z.string().optional(),
+  "emptyState": EmptyStateDefSchema.optional(),
+  "saveViewAction": ActionSchema.optional(),
+  "saveViewActive": z.boolean().optional(),
+  "options": TableDisplayOptionsSchema.optional(),
+});
+
+export const RichStatusValueSchema = z.object({
+  "label": z.string(),
+  "appearance": z.enum(["success", "warning", "danger", "info", "neutral"]),
+  "icon": z.string().optional(),
+});
+
+export const AnnotatedValueSchema = z.object({
+  "text": z.string(),
+  "badge": z.object({
+    "label": z.string(),
+    "color": z.string(),
+  }).optional(),
+  "sublabel": z.string().optional(),
+  "appearance": z.enum(["success", "warning", "danger", "info", "neutral"]).optional(),
+});
+
+export const ProgressValueSchema = z.object({
+  "value": z.number(),
+  "max": z.number().optional(),
+  "label": z.string().optional(),
+  "appearance": z.enum(["success", "warning", "danger", "info", "neutral"]).optional(),
+});
+
+export const LinkGroupItemSchema = z.object({
+  "icon": z.string(),
+  "href": z.union([z.string(), z.null()]),
+  "label": z.string(),
+  "external": z.boolean().optional(),
+});
+
+export const DeltaDirectionSchema = z.union([z.enum(["positive", "negative", "neutral"]), z.string()]);
+
+export const MetricCardBlockDataSchema = z.object({
+  "value": z.union([z.string(), z.number()]),
+  "delta": z.string().optional(),
+  "deltaDirection": DeltaDirectionSchema.optional(),
+  "label": z.string(),
+  "icon": z.string().optional(),
+  "href": z.string().optional(),
+  "locale": z.string().optional(),
+  "compact": z.boolean().optional(),
+});
+
+export const EmptyStateVariantSchema = z.union([z.enum(["first-use", "no-results", "error", "permission"]), z.string()]);
+
+export const EmptyStateBlockDataSchema = z.object({
+  "variant": EmptyStateVariantSchema.optional(),
+  "icon": z.string().optional(),
+  "lottieUrl": z.string().optional(),
+  "description": z.string().optional(),
+  "cta": z.object({
+    "label": z.string(),
+    "href": z.string().optional(),
+    "method": z.enum(["get", "post"]).optional(),
+  }).optional(),
+  "ctaSecondary": z.object({
+    "label": z.string(),
+    "href": z.string(),
+  }).optional(),
+});
+
+export const StatusStripItemSchema = z.object({
+  "key": z.string(),
+  "label": z.string(),
+  "value": z.string(),
+  "appearance": z.enum(["success", "warning", "danger", "info", "neutral"]),
+  "tooltip": z.string().optional(),
+  "href": z.string().optional(),
+});
+
+export const StatusStripToneSchema = z.union([z.enum(["success", "warning", "danger", "neutral"]), z.string()]);
+
+export const StatusStripBlockDataSchema = z.object({
+  "score": z.number().optional(),
+  "tone": StatusStripToneSchema.optional(),
+  "items": z.array(StatusStripItemSchema),
+});
+
+export const DetailPanelFieldDefSchema = z.object({
+  "key": z.string(),
+  "label": z.string(),
+  "value": z.union([z.string(), z.number(), z.boolean(), z.null()]),
+  "kind": z.enum(["text", "status", "timestamp", "boolean", "link", "code", "email"]).optional(),
+  "copyable": z.boolean().optional(),
+  "href": z.string().optional(),
+  "entity": z.object({
+    "type": z.string(),
+    "id": z.union([z.string(), z.number()]),
+  }).optional(),
+});
+
+export const DetailPanelSectionDefSchema = z.object({
+  "id": z.string(),
+  "title": z.string(),
+  "fields": z.array(DetailPanelFieldDefSchema),
+  "defaultCollapsed": z.boolean().optional(),
+  "actions": z.array(ActionSchema).optional(),
+});
+
+export const DetailPanelBlockDataSchema = z.object({
+  "sections": z.array(DetailPanelSectionDefSchema),
+  "columns": z.union([z.literal(1), z.literal(2)]).optional(),
+});
+
+export const ActivityTimelineEntrySchema = z.object({
+  "id": z.string(),
+  "actor": z.string(),
+  "actorHref": z.string().optional(),
+  "action": z.string(),
+  "detail": z.string().optional(),
+  "icon": z.string(),
+  "color": z.enum(["success", "info", "warning", "destructive", "neutral"]),
+  "timestamp": z.number(),
+  "read": z.boolean().optional(),
+  "markReadHref": z.string().optional(),
+});
+
+export const ActivityTimelineBlockDataSchema = z.object({
+  "groups": z.array(z.object({
+    "label": z.string(),
+    "entries": z.array(ActivityTimelineEntrySchema),
+  })),
+  "hasMore": z.boolean().optional(),
+  "loadMoreHref": z.string().optional(),
+  "limit": z.number().int().optional(),
+});
+
+export const MarkdownPanelBlockDataSchema = z.object({
+  "content": z.string(),
+  "maxHeight": z.number().optional(),
+});
+
+export const LinkListItemSchema = z.object({
+  "label": z.string(),
+  "href": z.union([z.string(), z.null()]),
+  "icon": z.string().optional(),
+  "description": z.string().optional(),
+  "external": z.boolean().optional(),
+  "trailing": z.string().optional(),
+  "active": z.boolean().optional(),
+});
+
+export const LinkListBlockDataSchema = z.object({
+  "items": z.array(LinkListItemSchema),
+});
 
 export const ChartTypeSchema = z.union([z.enum(["line", "bar", "area"]), z.string()]);
+
+export const ChartBlockDataSchema = z.object({
+  "chartType": ChartTypeSchema,
+  "categoryKey": z.string(),
+  "series": z.array(ChartSeriesSchema),
+  "data": z.array(z.union([z.record(z.string(), z.unknown()), z.array(z.unknown()).max(0)])),
+  "options": z.object({
+    "showLegend": z.boolean().optional(),
+    "showGrid": z.boolean().optional(),
+  }).optional(),
+});
+
+export const TabsBlockDataSchema = z.object({
+  "tabs": z.array(TabSchema),
+  "defaultTab": z.string().optional(),
+});
+
+export const ActionGridItemSchema = z.object({
+  "id": z.string(),
+  "label": LabelSchema,
+  "target": ActionTargetSchema,
+  "intent": ActionIntentSchema,
+  "icon": z.string().optional(),
+  "confirmation": ConfirmationSchema.optional(),
+  "capability": z.string().optional(),
+  "disabled": z.literal(true).optional(),
+  "loading": z.literal(true).optional(),
+  "title": z.string(),
+  "description": z.string(),
+});
+
+export const ActionGridBlockDataSchema = z.object({
+  "items": z.array(ActionGridItemSchema),
+  "flash": z.union([z.object({
+    "success": z.boolean(),
+    "message": z.string(),
+  }), z.null()]).optional(),
+});
+
+export const ActionTargetKindSchema = z.enum(["link", "route", "request", "panel"]);
 
 export const ConditionOperatorSchema = z.enum(["eq", "neq", "in", "not_in", "gt", "gte", "lt", "lte", "truthy", "falsy", "exists", "empty", "matches"]);
 

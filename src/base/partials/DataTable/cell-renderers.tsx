@@ -14,6 +14,7 @@ import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { router } from "@inertiajs/core";
 
 import { getIcon } from "@/base/utils/icons";
+import { knownValue } from "@/base/utils/php-wire";
 import { formatTimestamp } from "@/base/utils/time";
 import type {
   AnnotatedValue,
@@ -33,7 +34,15 @@ import { sanitizeHtmlToReact } from "./sanitize-html";
 // Status-to-badge mapping
 // ---------------------------------------------------------------------------
 
-type StatusSemantic = "success" | "warning" | "destructive" | "info" | "default" | "secondary";
+const STATUS_SEMANTICS = [
+  "success",
+  "warning",
+  "destructive",
+  "info",
+  "default",
+  "secondary",
+] as const;
+type StatusSemantic = (typeof STATUS_SEMANTICS)[number];
 
 /** Status pill classes using subtle bg + muted (darker) text for readable contrast. */
 const STATUS_PILL_CLASSES: Record<StatusSemantic, string> = {
@@ -108,8 +117,10 @@ function resolveStatusSemantic(status: string, statusMap?: Record<string, string
   const callerMap = Object.fromEntries(
     Object.entries(statusMap ?? {}).map(([key, intent]) => [key.toLowerCase(), intent]),
   );
-  const merged = { ...DEFAULT_STATUS_MAP, ...callerMap };
-  return (merged[status.toLowerCase()] ?? "secondary") as StatusSemantic;
+  const merged: Record<string, string> = { ...DEFAULT_STATUS_MAP, ...callerMap };
+  // statusMap values are an open enum: an intent this renderer does not know
+  // falls back to the neutral "secondary".
+  return knownValue(merged[status.toLowerCase()], STATUS_SEMANTICS) ?? "secondary";
 }
 
 // ---------------------------------------------------------------------------

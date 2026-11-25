@@ -22,6 +22,7 @@ import { useInspector } from "@/base/shell/partials/InspectorContext";
 import { isDangerIntent } from "@/base/utils/action-intent";
 import { getIcon } from "@/base/utils/icons";
 import { interpolate } from "@/base/utils/interpolate";
+import { normalizeRows } from "@/base/utils/php-wire";
 import type {
   ActionConfirmation,
   CardGridBlockData,
@@ -37,6 +38,8 @@ import { Button } from "@/primitives/reui/button";
 export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactElement {
   const { t } = useTranslation();
   const { data } = block;
+  // PHP sends an empty row as `[]`: normalise the rows once, here.
+  const rows = useMemo(() => normalizeRows(data.rows), [data.rows]);
   const { select, selectedId, enabled } = useInspector();
   const variant = data.variant ?? "default";
   const reloadKey = block.key;
@@ -100,7 +103,7 @@ export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactEl
     [reloadKey],
   );
 
-  if (data.rows.length === 0 && data.emptyState) {
+  if (rows.length === 0 && data.emptyState) {
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
         {data.emptyState.title && (
@@ -123,7 +126,7 @@ export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactEl
 
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-      {data.rows.map((row, index) => {
+      {rows.map((row, index) => {
         // Preserve the row id verbatim — it may be a string/UUID, not just a
         // number — so selection works for non-numeric ids. Rows without an id
         // fall back to the index for a stable, unique React key and are not

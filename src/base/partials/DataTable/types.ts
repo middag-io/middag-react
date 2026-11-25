@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 
 import type { EmptyPlaceholderCTA } from "@/base/partials/EmptyPlaceholder";
 import type { AppliedFilters, FilterDef } from "@/base/partials/FilterBar";
-import type { ExecutableAction, TimestampFormat } from "@/contracts/block-data";
+import type { ExecutableAction, StatusIntent, TimestampFormat } from "@/contracts/block-data";
 
 // ---------------------------------------------------------------------------
 // Column
@@ -55,10 +55,7 @@ export interface DataTableColumn<TData> {
   /** Custom cell renderer. Overrides type-based rendering. */
   render?: (value: unknown, row: TData) => ReactNode;
   /** Status-to-semantic mapping for type="status" columns. Maps status string to a semantic intent. */
-  statusMap?: Record<
-    string,
-    "success" | "warning" | "destructive" | "secondary" | "info" | "default"
-  >;
+  statusMap?: Record<string, StatusIntent>;
 }
 
 // ---------------------------------------------------------------------------

@@ -1,34 +1,29 @@
 /**
  * Interactive block types — blocks with user interaction beyond read-only display.
  *
- * Community tier: ActionGrid + Tabs. The Pro interactive blocks
- * (SentenceBuilder, ConditionTree, FlowEditor, FormBuilder, KanbanBoard) ship as
- * generated types in @middag-io/react-pro (sourced from Middag\Core\Ui).
+ * Community tier: ActionGrid + Tabs, GENERATED from middag-php-ui and re-exported
+ * under the stable public names. The extended interactive blocks ship as
+ * generated types in their own package.
  */
 
-import type { ActionBase } from "./actions";
+import type {
+  ActionGridBlockData as WireActionGridBlockData,
+  ActionGridItem as WireActionGridItem,
+} from "@/contracts/generated";
 
-// ── ActionGridBlock ─────────────────────────────────────────────────────────
+import type { ActionConfirmation } from "./actions";
 
-/** A card in the action grid: the canonical Action plus card presentation. */
-export interface ActionGridItem extends ActionBase {
-  title: string;
-  description: string;
-}
-
-export interface ActionGridBlockData {
-  items: ActionGridItem[];
-  flash?: { success: boolean; message: string } | null;
-}
-
-// ── TabsBlock ────────────────────────────────────────────────────────────────
+export type { TabsBlockData } from "@/contracts/generated";
 
 /**
- * Composite block: organizes inner blocks into tabs. Tab items are the wire
- * `Tab` VO produced by middag-php-ui (`{ id, label, blocks }`); `defaultTab`
- * selects the initially-open tab by `id`.
+ * A card in the action grid: the generated wire item (the canonical Action plus
+ * `title` and `description`) with the client confirmation overlay.
  */
-export interface TabsBlockData {
-  tabs: import("@/contracts/generated").Tab[];
-  defaultTab?: string;
+export interface ActionGridItem extends Omit<WireActionGridItem, "confirmation"> {
+  confirmation?: ActionConfirmation;
 }
+
+/** The generated action-grid payload, with the overlaid items. */
+export type ActionGridBlockData = Omit<WireActionGridBlockData, "items"> & {
+  items: ActionGridItem[];
+};

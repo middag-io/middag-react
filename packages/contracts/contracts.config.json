@@ -25,7 +25,14 @@
     "FilterType",
     "ChartType",
     "FormComponent",
-    "FieldType"
+    "FieldType",
+    "CardGridVariant",
+    "DeltaDirection",
+    "StatusStripTone",
+    "EmptyStateVariant",
+    "TimestampFormat",
+    "StatusIntent",
+    "ConditionalActionVariant"
   ],
   "commands": {
     "generate": "npm run gen:contracts",
