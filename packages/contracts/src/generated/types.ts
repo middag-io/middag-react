@@ -7,9 +7,9 @@
  * Regenerate:  npm run gen:contracts
  * Drift gate:  npm run gen:contracts:check
  *
- * @source middag-io/middag-php-ui@v1.14.0 schema/{page-contract.json,fragment.json,shared-props.json}
+ * @source middag-io/middag-php-ui@v2.0.0-rc.2 schema/{page-contract.json,fragment.json,shared-props.json}
  * @contract-version 2
- * @hash ed3b25557c7c82c7
+ * @hash 78e6ca38e09436d5
  */
 export type Label = string | Translatable;
 export type ActionTarget =
@@ -316,8 +316,15 @@ export type OptionFieldProps = FieldPropsBase & {
   }[];
 };
 export type RegionUpdateMode = "replace" | "append" | "prepend" | "remove" | "update";
-export type ActionTargetKind = "link" | "route" | "request" | "panel";
+export type ConditionalActionVariant = "icon" | "button";
+export type CardGridVariant = "default" | "store" | "connector";
+export type TimestampFormat = "relative" | "datetime" | "date" | "time" | "iso";
+export type StatusIntent = "success" | "warning" | "destructive" | "secondary" | "info" | "default";
+export type DeltaDirection = "positive" | "negative" | "neutral";
+export type EmptyStateVariant = "first-use" | "no-results" | "error" | "permission";
+export type StatusStripTone = "success" | "warning" | "danger" | "neutral";
 export type ChartType = "line" | "bar" | "area" | (string & {});
+export type ActionTargetKind = "link" | "route" | "request" | "panel";
 export type ConditionOperator =
   | "eq"
   | "neq"
@@ -408,6 +415,12 @@ export interface PageContract {
   entities?: {
     [k: string]: string;
   };
+  help?: {
+    title: string;
+    body: string;
+    learnMore?: string;
+  };
+  inspector?: InspectorDescriptor;
 }
 export interface PageMeta {
   key: string;
@@ -490,6 +503,11 @@ export interface Notification {
   timeout?: number;
   action?: Action;
 }
+export interface InspectorDescriptor {
+  endpoint: string;
+  width: number;
+  poll?: PollConfig;
+}
 export interface Fragment {
   version: "2";
   kind: FragmentKind;
@@ -498,11 +516,6 @@ export interface Fragment {
   };
   notifications?: Notification[];
   customType?: string;
-}
-export interface InspectorDescriptor {
-  endpoint: string;
-  width: number;
-  poll?: PollConfig;
 }
 export interface EditablePanelDescriptor {
   endpoint: string;
@@ -719,5 +732,291 @@ export interface ActionResult {
   refreshBlocks?: string[];
   errors?: FormErrors;
   fragments?: Fragment[];
+}
+export interface ConditionalAction {
+  id: string;
+  label: Label;
+  target: ActionTarget;
+  intent: ActionIntent;
+  icon?: string;
+  confirmation?: Confirmation;
+  capability?: string;
+  disabled?: true;
+  loading?: true;
+  variant?: ConditionalActionVariant;
+  visible_when?: FormCondition;
+  disabled_when?: FormCondition;
+  loading_when?: FormCondition;
+  disabled_reason_field?: string;
+}
+export interface EmptyStateDef {
+  icon?: string;
+  title?: string;
+  description?: string;
+  cta?: {
+    label: string;
+    href: string;
+  };
+}
+export interface CardGridBlockData {
+  columns: CardGridColumnDef[];
+  rows: (
+    | {
+        [k: string]: unknown;
+      }
+    | []
+  )[];
+  variant?: CardGridVariant;
+  emptyState?: EmptyStateDef;
+  editHref?: string;
+  rowActions?: ConditionalAction[];
+}
+export interface CardGridColumnDef {
+  key: string;
+  label: string;
+  kind?: "text" | "status" | "badge" | "boolean" | "timestamp" | "number";
+}
+export interface EntityRef {
+  type: string;
+  id: string;
+}
+export interface DenseTableColumnDef {
+  key: string;
+  label: string;
+  sortable?: boolean;
+  searchable?: boolean;
+  variant?: ColumnVariant | string;
+  timestampFormat?: TimestampFormat;
+  href?: string;
+  entity?: EntityRef;
+  minWidth?: number;
+  maxWidth?: number;
+  statusMap?:
+    | {
+        [k: string]: StatusIntent;
+      }
+    | [];
+  format?: ValueFormat;
+  formatOptions?:
+    | {
+        [k: string]: unknown;
+      }
+    | [];
+  options?:
+    | {
+        [k: string]: unknown;
+      }
+    | [];
+}
+export interface DenseTablePagination {
+  page: number;
+  perPage: number;
+  total: number;
+  lastPage: number;
+}
+export interface DenseTableSort {
+  column: string | null;
+  direction: "asc" | "desc" | null;
+}
+export interface DenseTableFilterDef {
+  key: string;
+  label: string;
+  type: "select" | "multiselect" | "date_range";
+  options?: {
+    value: string;
+    label: string;
+  }[];
+}
+export interface DenseTableBlockData {
+  columns: DenseTableColumnDef[];
+  rows: (
+    | {
+        [k: string]: unknown;
+      }
+    | []
+  )[];
+  pagination?: DenseTablePagination;
+  sort?: DenseTableSort;
+  filters?:
+    | {
+        available: DenseTableFilterDef[];
+        applied:
+          | {
+              [k: string]: string | string[];
+            }
+          | [];
+      }
+    | [];
+  rowHref?: string;
+  rowActions?: ConditionalAction[];
+  bulkActions?: Action[];
+  searchPlaceholder?: string;
+  emptyState?: EmptyStateDef;
+  saveViewAction?: Action;
+  saveViewActive?: boolean;
+  options?: TableDisplayOptions;
+}
+export interface RichStatusValue {
+  label: string;
+  appearance: "success" | "warning" | "danger" | "info" | "neutral";
+  icon?: string;
+}
+export interface AnnotatedValue {
+  text: string;
+  badge?: {
+    label: string;
+    color: string;
+  };
+  sublabel?: string;
+  appearance?: "success" | "warning" | "danger" | "info" | "neutral";
+}
+export interface ProgressValue {
+  value: number;
+  max?: number;
+  label?: string;
+  appearance?: "success" | "warning" | "danger" | "info" | "neutral";
+}
+export interface LinkGroupItem {
+  icon: string;
+  href: string | null;
+  label: string;
+  external?: boolean;
+}
+export interface MetricCardBlockData {
+  value: string | number;
+  delta?: string;
+  deltaDirection?: DeltaDirection;
+  label: string;
+  icon?: string;
+  href?: string;
+  locale?: string;
+  compact?: boolean;
+}
+export interface EmptyStateBlockData {
+  variant?: EmptyStateVariant;
+  icon?: string;
+  lottieUrl?: string;
+  description?: string;
+  cta?: {
+    label: string;
+    href?: string;
+    method?: "get" | "post";
+  };
+  ctaSecondary?: {
+    label: string;
+    href: string;
+  };
+}
+export interface StatusStripItem {
+  key: string;
+  label: string;
+  value: string;
+  appearance: "success" | "warning" | "danger" | "info" | "neutral";
+  tooltip?: string;
+  href?: string;
+}
+export interface StatusStripBlockData {
+  score?: number;
+  tone?: StatusStripTone;
+  items: StatusStripItem[];
+}
+export interface DetailPanelFieldDef {
+  key: string;
+  label: string;
+  value: string | number | boolean | null;
+  kind?: "text" | "status" | "timestamp" | "boolean" | "link" | "code" | "email";
+  copyable?: boolean;
+  href?: string;
+  entity?: {
+    type: string;
+    id: string | number;
+  };
+}
+export interface DetailPanelSectionDef {
+  id: string;
+  title: string;
+  fields: DetailPanelFieldDef[];
+  defaultCollapsed?: boolean;
+  actions?: Action[];
+}
+export interface DetailPanelBlockData {
+  sections: DetailPanelSectionDef[];
+  columns?: 1 | 2;
+}
+export interface ActivityTimelineEntry {
+  id: string;
+  actor: string;
+  actorHref?: string;
+  action: string;
+  detail?: string;
+  icon: string;
+  color: "success" | "info" | "warning" | "destructive" | "neutral";
+  timestamp: number;
+  read?: boolean;
+  markReadHref?: string;
+}
+export interface ActivityTimelineBlockData {
+  groups: {
+    label: string;
+    entries: ActivityTimelineEntry[];
+  }[];
+  hasMore?: boolean;
+  loadMoreHref?: string;
+  limit?: number;
+}
+export interface MarkdownPanelBlockData {
+  content: string;
+  maxHeight?: number;
+}
+export interface LinkListItem {
+  label: string;
+  href: string | null;
+  icon?: string;
+  description?: string;
+  external?: boolean;
+  trailing?: string;
+  active?: boolean;
+}
+export interface LinkListBlockData {
+  items: LinkListItem[];
+}
+export interface ChartBlockData {
+  chartType: ChartType;
+  categoryKey: string;
+  series: ChartSeries[];
+  data: (
+    | {
+        [k: string]: unknown;
+      }
+    | []
+  )[];
+  options?: {
+    showLegend?: boolean;
+    showGrid?: boolean;
+  };
+}
+export interface TabsBlockData {
+  tabs: Tab[];
+  defaultTab?: string;
+}
+export interface ActionGridBlockData {
+  items: ActionGridItem[];
+  flash?: {
+    success: boolean;
+    message: string;
+  } | null;
+}
+export interface ActionGridItem {
+  id: string;
+  label: Label;
+  target: ActionTarget;
+  intent: ActionIntent;
+  icon?: string;
+  confirmation?: Confirmation;
+  capability?: string;
+  disabled?: true;
+  loading?: true;
+  title: string;
+  description: string;
 }
 
