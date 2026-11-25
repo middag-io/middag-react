@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://github.com/middag-io/middag-react/compare/ui-contracts-v0.4.0...ui-contracts-v0.5.0) (2026-11-25)
+
+
+### Features
+
+* **ui-contracts:** mirror the middag-php-ui v2.0.0-rc.2 schemas ([008c6ea](https://github.com/middag-io/middag-react/commit/008c6ea281665ba4d27e6f38117cd020b5e4712c))
+
+
+### Bug Fixes
+
+* **ui-contracts:** list the rc.2 block data enums as open enums ([2e10ebf](https://github.com/middag-io/middag-react/commit/2e10ebf12af64ae5c3d1246ca2826f1062f4f9ba))
+
 ## [0.4.0](https://github.com/middag-io/middag-react/compare/ui-contracts-v0.3.0...ui-contracts-v0.4.0) (2026-11-24)
 
 
