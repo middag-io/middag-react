@@ -32,6 +32,16 @@
 
 * **theme:** one source for the radius scale and documented override tokens ([5fffec3](https://github.com/middag-io/middag-react/commit/5fffec3c5ae66343630fedbefe26087c66f50829))
 
+### Consumer impact
+
+- Block data types (`DenseTableBlockData`, `CardGridBlockData` and the other block payload types) keep their exported names; they are now generated from the middag-php-ui `v2.0.0-rc.2` schemas instead of written by hand. New open enums are exported (`CardGridVariant`, `DeltaDirection`, `StatusStripTone`, `EmptyStateVariant`, `TimestampFormat`, `StatusIntent`, `ConditionalActionVariant`); an unknown value falls back to the renderer's default. Payloads that PHP serializes as `[]` (rows, filters, status maps) are normalised at the block boundary.
+- Theme tokens: light `muted-foreground`, `success`, `info`, `destructive` and `ring` are darker and dark `muted-foreground` is lighter, to meet WCAG AA. New tokens `--success-text`, `--warning-text`, `--info-text` and `--destructive-text` carry status-coloured text; a host that overrides `--success` and the other status colours should also set the matching `--*-text`.
+- Radius: `tokens.css` is the single source of the `--radius-*` values; overriding `--radius` alone no longer derives the scale. Unused `--text-*`, `--size-*` and `--z-*` tokens stay, documented as override points.
+- BasicShell: the page title renders as an `<h1>` with a skip link and a single `<main>`; `[data-slot=sidebar-inset]` is now a `div`. Embedded hosts whose page already has an `h1` or a skip link use `titleAs` and `skipLink={false}`.
+- Sidebar: the open state is saved in the `middag_sidebar_state` cookie and read only when `defaultOpen` is not set (an explicit `defaultOpen` wins). The old `sidebar_state` cookie is ignored.
+- DataTable drops `role="grid"` and shows row actions on keyboard focus. FormField gains `headingLevel` (default 4, `HeadingLevel` type exported) and announces required fields as "(required)" to screen readers; the visual is unchanged.
+- CI gates: jsx-a11y in lint, axe tests and a token contrast check.
+
 ## [0.51.1](https://github.com/middag-io/middag-react/compare/v0.51.0...v0.51.1) (2026-11-24)
 
 
