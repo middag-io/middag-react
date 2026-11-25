@@ -180,9 +180,13 @@ export function BasicShell({ children }: ShellProps): ReactElement {
   return (
     <SidebarProvider>
       {/* First focusable element: lets keyboard users skip the navigation. */}
+      {/* Hidden until focused by an unlayered rule in tailwind.css, not by
+          sr-only: host themes (Bootstrap) ship their own unlayered .sr-only,
+          which would keep the link clipped even on focus. */}
       <a
         href="#middag-main-content"
-        className="bg-background text-foreground focus-visible:ring-ring sr-only z-50 rounded-md px-3 py-2 text-sm font-medium focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus-visible:ring-2 focus-visible:outline-none"
+        data-slot="skip-link"
+        className="bg-background text-foreground focus-visible:ring-ring rounded-md px-3 py-2 text-sm font-medium shadow-md focus-visible:ring-2 focus-visible:outline-none"
       >
         {t("middag.ui.shell.skip_to_content")}
       </a>
