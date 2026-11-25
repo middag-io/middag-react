@@ -25,12 +25,16 @@ import {
   TooltipTrigger,
 } from "@/primitives/reui/tooltip";
 
-const SIDEBAR_COOKIE_NAME = "sidebar_state";
+const SIDEBAR_COOKIE_NAME = "middag_sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+
+/** useLayoutEffect on the client, useEffect during server rendering. */
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
 /** The open state saved in the sidebar cookie, or null when there is none. */
 function readSidebarCookie(): boolean | null {
@@ -66,7 +70,7 @@ function useSidebar() {
 }
 
 function SidebarProvider({
-  defaultOpen = true,
+  defaultOpen,
   open: openProp,
   onOpenChange: setOpenProp,
   className,
@@ -83,11 +87,18 @@ function SidebarProvider({
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
-  // The cookie written by setOpen restores the last state across page loads;
-  // without one, defaultOpen applies.
-  const [_open, _setOpen] = React.useState(
-    () => readSidebarCookie() ?? defaultOpen,
-  );
+  // An explicit defaultOpen wins. Without one, the cookie written by setOpen
+  // restores the last state across page loads. The first render always uses
+  // the server-safe default (open), so server and client markup match; the
+  // cookie is applied in a layout effect, on the client, before first paint.
+  const [_open, _setOpen] = React.useState(defaultOpen ?? true);
+  useIsomorphicLayoutEffect(() => {
+    if (defaultOpen !== undefined || openProp !== undefined) return;
+    const saved = readSidebarCookie();
+    if (saved !== null) _setOpen(saved);
+    // Mount only: the cookie seeds the initial state, later toggles own it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const open = openProp ?? _open;
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {

@@ -1,8 +1,11 @@
 /**
- * SidebarProvider persists its open state in the `sidebar_state` cookie and
- * restores it on the next mount; without the cookie, defaultOpen applies.
+ * SidebarProvider persists its open state in the `middag_sidebar_state`
+ * cookie. Without an explicit defaultOpen the next mount restores it; an
+ * explicit defaultOpen always wins. The first render ignores the cookie so
+ * server and client markup match.
  */
 
+import { renderToString } from "react-dom/server";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -10,10 +13,16 @@ import "../setup";
 
 import { SidebarProvider, useSidebar } from "@/primitives/reui/sidebar";
 
-const COOKIE = "sidebar_state";
+const COOKIE = "middag_sidebar_state";
 
-function clearCookie(): void {
-  document.cookie = `${COOKIE}=; path=/; max-age=0`;
+function setCookie(name: string, value: string): void {
+  document.cookie = `${name}=${value}; path=/`;
+}
+
+function clearCookies(): void {
+  for (const name of [COOKIE, "sidebar_state"]) {
+    document.cookie = `${name}=; path=/; max-age=0`;
+  }
 }
 
 function Probe(): React.ReactElement {
@@ -25,24 +34,26 @@ function Probe(): React.ReactElement {
   );
 }
 
+const probeState = () => screen.getByTestId("probe").textContent;
+
 describe("SidebarProvider cookie", () => {
-  beforeEach(clearCookie);
+  beforeEach(clearCookies);
   afterEach(() => {
     cleanup();
-    clearCookie();
+    clearCookies();
   });
 
-  it("starts from defaultOpen when there is no cookie", () => {
+  it("starts open when there is neither a cookie nor a defaultOpen", () => {
     render(
-      <SidebarProvider defaultOpen={false}>
+      <SidebarProvider>
         <Probe />
       </SidebarProvider>,
     );
 
-    expect(screen.getByTestId("probe").textContent).toBe("collapsed");
+    expect(probeState()).toBe("expanded");
   });
 
-  it("restores the state saved by a previous toggle", () => {
+  it("restores the state saved by a previous toggle when defaultOpen is not set", () => {
     // Arrange: collapse once, which writes the cookie
     render(
       <SidebarProvider>
@@ -53,7 +64,7 @@ describe("SidebarProvider cookie", () => {
     expect(document.cookie).toContain(`${COOKIE}=false`);
     cleanup();
 
-    // Act: mount again with the default (open)
+    // Act
     render(
       <SidebarProvider>
         <Probe />
@@ -61,6 +72,42 @@ describe("SidebarProvider cookie", () => {
     );
 
     // Assert
-    expect(screen.getByTestId("probe").textContent).toBe("collapsed");
+    expect(probeState()).toBe("collapsed");
+  });
+
+  it("lets an explicit defaultOpen win over the cookie", () => {
+    setCookie(COOKIE, "false");
+
+    render(
+      <SidebarProvider defaultOpen>
+        <Probe />
+      </SidebarProvider>,
+    );
+
+    expect(probeState()).toBe("expanded");
+  });
+
+  it("ignores the old unprefixed sidebar_state cookie", () => {
+    setCookie("sidebar_state", "false");
+
+    render(
+      <SidebarProvider>
+        <Probe />
+      </SidebarProvider>,
+    );
+
+    expect(probeState()).toBe("expanded");
+  });
+
+  it("renders the server-safe default on the server, whatever the cookie says", () => {
+    setCookie(COOKIE, "false");
+
+    const html = renderToString(
+      <SidebarProvider>
+        <Probe />
+      </SidebarProvider>,
+    );
+
+    expect(html).toContain(">expanded<");
   });
 });
