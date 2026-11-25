@@ -92,6 +92,7 @@
     "typecheck": "tsc --noEmit",
     "typecheck:tests": "tsc -p tsconfig.test.json --noEmit",
     "typecheck:demo": "tsc -p demo/tsconfig.json --noEmit",
+    "theme:contrast": "node scripts/check-contrast.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:format": "npm run format && eslint . --fix",
@@ -197,9 +198,11 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.12",
+    "axe-core": "^4.14.1",
     "country-flag-icons": "^1.6.17",
     "eslint": "^10.2.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^7.1.0",
     "eslint-plugin-react-refresh": "^0.5.2",
     "i18next-parser": "^9.4.0",
@@ -223,6 +226,9 @@
     "happy-dom": "^21.0.4",
     "quick-temp": {
       "rimraf": "^6.1.4"
+    },
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
     }
   },
   "homepage": "https://ui-docs.middag.io",

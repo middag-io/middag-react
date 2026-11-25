@@ -95,7 +95,7 @@ export function InspectorFieldValue({ field }: { field: InspectorField }) {
   if (field.kind === "status" || field.kind === "badge") {
     const color =
       field.value === "active" || field.value === "granted"
-        ? "bg-success-subtle text-success"
+        ? "bg-success-subtle text-success-text"
         : field.value === "failed" || field.value === "revoked"
           ? "bg-destructive-subtle text-destructive"
           : "bg-muted text-muted-foreground";

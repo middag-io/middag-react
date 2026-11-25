@@ -48,7 +48,9 @@ export function DateField({
   mode = "date",
   placeholder,
   disabled,
-  required,
+  // `required` is not read: the trigger is a button, which supports neither
+  // aria-required nor aria-invalid. The label marks the field as required and
+  // the error reaches assistive tech through aria-describedby.
   error,
   helpTextId,
   errorId,
@@ -118,8 +120,6 @@ export function DateField({
             type="button"
             id={id}
             disabled={disabled}
-            aria-invalid={error ? true : undefined}
-            aria-required={required || undefined}
             aria-describedby={describedBy}
             className="border-input bg-background ring-ring focus:ring-ring flex h-9 w-full items-center rounded-md border px-3 py-1 text-sm shadow-xs transition-colors focus:ring-1 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >

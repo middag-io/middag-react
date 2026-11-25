@@ -10,6 +10,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Link } from "@inertiajs/react";
 
 import { getIcon } from "@/base/utils/icons";
+import { usePrefersReducedMotion } from "@/lib/hooks/use-prefers-reduced-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/primitives/reui/button";
 
@@ -92,6 +93,9 @@ export function EmptyPlaceholder({
   const iconColor = resolveIconColor(variant);
   const showCTA = variant !== "permission" && cta;
   const lottieSize = config.iconSize * 1.8;
+  // The canvas animation ignores the CSS reduced-motion rule: with reduced
+  // motion it shows its first frame and does not play or loop.
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
     <div
@@ -105,8 +109,8 @@ export function EmptyPlaceholder({
         >
           <DotLottieReact
             src={lottieUrl}
-            loop
-            autoplay
+            loop={!prefersReducedMotion}
+            autoplay={!prefersReducedMotion}
             style={{ width: lottieSize, height: lottieSize }}
             className="mb-4"
           />
@@ -151,7 +155,7 @@ export function EmptyPlaceholder({
       )}
 
       {ctaSecondary && (
-        <Link href={ctaSecondary.href} className="text-info mt-2.5 text-xs hover:underline">
+        <Link href={ctaSecondary.href} className="text-info-text mt-2.5 text-xs hover:underline">
           {ctaSecondary.label} &rarr;
         </Link>
       )}

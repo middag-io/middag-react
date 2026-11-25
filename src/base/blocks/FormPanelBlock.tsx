@@ -403,7 +403,6 @@ export function FormPanelBlock({ block }: BlockProps<FormPanelBlockData>): React
         onSubmit={form.handleSubmit(onSubmit)}
         className="mx-auto max-w-[720px] space-y-6"
         noValidate
-        role="form"
         aria-label={renderLabel(block.title, t) || t("middag.ui.form.default_title")}
       >
         {/* Form-level / non-field server errors (keys with no matching field) */}

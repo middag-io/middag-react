@@ -112,7 +112,7 @@ function CopyButton({ text }: { text: string }): ReactElement {
         size={14}
         className={cn(
           "transition-colors",
-          copied ? "text-success" : "text-muted-foreground hover:text-foreground",
+          copied ? "text-success-text" : "text-muted-foreground hover:text-foreground",
         )}
       />
     </button>
@@ -157,7 +157,7 @@ function FieldValue({ field }: { field: DetailField }): ReactElement {
         <HugeiconsIcon
           icon={value ? CheckmarkCircle01Icon : Cancel01Icon}
           size={16}
-          className={value ? "text-success" : "text-muted-foreground"}
+          className={value ? "text-success-text" : "text-muted-foreground"}
           aria-label={value ? t("middag.ui.common.yes") : t("middag.ui.common.no")}
         />
       );

@@ -156,9 +156,14 @@ export function CardGridBlock({ block }: BlockProps<CardGridBlockData>): ReactEl
             )}
           >
             {hasActions && (
+              // Keeps clicks and Enter/Space on the action buttons from also
+              // selecting the card (the card's keydown handler would otherwise
+              // preventDefault the button's own activation).
               <div
+                role="presentation"
                 className="absolute top-3 right-3 flex items-center gap-1"
                 onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.stopPropagation()}
               >
                 {editHref && (
                   <Button

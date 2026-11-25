@@ -52,7 +52,7 @@ export function DetailPanelBlock({ block }: BlockProps<DetailPanelBlockData>): R
     <div className="space-y-8">
       {copyableText && <CopyReportButton text={copyableText} />}
       {data.sections.map((section) => (
-        <section key={section.id} role="region" aria-label={renderLabel(section.title, t)}>
+        <section key={section.id} aria-label={renderLabel(section.title, t)}>
           <div className="mb-4 flex items-center justify-between">
             <h3 id={`${section.id}-heading`} className="text-foreground text-lg font-semibold">
               {renderLabel(section.title, t)}

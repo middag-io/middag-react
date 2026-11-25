@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 import prettierConfig from 'eslint-config-prettier';
 
 export default tseslint.config(
@@ -55,6 +56,32 @@ export default tseslint.config(
                     message: 'Use trackedFetch from @/lib/host-pending.',
                 })),
             ],
+        },
+    },
+    {
+        // Accessibility gate: every recommended jsx-a11y rule is an error.
+        files: ['**/*.{jsx,tsx}'],
+        plugins: { 'jsx-a11y': jsxA11y },
+        rules: {
+            ...Object.fromEntries(
+                Object.entries(jsxA11y.flatConfigs.recommended.rules).map(([rule, setting]) => [
+                    rule,
+                    Array.isArray(setting)
+                        ? ['error', ...setting.slice(1)]
+                        : setting === 'off' || setting === 0
+                          ? 'off'
+                          : 'error',
+                ]),
+            ),
+            // A scrollable region must be focusable so keyboard users can scroll it
+            // (axe scrollable-region-focusable).
+            'jsx-a11y/no-noninteractive-tabindex': [
+                'error',
+                { tags: [], roles: ['tabpanel', 'region'], allowExpressionValues: true },
+            ],
+            // `role="list"` on a styled list restores list semantics that Safari
+            // drops when list-style is none.
+            'jsx-a11y/no-redundant-roles': ['error', { ul: ['list'], ol: ['list'] }],
         },
     },
     prettierConfig,

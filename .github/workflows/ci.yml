@@ -37,6 +37,12 @@ jobs:
       - name: Static checks
         run: npm run check
 
+      # WCAG contrast of the theme tokens (text 4.5:1, focus ring 3:1) in
+      # light and dark mode. The same check runs in the vitest suite; this
+      # step prints the measured table in the job log.
+      - name: Theme contrast gate
+        run: npm run theme:contrast
+
       # Generated contracts must stay in sync with the php-ui schema mirror
       # committed in docs/public/schemas/.
       - name: Contracts drift gate
@@ -69,6 +75,8 @@ jobs:
           git show "FETCH_HEAD:packages/contracts/schema/SOURCE.json" > "$BASE_DIR/SOURCE.json" 2>/dev/null || rm -f "$BASE_DIR/SOURCE.json"
           npm run contracts:compat -- --base "$BASE_DIR"
 
+      # Includes the accessibility gate (tests/a11y: axe-core, no serious or
+      # critical violation) and the contrast suite (tests/scripts).
       # Runs the full suite once WITH coverage so the regression floor
       # (vitest.config.ts coverage.thresholds ≈ baseline − 2pp) gates the PR.
       # A drop below the floor fails here; raise the floor as coverage grows.
