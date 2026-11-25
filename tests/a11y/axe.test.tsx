@@ -15,7 +15,7 @@ import "../setup";
 import { FormField, type FieldDescriptor } from "@/base/form/FormField";
 import { DataTable } from "@/base/partials/DataTable";
 import type { DataTableColumn, DataTableRowAction } from "@/base/partials/DataTable/types";
-import { BasicShell } from "@/base/shell/BasicShell";
+import { BasicShell, type BasicShellProps } from "@/base/shell/BasicShell";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { Badge } from "@/primitives/reui/badge";
 
@@ -26,7 +26,7 @@ import { blockingViolations } from "./axe-helpers";
 afterEach(() => cleanup());
 
 describe("BasicShell", () => {
-  function renderShell(): void {
+  function renderShell(shellProps: Partial<BasicShellProps> = {}): void {
     // <html lang> and <title> belong to the host page that mounts the shell.
     document.documentElement.lang = "en";
     document.title = "Courses";
@@ -62,7 +62,7 @@ describe("BasicShell", () => {
     });
     render(
       <I18nProvider>
-        <BasicShell>
+        <BasicShell {...shellProps}>
           <p>Page body</p>
         </BasicShell>
       </I18nProvider>,
@@ -97,6 +97,28 @@ describe("BasicShell", () => {
 
     const title = await screen.findByRole("heading", { level: 1, name: "Courses" });
     expect(title.tagName).toBe("H1");
+  });
+  it("renders the title as an h2 or a plain div when titleAs says so", async () => {
+    renderShell({ titleAs: "h2" });
+    const h2 = await screen.findByRole("heading", { level: 2, name: "Courses" });
+    expect(h2.tagName).toBe("H2");
+    expect(screen.queryByRole("heading", { level: 1 })).toBeNull();
+    cleanup();
+
+    renderShell({ titleAs: "div" });
+    const title = document.querySelector('[data-slot="page-title"]');
+    expect(title?.tagName).toBe("DIV");
+    expect(screen.queryByRole("heading", { name: "Courses" })).toBeNull();
+    expect(await blockingViolations(document)).toEqual([]);
+  });
+
+  it("omits the skip link when skipLink is false", async () => {
+    renderShell({ skipLink: false });
+    await screen.findByText("Page body");
+
+    expect(document.querySelector('[data-slot="skip-link"]')).toBeNull();
+    expect(screen.queryByRole("link", { name: "Skip to main content" })).toBeNull();
+    expect(screen.getAllByRole("main")).toHaveLength(1);
   });
 });
 
@@ -212,6 +234,66 @@ describe("FormField", () => {
     // The email input (no help text) references its error and nothing else.
     expect(screen.getByLabelText("Email").getAttribute("aria-describedby")).toMatch(/-error$/);
   });
+
+  it(
+    "announces required fields by name, whatever the field role, with the asterisk hidden",
+    { timeout: 15000 },
+    async () => {
+      const options = [
+        { value: "a", label: "A" },
+        { value: "b", label: "B" },
+      ];
+      const required: FieldDescriptor[] = [
+        { key: "title", component: "text", props: { label: "Title", required: true } },
+        { key: "start", component: "date", props: { label: "Start", required: true } },
+        {
+          key: "tags",
+          component: "multiselect",
+          props: { label: "Tags", required: true, options },
+        },
+        { key: "kind", component: "radio", props: { label: "Kind", required: true, options } },
+        { key: "score", component: "rating", props: { label: "Score", required: true } },
+        { key: "level", component: "slider", props: { label: "Level", required: true } },
+        { key: "period", component: "date_range", props: { label: "Period", required: true } },
+      ] as FieldDescriptor[];
+      render(
+        <I18nProvider>
+          {required.map((field) => (
+            <FormField
+              key={field.key}
+              field={field}
+              value={field.component === "multiselect" ? [] : null}
+              onChange={vi.fn()}
+            />
+          ))}
+        </I18nProvider>,
+      );
+      const name = (label: string) => new RegExp(`^${label}\\s*\\(required\\)$`);
+
+      expect(screen.getByRole("textbox", { name: name("Title") })).toBeDefined();
+      expect(
+        await screen.findByRole("button", { name: name("Start") }, { timeout: 5000 }),
+      ).toBeDefined();
+      expect(screen.getByRole("group", { name: name("Tags") })).toBeDefined();
+      expect(screen.getByRole("radiogroup", { name: name("Kind") })).toBeDefined();
+      expect(screen.getByRole("radiogroup", { name: name("Score") })).toBeDefined();
+      expect(screen.getByRole("group", { name: name("Level") })).toBeDefined();
+      expect(
+        await screen.findByRole("group", { name: name("Period") }, { timeout: 5000 }),
+      ).toBeDefined();
+      // The visual asterisk stays and is hidden from assistive tech.
+      for (const star of screen.getAllByText("*")) {
+        expect(star.getAttribute("aria-hidden")).toBe("true");
+      }
+      // The slider thumb and the date-range selector carry older primitive
+      // violations (unnamed thumb and preset buttons) tracked separately; the
+      // other fields must be clean.
+      for (const key of ["title", "start", "tags", "kind", "score"]) {
+        const wrapper = screen.getByTestId(`field-${key}`);
+        expect(await blockingViolations(wrapper), key).toEqual([]);
+      }
+    },
+  );
 
   it("renders the header at the requested level (default 4)", () => {
     renderForm();
