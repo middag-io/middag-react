@@ -42,7 +42,6 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -180,6 +179,14 @@ export function BasicShell({ children }: ShellProps): ReactElement {
 
   return (
     <SidebarProvider>
+      {/* First focusable element: lets keyboard users skip the navigation. */}
+      <a
+        href="#middag-main-content"
+        className="bg-background text-foreground focus-visible:ring-ring sr-only z-50 rounded-md px-3 py-2 text-sm font-medium focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus-visible:ring-2 focus-visible:outline-none"
+      >
+        {t("middag.ui.shell.skip_to_content")}
+      </a>
+
       <Sidebar collapsible="offcanvas" className="border-sidebar-border bg-sidebar border-r">
         <SidebarHeader className="border-sidebar-border border-b px-4 py-3">
           <span className="text-sidebar-foreground text-sm font-semibold">MIDDAG</span>
@@ -241,7 +248,9 @@ export function BasicShell({ children }: ShellProps): ReactElement {
         </SidebarFooter>
       </Sidebar>
 
-      <SidebarInset>
+      {/* Same box as SidebarInset, but a div: SidebarInset renders a <main>, and
+          the content area below is the page's only main landmark. */}
+      <div data-slot="sidebar-inset" className="bg-background relative flex w-full flex-1 flex-col">
         <header className="border-border flex h-14 shrink-0 items-center gap-3 border-b px-4">
           <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
           <div className="flex min-w-0 flex-col">
@@ -264,8 +273,15 @@ export function BasicShell({ children }: ShellProps): ReactElement {
                 ))}
               </nav>
             )}
+            {/* The page title is the level-1 heading. A role rather than an <h1>
+                tag: hosts such as Moodle style h1 globally (unlayered), which
+                would override the utility classes and resize the header. */}
             {page.title && (
-              <span className="text-foreground truncate text-sm font-medium">
+              <span
+                role="heading"
+                aria-level={1}
+                className="text-foreground truncate text-sm font-medium"
+              >
                 {renderLabel(page.title, t)}
               </span>
             )}
@@ -286,13 +302,14 @@ export function BasicShell({ children }: ShellProps): ReactElement {
 
         <main
           id="middag-main-content"
-          className="flex min-h-0 flex-1 flex-col overflow-auto"
+          tabIndex={-1}
+          className="flex min-h-0 flex-1 flex-col overflow-auto focus:outline-none"
           aria-live="polite"
           aria-busy="false"
         >
           {children}
         </main>
-      </SidebarInset>
+      </div>
 
       <Toaster position="bottom-right" richColors />
     </SidebarProvider>
