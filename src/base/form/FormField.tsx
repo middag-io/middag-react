@@ -118,15 +118,26 @@ export interface FormFieldProps {
   onChange: (value: unknown) => void;
   error?: string;
   sourceValues?: Record<string, unknown>;
+  /**
+   * Level of the heading a `header` field renders (default 4). Set it to fit
+   * the page outline the form sits in, so headings do not skip levels.
+   */
+  headingLevel?: HeadingLevel;
 }
+
+/** Heading levels a `header` field can render (level 1 is the page title). */
+export type HeadingLevel = 2 | 3 | 4 | 5 | 6;
+
+const DEFAULT_HEADING_LEVEL: HeadingLevel = 4;
 
 /**
  * Renders a header separator (non-interactive, no label wrapper).
  */
-function HeaderField({ label }: { label: string }): ReactElement {
+function HeaderField({ label, level }: { label: string; level: HeadingLevel }): ReactElement {
+  const Heading = `h${level}` as const;
   return (
     <div className="pt-4 pb-1">
-      <h4 className="text-foreground text-sm font-semibold">{label}</h4>
+      <Heading className="text-foreground text-sm font-semibold">{label}</Heading>
     </div>
   );
 }
@@ -144,24 +155,29 @@ export function FormField({
   onChange,
   error,
   sourceValues = {},
+  headingLevel = DEFAULT_HEADING_LEVEL,
 }: FormFieldProps): ReactElement {
   const { t } = useTranslation();
   const generatedId = useId();
   const fieldId = `field-${field.key}-${generatedId}`;
-  const helpTextId = `${fieldId}-help`;
   const errorId = `${fieldId}-error`;
 
   const { component, props } = field;
 
   // Header -- renders just a heading, no label/help/error wrapper.
   if (component === "header") {
-    return <HeaderField label={props.label} />;
+    return <HeaderField label={props.label} level={headingLevel} />;
   }
 
   // Hidden -- renders a hidden input, no visible wrapper.
   if (component === "hidden") {
     return <HiddenField id={fieldId} value={value} />;
   }
+
+  // Only ids of elements this component renders are handed to the input's
+  // aria-describedby: the help text exists only when there is help text, and
+  // the fields reference errorId only while `error` is set (rendered below).
+  const helpTextId = props.helpText ? `${fieldId}-help` : undefined;
 
   // Resolve conditional state against the current sibling field values.
   // `sourceValues` carries the full form value map, so disabled_when /
@@ -227,7 +243,7 @@ function renderField(
   onChange: (value: unknown) => void,
   props: AnyFieldProps,
   error: string | undefined,
-  helpTextId: string,
+  helpTextId: string | undefined,
   errorId: string,
   _t: TFunction,
   sourceValues: Record<string, unknown>,
