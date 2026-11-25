@@ -576,7 +576,7 @@ export const ActionResultSchema = z.object({
   "fragments": z.array(FragmentSchema).optional(),
 });
 
-export const ConditionalActionVariantSchema = z.enum(["icon", "button"]);
+export const ConditionalActionVariantSchema = z.union([z.enum(["icon", "button"]), z.string()]);
 
 export const ConditionalActionSchema = z.object({
   "id": z.string(),
@@ -611,7 +611,7 @@ export const CardGridColumnDefSchema = z.object({
   "kind": z.enum(["text", "status", "badge", "boolean", "timestamp", "number"]).optional(),
 });
 
-export const CardGridVariantSchema = z.enum(["default", "store", "connector"]);
+export const CardGridVariantSchema = z.union([z.enum(["default", "store", "connector"]), z.string()]);
 
 export const CardGridBlockDataSchema = z.object({
   "columns": z.array(CardGridColumnDefSchema),
@@ -627,9 +627,9 @@ export const EntityRefSchema = z.object({
   "id": z.string(),
 });
 
-export const TimestampFormatSchema = z.enum(["relative", "datetime", "date", "time", "iso"]);
+export const TimestampFormatSchema = z.union([z.enum(["relative", "datetime", "date", "time", "iso"]), z.string()]);
 
-export const StatusIntentSchema = z.enum(["success", "warning", "destructive", "secondary", "info", "default"]);
+export const StatusIntentSchema = z.union([z.enum(["success", "warning", "destructive", "secondary", "info", "default"]), z.string()]);
 
 export const DenseTableColumnDefSchema = z.object({
   "key": z.string(),
@@ -719,7 +719,7 @@ export const LinkGroupItemSchema = z.object({
   "external": z.boolean().optional(),
 });
 
-export const DeltaDirectionSchema = z.enum(["positive", "negative", "neutral"]);
+export const DeltaDirectionSchema = z.union([z.enum(["positive", "negative", "neutral"]), z.string()]);
 
 export const MetricCardBlockDataSchema = z.object({
   "value": z.union([z.string(), z.number()]),
@@ -732,7 +732,7 @@ export const MetricCardBlockDataSchema = z.object({
   "compact": z.boolean().optional(),
 });
 
-export const EmptyStateVariantSchema = z.enum(["first-use", "no-results", "error", "permission"]);
+export const EmptyStateVariantSchema = z.union([z.enum(["first-use", "no-results", "error", "permission"]), z.string()]);
 
 export const EmptyStateBlockDataSchema = z.object({
   "variant": EmptyStateVariantSchema.optional(),
@@ -759,7 +759,7 @@ export const StatusStripItemSchema = z.object({
   "href": z.string().optional(),
 });
 
-export const StatusStripToneSchema = z.enum(["success", "warning", "danger", "neutral"]);
+export const StatusStripToneSchema = z.union([z.enum(["success", "warning", "danger", "neutral"]), z.string()]);
 
 export const StatusStripBlockDataSchema = z.object({
   "score": z.number().optional(),

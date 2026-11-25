@@ -316,13 +316,20 @@ export type OptionFieldProps = FieldPropsBase & {
   }[];
 };
 export type RegionUpdateMode = "replace" | "append" | "prepend" | "remove" | "update";
-export type ConditionalActionVariant = "icon" | "button";
-export type CardGridVariant = "default" | "store" | "connector";
-export type TimestampFormat = "relative" | "datetime" | "date" | "time" | "iso";
-export type StatusIntent = "success" | "warning" | "destructive" | "secondary" | "info" | "default";
-export type DeltaDirection = "positive" | "negative" | "neutral";
-export type EmptyStateVariant = "first-use" | "no-results" | "error" | "permission";
-export type StatusStripTone = "success" | "warning" | "danger" | "neutral";
+export type ConditionalActionVariant = "icon" | "button" | (string & {});
+export type CardGridVariant = "default" | "store" | "connector" | (string & {});
+export type TimestampFormat = "relative" | "datetime" | "date" | "time" | "iso" | (string & {});
+export type StatusIntent =
+  | "success"
+  | "warning"
+  | "destructive"
+  | "secondary"
+  | "info"
+  | "default"
+  | (string & {});
+export type DeltaDirection = "positive" | "negative" | "neutral" | (string & {});
+export type EmptyStateVariant = "first-use" | "no-results" | "error" | "permission" | (string & {});
+export type StatusStripTone = "success" | "warning" | "danger" | "neutral" | (string & {});
 export type ChartType = "line" | "bar" | "area" | (string & {});
 export type ActionTargetKind = "link" | "route" | "request" | "panel";
 export type ConditionOperator =
