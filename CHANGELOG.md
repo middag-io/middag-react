@@ -1,5 +1,47 @@
 # Changelog
 
+## [0.52.0](https://github.com/middag-io/middag-react/compare/v0.51.1...v0.52.0) (2026-11-25)
+
+
+### Features
+
+* consume the generated block data types ([ea3f4c6](https://github.com/middag-io/middag-react/commit/ea3f4c666251e230b966b53621a58f233e13e453))
+* **shell:** titleAs and skipLink options for embedded hosts ([3fc5d5b](https://github.com/middag-io/middag-react/commit/3fc5d5b1751c535033b97ed0f24b1cbef0a13b3f))
+* **ui-contracts:** mirror the middag-php-ui v2.0.0-rc.2 schemas ([008c6ea](https://github.com/middag-io/middag-react/commit/008c6ea281665ba4d27e6f38117cd020b5e4712c))
+
+
+### Bug Fixes
+
+* **a11y:** resolve the jsx-a11y findings in blocks and form fields ([4d5b6f1](https://github.com/middag-io/middag-react/commit/4d5b6f1c9f8d25a45ecdf83d98d9e84c0e5c8e00))
+* **badge:** readable foregrounds for solid, light and outline variants ([6d7d16f](https://github.com/middag-io/middag-react/commit/6d7d16f6d7bc891effe0c15f439c1d8f3cc6e45a))
+* **data-table:** reveal row actions on keyboard focus and drop the grid role ([399ed8f](https://github.com/middag-io/middag-react/commit/399ed8f81b7929427d842b9e402449770d2ad931))
+* **empty-placeholder:** stop the Lottie loop when reduced motion is requested ([9396f68](https://github.com/middag-io/middag-react/commit/9396f6824956be822374d90c40ddb09158ffb210))
+* **form:** announce required fields to screen readers on every field type ([21140d7](https://github.com/middag-io/middag-react/commit/21140d7bb1b423869a6558776c9c2dfd817a3d49))
+* **form:** configurable header level and no dangling aria-describedby ([a369e31](https://github.com/middag-io/middag-react/commit/a369e31bd9e24381ec4505490e4b5497acf0634b))
+* **shell:** add a skip link, a level-1 page title and a single main landmark ([4c74b1b](https://github.com/middag-io/middag-react/commit/4c74b1b716845cdeaac38cb7c82c3173f8ef5346))
+* **shell:** keep the skip link visible on focus under host .sr-only rules ([76b269a](https://github.com/middag-io/middag-react/commit/76b269abf28634fb8d1d99ec44b6fcf7761f8bba))
+* **shell:** render the page title as a real h1 that keeps its look ([52903cf](https://github.com/middag-io/middag-react/commit/52903cf9db7c45644edea590625113b301834e79))
+* **sidebar:** read the saved state only without defaultOpen, under a prefixed cookie ([cbdfe91](https://github.com/middag-io/middag-react/commit/cbdfe91f4423efc3c1590a7f4f06e96b9cab5199))
+* **sidebar:** restore the open state saved in the sidebar_state cookie ([5886774](https://github.com/middag-io/middag-react/commit/5886774c609726c58ea5a0342a185519fd48155c))
+* **theme:** keep muted text at AA on hovered and selected surfaces ([9021ddc](https://github.com/middag-io/middag-react/commit/9021ddc76ee9351a0402ce69d74556ec104e6f60))
+* **theme:** meet WCAG AA contrast for text tokens in light and dark mode ([83088a4](https://github.com/middag-io/middag-react/commit/83088a4ba1305436206f8c2fb59945b82d1fc7a3))
+* **ui-contracts:** list the rc.2 block data enums as open enums ([2e10ebf](https://github.com/middag-io/middag-react/commit/2e10ebf12af64ae5c3d1246ca2826f1062f4f9ba))
+
+
+### Refactoring
+
+* **theme:** one source for the radius scale and documented override tokens ([5fffec3](https://github.com/middag-io/middag-react/commit/5fffec3c5ae66343630fedbefe26087c66f50829))
+
+### Consumer impact
+
+- Block data types (`DenseTableBlockData`, `CardGridBlockData` and the other block payload types) keep their exported names; they are now generated from the middag-php-ui `v2.0.0-rc.2` schemas instead of written by hand. New open enums are exported (`CardGridVariant`, `DeltaDirection`, `StatusStripTone`, `EmptyStateVariant`, `TimestampFormat`, `StatusIntent`, `ConditionalActionVariant`); an unknown value falls back to the renderer's default. Payloads that PHP serializes as `[]` (rows, filters, status maps) are normalised at the block boundary.
+- Theme tokens: light `muted-foreground`, `success`, `info`, `destructive` and `ring` are darker and dark `muted-foreground` is lighter, to meet WCAG AA. New tokens `--success-text`, `--warning-text`, `--info-text` and `--destructive-text` carry status-coloured text; a host that overrides `--success` and the other status colours should also set the matching `--*-text`.
+- Radius: `tokens.css` is the single source of the `--radius-*` values; overriding `--radius` alone no longer derives the scale. Unused `--text-*`, `--size-*` and `--z-*` tokens stay, documented as override points.
+- BasicShell: the page title renders as an `<h1>` with a skip link and a single `<main>`; `[data-slot=sidebar-inset]` is now a `div`. Embedded hosts whose page already has an `h1` or a skip link use `titleAs` and `skipLink={false}`.
+- Sidebar: the open state is saved in the `middag_sidebar_state` cookie and read only when `defaultOpen` is not set (an explicit `defaultOpen` wins). The old `sidebar_state` cookie is ignored.
+- DataTable drops `role="grid"` and shows row actions on keyboard focus. FormField gains `headingLevel` (default 4, `HeadingLevel` type exported) and announces required fields as "(required)" to screen readers; the visual is unchanged.
+- CI gates: jsx-a11y in lint, axe tests and a token contrast check.
+
 ## [0.51.1](https://github.com/middag-io/middag-react/compare/v0.51.0...v0.51.1) (2026-11-24)
 
 
