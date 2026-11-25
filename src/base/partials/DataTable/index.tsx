@@ -719,7 +719,10 @@ export function DataTable<TData extends object>({
         cell: ({ row }) => (
           <div
             className={
-              actionsAlwaysVisible ? "" : "opacity-0 transition-opacity group-hover/row:opacity-100"
+              actionsAlwaysVisible
+                ? ""
+                : // Revealed on row hover and whenever keyboard focus is in the row.
+                  "opacity-0 transition-opacity group-focus-within/row:opacity-100 group-hover/row:opacity-100 focus-within:opacity-100"
             }
           >
             <RowActionButtons row={row.original} actions={rowActions} />
@@ -1148,7 +1151,7 @@ export function DataTable<TData extends object>({
           aria-label={t("middag.ui.table.scroll_region")}
           tabIndex={0}
         >
-          <table className="w-full border-collapse" role="grid">
+          <table className="w-full border-collapse">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
