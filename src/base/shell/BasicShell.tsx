@@ -42,7 +42,6 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -158,7 +157,24 @@ function HeaderUserMenu({
   );
 }
 
-export function BasicShell({ children }: ShellProps): ReactElement {
+/** Element that renders the page title in the BasicShell header. */
+export type BasicShellTitleTag = "h1" | "h2" | "div";
+
+export interface BasicShellProps extends ShellProps {
+  /**
+   * Element for the page title (default "h1"). Embedded hosts whose page
+   * already has an h1 pass "h2" or "div".
+   */
+  titleAs?: BasicShellTitleTag;
+  /** Render the skip-to-content link (default true). Hosts that already render one pass false. */
+  skipLink?: boolean;
+}
+
+export function BasicShell({
+  children,
+  titleAs: TitleTag = "h1",
+  skipLink = true,
+}: BasicShellProps): ReactElement {
   const { t } = useTranslation();
   const { props } = usePage<SharedProps>();
   const isDark = useIsDark();
@@ -180,6 +196,20 @@ export function BasicShell({ children }: ShellProps): ReactElement {
 
   return (
     <SidebarProvider>
+      {/* First focusable element: lets keyboard users skip the navigation. */}
+      {/* Hidden until focused by an unlayered rule in tailwind.css, not by
+          sr-only: host themes (Bootstrap) ship their own unlayered .sr-only,
+          which would keep the link clipped even on focus. */}
+      {skipLink && (
+        <a
+          href="#middag-main-content"
+          data-slot="skip-link"
+          className="bg-background text-foreground focus-visible:ring-ring rounded-md px-3 py-2 text-sm font-medium shadow-md focus-visible:ring-2 focus-visible:outline-none"
+        >
+          {t("middag.ui.shell.skip_to_content")}
+        </a>
+      )}
+
       <Sidebar collapsible="offcanvas" className="border-sidebar-border bg-sidebar border-r">
         <SidebarHeader className="border-sidebar-border border-b px-4 py-3">
           <span className="text-sidebar-foreground text-sm font-semibold">MIDDAG</span>
@@ -241,7 +271,9 @@ export function BasicShell({ children }: ShellProps): ReactElement {
         </SidebarFooter>
       </Sidebar>
 
-      <SidebarInset>
+      {/* Same box as SidebarInset, but a div: SidebarInset renders a <main>, and
+          the content area below is the page's only main landmark. */}
+      <div data-slot="sidebar-inset" className="bg-background relative flex w-full flex-1 flex-col">
         <header className="border-border flex h-14 shrink-0 items-center gap-3 border-b px-4">
           <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
           <div className="flex min-w-0 flex-col">
@@ -264,10 +296,16 @@ export function BasicShell({ children }: ShellProps): ReactElement {
                 ))}
               </nav>
             )}
+            {/* The page title is the level-1 heading. The wrapper carries the
+                look; the title element (h1 unless titleAs says otherwise)
+                inherits it (tailwind.css resets host h1 styles
+                such as Moodle's on [data-slot="page-title"]). */}
             {page.title && (
-              <span className="text-foreground truncate text-sm font-medium">
-                {renderLabel(page.title, t)}
-              </span>
+              <div className="text-foreground min-w-0 text-sm font-medium">
+                <TitleTag data-slot="page-title" className="truncate">
+                  {renderLabel(page.title, t)}
+                </TitleTag>
+              </div>
             )}
           </div>
 
@@ -286,13 +324,14 @@ export function BasicShell({ children }: ShellProps): ReactElement {
 
         <main
           id="middag-main-content"
-          className="flex min-h-0 flex-1 flex-col overflow-auto"
+          tabIndex={-1}
+          className="flex min-h-0 flex-1 flex-col overflow-auto focus:outline-none"
           aria-live="polite"
           aria-busy="false"
         >
           {children}
         </main>
-      </SidebarInset>
+      </div>
 
       <Toaster position="bottom-right" richColors />
     </SidebarProvider>

@@ -32,6 +32,8 @@ export interface MultiSelectFieldProps {
   error?: string;
   helpTextId?: string;
   errorId?: string;
+  /** Id of the visible label (FormField renders it); names the group for assistive tech. */
+  labelId?: string;
   /**
    * Rendering mode. "auto" (default) uses a checkbox list for small option sets
    * and the searchable combobox for large ones; "combobox" / "checkbox" force it.
@@ -52,6 +54,7 @@ export function MultiSelectField({
   error,
   helpTextId,
   errorId,
+  labelId,
   variant = "auto",
 }: MultiSelectFieldProps): ReactElement {
   const { t } = useTranslation();
@@ -71,8 +74,7 @@ export function MultiSelectField({
         selected={selected}
         onChange={onChange}
         disabled={disabled}
-        required={required}
-        error={error}
+        labelId={labelId}
         describedBy={describedBy}
         t={t}
       />
@@ -104,8 +106,7 @@ function CheckboxList({
   selected,
   onChange,
   disabled,
-  required,
-  error,
+  labelId,
   describedBy,
   t,
 }: {
@@ -114,11 +115,12 @@ function CheckboxList({
   selected: string[];
   onChange: (value: string[]) => void;
   disabled?: boolean;
-  required?: boolean;
-  error?: string;
+  labelId?: string;
   describedBy?: string;
   t: TFunction;
 }): ReactElement {
+  // A group role supports neither aria-required nor aria-invalid; the error
+  // reaches assistive tech through aria-describedby.
   const toggle = (optValue: string) => {
     if (selected.includes(optValue)) {
       onChange(selected.filter((v) => v !== optValue));
@@ -131,8 +133,7 @@ function CheckboxList({
     <div
       id={id}
       role="group"
-      aria-invalid={error ? true : undefined}
-      aria-required={required || undefined}
+      aria-labelledby={labelId}
       aria-describedby={describedBy}
       className="border-input max-h-48 space-y-2 overflow-y-auto rounded-md border p-3"
     >

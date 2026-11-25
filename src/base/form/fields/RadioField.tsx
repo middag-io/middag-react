@@ -24,6 +24,8 @@ export interface RadioFieldProps {
   error?: string;
   helpTextId?: string;
   errorId?: string;
+  /** Id of the visible label (FormField renders it); names the group for assistive tech. */
+  labelId?: string;
 }
 
 export function RadioField({
@@ -36,6 +38,7 @@ export function RadioField({
   error,
   helpTextId,
   errorId,
+  labelId,
 }: RadioFieldProps): ReactElement {
   const describedBy =
     [error ? errorId : undefined, helpTextId].filter(Boolean).join(" ") || undefined;
@@ -48,6 +51,7 @@ export function RadioField({
       disabled={disabled}
       aria-invalid={error ? true : undefined}
       aria-required={required || undefined}
+      aria-labelledby={labelId}
       aria-describedby={describedBy}
     >
       {options.map((opt) => {

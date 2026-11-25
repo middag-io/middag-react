@@ -3,6 +3,11 @@ import { Slot } from "radix-ui";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Solid variants pair a fill with its `*-foreground` token; `*-light` and
+ * `*-outline` variants use the `*-text` status tokens, which keep WCAG AA on
+ * the tints and the canvas in light and dark mode (scripts/check-contrast.mjs).
+ */
 const badgeVariants = cva(
   "relative inline-flex shrink-0 items-center justify-center w-fit border border-transparent font-medium whitespace-nowrap outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=size-])]:size-3",
   {
@@ -11,22 +16,22 @@ const badgeVariants = cva(
         default: "bg-primary text-primary-foreground",
         outline: "border-border bg-transparent dark:bg-input/32",
         secondary: "bg-secondary text-secondary-foreground",
-        info: "bg-info text-white",
-        success: "bg-success text-white",
-        warning: "bg-warning text-white",
-        destructive: "bg-destructive text-white",
+        info: "bg-info text-info-foreground",
+        success: "bg-success text-success-foreground",
+        warning: "bg-warning text-warning-foreground",
+        destructive: "bg-destructive text-destructive-foreground",
         focus: "bg-focus text-focus-foreground",
         invert: "bg-invert text-invert-foreground",
         "primary-light":
-          "bg-primary/10 border-none text-primary dark:bg-primary/20",
+          "bg-primary/10 border-none text-primary",
         "warning-light":
-          "bg-warning/10 border-none text-warning-foreground dark:bg-warning/20",
+          "bg-warning/10 border-none text-warning-text dark:bg-warning/20",
         "success-light":
-          "bg-success/10 border-none text-success-foreground dark:bg-success/20",
+          "bg-success/10 border-none text-success-text dark:bg-success/20",
         "info-light":
-          "bg-info/10 border-none text-info-foreground dark:bg-info/20",
+          "bg-info/10 border-none text-info-text dark:bg-info/20",
         "destructive-light":
-          "bg-destructive/10 border-none text-destructive-foreground dark:bg-destructive/20",
+          "bg-destructive/10 border-none text-destructive-text dark:bg-destructive/20",
         "invert-light":
           "bg-invert/10 border-none text-foreground dark:bg-invert/20",
         "focus-light":
@@ -34,15 +39,15 @@ const badgeVariants = cva(
         "primary-outline":
           "bg-background border-border text-primary dark:bg-input/30",
         "warning-outline":
-          "bg-background border-border text-warning-foreground dark:bg-input/30",
+          "bg-background border-border text-warning-text dark:bg-input/30",
         "success-outline":
-          "bg-background border-border text-success-foreground dark:bg-input/30",
+          "bg-background border-border text-success-text dark:bg-input/30",
         "info-outline":
-          "bg-background border-border text-info-foreground dark:bg-input/30",
+          "bg-background border-border text-info-text dark:bg-input/30",
         "destructive-outline":
-          "bg-background border-border text-destructive-foreground dark:bg-input/30",
+          "bg-background border-border text-destructive-text dark:bg-input/30",
         "invert-outline":
-          "bg-background border-border text-invert-foreground dark:bg-input/30",
+          "bg-background border-border text-invert dark:bg-input/30",
         "focus-outline":
           "bg-background border-border text-focus-foreground dark:bg-input/30",
       },

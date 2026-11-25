@@ -145,7 +145,7 @@ describe("StatusCell", () => {
         column={{ key: "status", statusMap: { APROVADO: "success" } }}
       />,
     );
-    expect(container.querySelector(".text-success")).not.toBeNull();
+    expect(container.querySelector(".text-success-text")).not.toBeNull();
   });
 });
 
@@ -154,10 +154,10 @@ describe("BooleanCell", () => {
 
   it("renders a success icon for true and a muted icon for false", () => {
     const { container: t } = render(<BooleanCell value={true} row={{}} column={{ key: "ok" }} />);
-    expect(t.querySelector(".text-success")).not.toBeNull();
+    expect(t.querySelector(".text-success-text")).not.toBeNull();
     cleanup();
     const { container: f } = render(<BooleanCell value={false} row={{}} column={{ key: "ok" }} />);
-    expect(f.querySelector(".text-success")).toBeNull();
+    expect(f.querySelector(".text-success-text")).toBeNull();
     expect(f.querySelector(".text-muted-foreground")).not.toBeNull();
   });
 

@@ -234,6 +234,41 @@
  * Tailwind @layer utilities. Scoped to .middag-root.
  * See the CSS isolation strategy above.
  */
+/* Shell skip link: off-screen until it takes keyboard focus. Unlayered so a
+   host .sr-only or link rule cannot keep it hidden or restyle its box. */
+[data-slot="skip-link"] {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 50;
+  color: var(--foreground);
+  background-color: var(--background);
+  text-decoration: none;
+}
+
+[data-slot="skip-link"]:not(:focus) {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Shell page title (h1 by default, h2 or div via titleAs) that looks like the
+   text around it. Host themes (Moodle/Bootstrap) size and space headings with
+   unlayered rules that beat the utilities, so the title inherits its
+   typography from its wrapper. */
+.middag-root [data-slot="page-title"] {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
 @media (min-width: 48rem) {
   .middag-root [data-slot="sidebar-container"] {
     display: flex;

@@ -33,19 +33,21 @@ All tokens are defined in `:root` and can be overridden at any scope. Dark mode 
 
 | Token                      | Light Default              | Dark Default             | Purpose                      |
 |----------------------------|----------------------------|--------------------------|------------------------------|
-| `--destructive`            | `oklch(0.577 0.245 27.33)` | `oklch(0.63 0.24 27.33)` | Error states, delete actions |
+| `--destructive`            | `oklch(0.56 0.23 27.33)`   | `oklch(0.63 0.24 27.33)` | Error states, delete actions |
 | `--destructive-foreground` | `oklch(0.98 0 0)`          | `oklch(0.1 0.01 27.33)`  | Text on destructive surfaces |
 | `--destructive-subtle`     | `oklch(0.95 0.05 27.33)`   | `oklch(0.22 0.06 27.33)` | Soft error background        |
 | `--destructive-muted`      | `oklch(0.88 0.08 27.33)`   | `oklch(0.28 0.08 27.33)` | Muted error (hover, borders) |
+| `--destructive-text`       | `oklch(0.48 0.2 27.33)`    | `oklch(0.74 0.16 27.33)` | Error-colored text (AA)      |
 
 ### Success
 
 | Token                  | Light Default          | Dark Default           | Purpose                        |
 |------------------------|------------------------|------------------------|--------------------------------|
-| `--success`            | `oklch(0.55 0.17 155)` | `oklch(0.62 0.17 155)` | Positive states, confirmations |
+| `--success`            | `oklch(0.52 0.16 155)` | `oklch(0.62 0.17 155)` | Positive states, confirmations |
 | `--success-foreground` | `oklch(0.98 0 0)`      | `oklch(0.1 0.01 155)`  | Text on success surfaces       |
 | `--success-subtle`     | `oklch(0.95 0.04 155)` | `oklch(0.2 0.04 155)`  | Soft success background        |
 | `--success-muted`      | `oklch(0.88 0.06 155)` | `oklch(0.26 0.06 155)` | Muted success (hover, borders) |
+| `--success-text`       | `oklch(0.45 0.13 155)` | `oklch(0.76 0.15 155)` | Success-colored text (AA)      |
 
 ### Warning
 
@@ -55,22 +57,28 @@ All tokens are defined in `:root` and can be overridden at any scope. Dark mode 
 | `--warning-foreground` | `oklch(0.18 0.02 75)` | `oklch(0.15 0.02 75)` | Text on warning surfaces            |
 | `--warning-subtle`     | `oklch(0.96 0.04 75)` | `oklch(0.22 0.04 75)` | Soft warning background             |
 | `--warning-muted`      | `oklch(0.9 0.06 75)`  | `oklch(0.28 0.06 75)` | Muted warning (hover, borders)      |
+| `--warning-text`       | `oklch(0.48 0.11 60)` | `oklch(0.82 0.15 75)` | Warning-colored text (AA)           |
 
 ### Info
 
 | Token               | Light Default          | Dark Default           | Purpose                     |
 |---------------------|------------------------|------------------------|-----------------------------|
-| `--info`            | `oklch(0.58 0.16 250)` | `oklch(0.65 0.16 250)` | Informational callouts      |
+| `--info`            | `oklch(0.54 0.16 250)` | `oklch(0.65 0.16 250)` | Informational callouts      |
 | `--info-foreground` | `oklch(0.98 0 0)`      | `oklch(0.1 0.01 250)`  | Text on info surfaces       |
 | `--info-subtle`     | `oklch(0.95 0.04 250)` | `oklch(0.2 0.04 250)`  | Soft info background        |
 | `--info-muted`      | `oklch(0.88 0.06 250)` | `oklch(0.26 0.06 250)` | Muted info (hover, borders) |
+| `--info-text`       | `oklch(0.47 0.15 250)` | `oklch(0.76 0.12 250)` | Info-colored text (AA)      |
+
+::: info Status text tokens
+`--success`, `--warning`, `--info` and `--destructive` are fill colors. For text in a status color use the matching `--*-text` token (`text-success-text`, `text-warning-text`, `text-info-text`, `text-destructive-text`): it keeps WCAG AA (4.5:1) on the canvas, the card, the `*-subtle` surface and the badge tints, in light and dark mode. `npm run theme:contrast` checks every text pair the components render.
+:::
 
 ### Neutral (Surface & Structure)
 
 | Token                 | Light Default              | Dark Default               | Purpose                                          |
 |-----------------------|----------------------------|----------------------------|--------------------------------------------------|
 | `--muted`             | `oklch(0.97 0.001 286)`    | `oklch(0.2 0.005 286.38)`  | Muted backgrounds (disabled, secondary panels)   |
-| `--muted-foreground`  | `oklch(0.58 0.008 286)`    | `oklch(0.6 0.01 285.82)`   | Text on muted surfaces (help text, placeholders) |
+| `--muted-foreground`  | `oklch(0.52 0.008 286)`    | `oklch(0.62 0.01 285.82)`  | Text on muted surfaces (help text, placeholders) |
 | `--accent`            | `oklch(0.97 0.001 286)`    | `oklch(0.22 0.005 286.38)` | Accent backgrounds (hover rows, active nav)      |
 | `--accent-foreground` | `oklch(0.21 0.014 285.82)` | `oklch(0.9 0.005 285.82)`  | Text on accent surfaces                          |
 
@@ -80,7 +88,7 @@ All tokens are defined in `:root` and can be overridden at any scope. Dark mode 
 |------------|-----------------------------|----------------------------|----------------------|
 | `--border` | `oklch(0.92 0.004 286)`     | `oklch(0.28 0.005 286.32)` | Default border color |
 | `--input`  | `oklch(0.92 0.004 286)`     | `oklch(0.28 0.005 286.32)` | Input field borders  |
-| `--ring`   | `oklch(0.708 0.028 256.85)` | `oklch(0.55 0.04 256.85)`  | Focus ring color     |
+| `--ring`   | `oklch(0.64 0.03 256.85)`   | `oklch(0.55 0.04 256.85)`  | Focus ring color     |
 
 ### Overlays
 
@@ -130,6 +138,8 @@ All tokens are defined in `:root` and can be overridden at any scope. Dark mode 
 
 ### Typography Scale
 
+Public override point: no engine component reads these tokens today. They are kept for hosts to set or read and will not be removed as unused.
+
 | Token             | Default                     | Purpose                                      |
 |-------------------|-----------------------------|----------------------------------------------|
 | `--text-display`  | `clamp(1.75rem, 4vw, 2rem)` | Hero headings, page title emphasis (28-32px) |
@@ -157,7 +167,7 @@ All tokens are defined in `:root` and can be overridden at any scope. Dark mode 
 | `--radius-full` | `9999px`          | Pill shape (avatars, badges)                    |
 
 ::: info Tailwind radius mapping
-The Tailwind `@theme` block derives `--radius-sm`, `--radius-md`, `--radius-lg`, `--radius-xl`, and `--radius-2xl` from the base `--radius` value using `calc()`. If you override `--radius`, all Tailwind radius utilities adjust proportionally.
+`tokens.css` is the only place that sets the `--radius-*` values. The Tailwind `@theme` block (`tailwind-theme.css`, `theme.css`) points `rounded-sm` … `rounded-2xl` at these tokens, so override `--radius-sm` … `--radius-2xl` to change the corners. `--radius` is the base value for the vendored primitives that compute from it (`calc(var(--radius) - 5px)`); overriding it does not rescale the `--radius-*` scale.
 :::
 
 ### Shadows
@@ -234,6 +244,8 @@ When `prefers-reduced-motion: reduce` is active, all animation and transition du
 
 ### Component Sizing
 
+Public override point: no engine component reads these tokens today. They are kept for hosts to set or read and will not be removed as unused.
+
 | Token                 | Value  | Purpose                            |
 |-----------------------|--------|------------------------------------|
 | `--size-button-sm`    | `32px` | Small button height                |
@@ -247,6 +259,8 @@ When `prefers-reduced-motion: reduce` is active, all animation and transition du
 | `--size-avatar-lg`    | `40px` | Large avatar                       |
 
 ### Z-Index Scale
+
+Public override point: only `--z-toast` is read by the engine (the page progress bar). The others are kept for hosts to set or read and will not be removed as unused.
 
 | Token          | Value | Purpose                         |
 |----------------|-------|---------------------------------|

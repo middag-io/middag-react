@@ -41,24 +41,28 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive-subtle: var(--destructive-subtle);
   --color-destructive-muted: var(--destructive-muted);
+  --color-destructive-text: var(--destructive-text);
 
   /* Success */
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-success-subtle: var(--success-subtle);
   --color-success-muted: var(--success-muted);
+  --color-success-text: var(--success-text);
 
   /* Warning */
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
   --color-warning-subtle: var(--warning-subtle);
   --color-warning-muted: var(--warning-muted);
+  --color-warning-text: var(--warning-text);
 
   /* Info */
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
   --color-info-subtle: var(--info-subtle);
   --color-info-muted: var(--info-muted);
+  --color-info-text: var(--info-text);
 
   /* Neutral */
   --color-muted: var(--muted);
@@ -122,18 +126,22 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive-subtle: var(--destructive-subtle);
   --color-destructive-muted: var(--destructive-muted);
+  --color-destructive-text: var(--destructive-text);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-success-subtle: var(--success-subtle);
   --color-success-muted: var(--success-muted);
+  --color-success-text: var(--success-text);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
   --color-warning-subtle: var(--warning-subtle);
   --color-warning-muted: var(--warning-muted);
+  --color-warning-text: var(--warning-text);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
   --color-info-subtle: var(--info-subtle);
   --color-info-muted: var(--info-muted);
+  --color-info-text: var(--info-text);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);

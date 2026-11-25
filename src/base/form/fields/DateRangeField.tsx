@@ -24,6 +24,8 @@ export interface DateRangeFieldProps {
   error?: string;
   helpTextId?: string;
   errorId?: string;
+  /** Id of the visible label (FormField renders it); names the group for assistive tech. */
+  labelId?: string;
 }
 
 export function DateRangeField({
@@ -35,6 +37,7 @@ export function DateRangeField({
   error,
   helpTextId,
   errorId,
+  labelId,
 }: DateRangeFieldProps): ReactElement {
   const describedBy =
     [error ? errorId : undefined, helpTextId].filter(Boolean).join(" ") || undefined;
@@ -47,20 +50,22 @@ export function DateRangeField({
   );
 
   return (
-    <div
-      id={id}
-      aria-required={required || undefined}
-      aria-invalid={error ? true : undefined}
-      aria-describedby={describedBy}
-    >
-      <DateSelector
-        value={value as DateSelectorValue | undefined}
-        onChange={handleChange}
-        allowRange
-        defaultFilterType={(operator as DateSelectorFilterType) ?? "is"}
-        presetMode={operator ? (operator as DateSelectorFilterType) : undefined}
-        showInput
-      />
+    <div role="group" aria-labelledby={labelId}>
+      <div
+        id={id}
+        aria-required={required || undefined}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy}
+      >
+        <DateSelector
+          value={value as DateSelectorValue | undefined}
+          onChange={handleChange}
+          allowRange
+          defaultFilterType={(operator as DateSelectorFilterType) ?? "is"}
+          presetMode={operator ? (operator as DateSelectorFilterType) : undefined}
+          showInput
+        />
+      </div>
     </div>
   );
 }

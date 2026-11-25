@@ -46,10 +46,10 @@ type StatusSemantic = (typeof STATUS_SEMANTICS)[number];
 
 /** Status pill classes using subtle bg + muted (darker) text for readable contrast. */
 const STATUS_PILL_CLASSES: Record<StatusSemantic, string> = {
-  success: "bg-success-subtle text-success",
-  warning: "bg-warning-subtle text-warning",
-  destructive: "bg-destructive-subtle text-destructive",
-  info: "bg-info-subtle text-info",
+  success: "bg-success-subtle text-success-text",
+  warning: "bg-warning-subtle text-warning-text",
+  destructive: "bg-destructive-subtle text-destructive-text",
+  info: "bg-info-subtle text-info-text",
   default: "bg-muted text-muted-foreground",
   secondary: "bg-muted text-muted-foreground",
 };
@@ -147,7 +147,7 @@ export function StatusCell({ value, column }: CellRendererProps): ReactElement {
 export function BooleanCell({ value }: CellRendererProps): ReactElement {
   if (value == null) return <span className="text-muted-foreground">&mdash;</span>;
   return value ? (
-    <HugeiconsIcon icon={Tick02Icon} className="text-success size-4" />
+    <HugeiconsIcon icon={Tick02Icon} className="text-success-text size-4" />
   ) : (
     <HugeiconsIcon icon={Cancel01Icon} className="text-muted-foreground size-4" />
   );
@@ -283,10 +283,10 @@ export function LinkGroupCell({ value }: CellRendererProps): ReactElement {
 }
 
 const ANNOTATED_APPEARANCE: Record<string, string> = {
-  success: "text-success",
-  warning: "text-warning",
-  danger: "text-destructive",
-  info: "text-info",
+  success: "text-success-text",
+  warning: "text-warning-text",
+  danger: "text-destructive-text",
+  info: "text-info-text",
   neutral: "text-muted-foreground",
 };
 
