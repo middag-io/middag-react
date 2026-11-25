@@ -71,8 +71,6 @@ export function MultiSelectField({
         selected={selected}
         onChange={onChange}
         disabled={disabled}
-        required={required}
-        error={error}
         describedBy={describedBy}
         t={t}
       />
@@ -104,8 +102,6 @@ function CheckboxList({
   selected,
   onChange,
   disabled,
-  required,
-  error,
   describedBy,
   t,
 }: {
@@ -114,11 +110,11 @@ function CheckboxList({
   selected: string[];
   onChange: (value: string[]) => void;
   disabled?: boolean;
-  required?: boolean;
-  error?: string;
   describedBy?: string;
   t: TFunction;
 }): ReactElement {
+  // A group role supports neither aria-required nor aria-invalid; the error
+  // reaches assistive tech through aria-describedby.
   const toggle = (optValue: string) => {
     if (selected.includes(optValue)) {
       onChange(selected.filter((v) => v !== optValue));
@@ -131,8 +127,6 @@ function CheckboxList({
     <div
       id={id}
       role="group"
-      aria-invalid={error ? true : undefined}
-      aria-required={required || undefined}
       aria-describedby={describedBy}
       className="border-input max-h-48 space-y-2 overflow-y-auto rounded-md border p-3"
     >

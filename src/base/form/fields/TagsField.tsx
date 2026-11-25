@@ -85,6 +85,9 @@ export function TagsField({
       className={`focus-within:ring-ring flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-md border px-2 py-1.5 text-sm transition-colors focus-within:ring-1 ${
         error ? "border-destructive" : "border-input"
       } ${disabled ? "opacity-50" : ""}`}
+      // Pointer convenience only: clicking the box focuses the input, which
+      // keyboard users reach directly.
+      role="presentation"
       onClick={() => inputRef.current?.focus()}
     >
       {tags.map((tag, idx) => (
