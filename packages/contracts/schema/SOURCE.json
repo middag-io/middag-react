@@ -1,11 +1,11 @@
 {
   "repository": "middag-io/middag-php-ui",
-  "ref": "v1.14.0",
-  "sha": "f3f714b2c337d809b146ee27a8ed4c9d6f6039b8",
+  "ref": "v1.13.1",
+  "sha": "a69e375e72b6e20368cdd7b7ca0ff38041afd435",
   "path": "schema",
   "files": {
-    "page-contract.json": "38851b02fe174c077bdbba3e55554e2e055f78a615505a3c634d26ca13c1bfd6",
-    "fragment.json": "0a19e811e68b4cf29238b3271d90df77617fc8a093b63d1dfded2b4ec6441bbe",
-    "shared-props.json": "e83e803700f769733653e52409c3ea7da6d5c7306b636230ec85aaf5484d114e"
+    "page-contract.json": "5761629a87dfb16a75071991b0ff94bbf5c7e8410fec5b843bc2c427a6509d05",
+    "fragment.json": "5e1938b76f6afb21971d50f935670c5e8b384ac3555db77730864da335eff882",
+    "shared-props.json": "c3bebdc5d12c1c894326ad35a4e7f669f8da36719afcd27394ed5c20c24e22a8"
   }
 }

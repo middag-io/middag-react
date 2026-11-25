@@ -7,9 +7,9 @@
  * Regenerate:  npm run gen:contracts
  * Drift gate:  npm run gen:contracts:check
  *
- * @source middag-io/middag-php-ui@v1.14.0 schema/{page-contract.json,fragment.json,shared-props.json}
+ * @source middag-io/middag-php-ui@v1.13.1 schema/{page-contract.json,fragment.json,shared-props.json}
  * @contract-version 2
- * @hash ed3b25557c7c82c7
+ * @hash a11a97d1f5ad9c63
  */
 export type Label = string | Translatable;
 export type ActionTarget =
@@ -55,7 +55,7 @@ export type FragmentKind =
   | "notifications"
   | "custom";
 export type ThemeMode = "light" | "dark" | "system" | (string & {});
-export type FieldError = string | (string | FieldMessage)[] | FieldMessage;
+export type FieldError = string | string[];
 export type ValueFormat =
   | "text"
   | "date"
@@ -404,6 +404,7 @@ export interface PageContract {
   shell: string;
   page: PageMeta;
   layout: LayoutDescriptor;
+  resources?: PageResources;
   notifications?: Notification[];
   entities?: {
     [k: string]: string;
@@ -482,6 +483,17 @@ export interface PollConfig {
   pauseWhenHidden: boolean;
   stopAfterMs?: number;
 }
+export interface PageResources {
+  featureFlags: {
+    [k: string]: boolean;
+  };
+  branding?: Branding;
+}
+export interface Branding {
+  appName: string;
+  logoUrl?: string;
+  logoCompactUrl?: string;
+}
 export interface Notification {
   level: NotificationLevel;
   message: Label;
@@ -497,7 +509,13 @@ export interface Fragment {
     [k: string]: unknown;
   };
   notifications?: Notification[];
+  resources?: ResourcePatch;
   customType?: string;
+}
+export interface ResourcePatch {
+  featureFlags?: {
+    [k: string]: boolean;
+  };
 }
 export interface InspectorDescriptor {
   endpoint: string;
@@ -542,10 +560,7 @@ export interface SharedProps {
   auth?: SharedAuth;
   theme?: SharedTheme;
   flash?: FlashMessages;
-  /**
-   * Validation errors of the current request: a FormErrors map or, when the request carried the X-Inertia-Error-Bag header, a FormErrorBags map of bag name to FormErrors. The wire is not self-describing: the reader that sent the header reads errors[bag]; any other reader treats the map as flat.
-   */
-  errors?: FormErrors | FormErrorBags;
+  errors?: FormErrors;
   csrf_token?: string;
   locale?: string;
   scope?: {
@@ -576,27 +591,10 @@ export interface FlashMessages {
   warning?: string;
 }
 /**
- * Validation errors keyed by field name. Each value is a message, a structured message (FieldMessage) or a list of either. The reserved key "_" carries form-level errors; dotted keys target nested fields.
+ * Validation errors keyed by field name. The reserved key "_" carries form-level errors; dotted keys target nested fields.
  */
 export interface FormErrors {
   [k: string]: FieldError;
-}
-/**
- * A structured validation message: the server-resolved message plus the translation key, domain and optional params.
- */
-export interface FieldMessage {
-  message: string;
-  key: string;
-  domain: string;
-  params?: {
-    [k: string]: unknown;
-  };
-}
-/**
- * Validation errors scoped to error bags: bag name to FormErrors.
- */
-export interface FormErrorBags {
-  [k: string]: FormErrors;
 }
 export interface TableConfig {
   columns: Column[];
@@ -719,5 +717,6 @@ export interface ActionResult {
   refreshBlocks?: string[];
   errors?: FormErrors;
   fragments?: Fragment[];
+  resources?: ResourcePatch;
 }
 

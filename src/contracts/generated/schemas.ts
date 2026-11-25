@@ -7,9 +7,9 @@
  * Regenerate:  npm run gen:contracts
  * Drift gate:  npm run gen:contracts:check
  *
- * @source middag-io/middag-php-ui@v1.14.0 schema/{page-contract.json,fragment.json,shared-props.json}
+ * @source middag-io/middag-php-ui@v1.13.1 schema/{page-contract.json,fragment.json,shared-props.json}
  * @contract-version 2
- * @hash ed3b25557c7c82c7
+ * @hash a11a97d1f5ad9c63
  */
 import { z } from "zod";
 import type { NavigationNode, FormSectionNode, FormGroupNode, FormSchemaNode } from "./types.js";
@@ -103,6 +103,17 @@ export const LayoutDescriptorSchema = z.object({
   "meta": z.record(z.string(), z.unknown()).optional(),
 });
 
+export const BrandingSchema = z.object({
+  "appName": z.string(),
+  "logoUrl": z.string().optional(),
+  "logoCompactUrl": z.string().optional(),
+});
+
+export const PageResourcesSchema = z.object({
+  "featureFlags": z.record(z.string(), z.boolean()),
+  "branding": BrandingSchema.optional(),
+});
+
 export const NotificationLevelSchema = z.union([z.enum(["success", "info", "warning", "error"]), z.string()]);
 
 export const NotificationSchema = z.object({
@@ -119,17 +130,23 @@ export const PageContractSchema = z.object({
   "shell": z.string(),
   "page": PageMetaSchema,
   "layout": LayoutDescriptorSchema,
+  "resources": PageResourcesSchema.optional(),
   "notifications": z.array(NotificationSchema).optional(),
   "entities": z.record(z.string(), z.string()).optional(),
 });
 
 export const FragmentKindSchema = z.enum(["block", "region", "table", "form", "detail", "inspector", "notifications", "custom"]);
 
+export const ResourcePatchSchema = z.object({
+  "featureFlags": z.record(z.string(), z.boolean()).optional(),
+});
+
 export const FragmentSchema = z.object({
   "version": z.literal("2"),
   "kind": FragmentKindSchema,
   "payload": z.record(z.string(), z.unknown()).optional(),
   "notifications": z.array(NotificationSchema).optional(),
+  "resources": ResourcePatchSchema.optional(),
   "customType": z.string().optional(),
 });
 
@@ -201,24 +218,15 @@ export const FlashMessagesSchema = z.object({
   "warning": z.string().optional(),
 });
 
-export const FieldMessageSchema = z.object({
-  "message": z.string(),
-  "key": z.string(),
-  "domain": z.string(),
-  "params": z.record(z.string(), z.unknown()).optional(),
-});
-
-export const FieldErrorSchema = z.union([z.string(), z.array(z.union([z.string(), FieldMessageSchema])), FieldMessageSchema]);
+export const FieldErrorSchema = z.union([z.string(), z.array(z.string())]);
 
 export const FormErrorsSchema = z.record(z.string(), FieldErrorSchema);
-
-export const FormErrorBagsSchema = z.record(z.string(), FormErrorsSchema);
 
 export const SharedPropsSchema = z.object({
   "auth": SharedAuthSchema.optional(),
   "theme": SharedThemeSchema.optional(),
   "flash": FlashMessagesSchema.optional(),
-  "errors": z.union([FormErrorsSchema, FormErrorBagsSchema]).optional(),
+  "errors": FormErrorsSchema.optional(),
   "csrf_token": z.string().optional(),
   "locale": z.string().optional(),
   "scope": z.record(z.string(), z.unknown()).optional(),
@@ -568,6 +576,7 @@ export const ActionResultSchema = z.object({
   "refreshBlocks": z.array(z.string()).optional(),
   "errors": FormErrorsSchema.optional(),
   "fragments": z.array(FragmentSchema).optional(),
+  "resources": ResourcePatchSchema.optional(),
 });
 
 export const ActionTargetKindSchema = z.enum(["link", "route", "request", "panel"]);
