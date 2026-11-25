@@ -19,6 +19,12 @@ name: Contracts mirror
 # carries the npm bump of @middag-io/ui-contracts: feat for an additive
 # change, fix for a regeneration with no wire change, feat! for a breaking
 # change that bumps x-contract-version.
+#
+# The bot commit and push skip the repository git hooks (core.hooksPath is
+# set by `npm ci` through `prepare`): a type error in the regenerated code
+# must surface in the pull request, not block it. When the typecheck of the
+# mirrored tree is red, the pull request opens as a draft for a maintainer
+# to complete. A rerun updates the branch with --force-with-lease.
 
 on:
   repository_dispatch:
@@ -91,12 +97,19 @@ jobs:
           echo "::error::middag-php-ui ${TAG} breaks the wire contract without bumping x-contract-version (see the compat report above)."
           exit 1
 
+      - name: Typecheck the mirrored tree
+        id: typecheck
+        if: steps.mirror.outputs.changed == 'true'
+        continue-on-error: true
+        run: npm run typecheck
+
       - name: Open the pull request
         if: steps.mirror.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           TAG: ${{ steps.tag.outputs.tag }}
           LEVEL: ${{ steps.mirror.outputs.level }}
+          TYPECHECK: ${{ steps.typecheck.outcome }}
         run: |
           case "$LEVEL" in
             breaking) TYPE='feat(ui-contracts)!' ;;
@@ -107,14 +120,27 @@ jobs:
           BRANCH="contracts/php-ui-${TAG}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Bot commits skip the repository hooks: CI on the pull request runs the checks.
+          git config core.hooksPath /dev/null
           git switch -c "$BRANCH"
           git add packages/contracts src/contracts/generated docs/public/schemas
           git commit -m "$TITLE" -m "Compatibility: ${LEVEL}. Mirrored from middag-io/middag-php-ui@${TAG}."
-          git push --force origin "$BRANCH"
+          # Lease on the branch as it is on the remote now (empty when absent),
+          # so a rerun updates it but never clobbers a concurrent push.
+          REMOTE_SHA="$(git ls-remote origin "refs/heads/${BRANCH}" | cut -f1)"
+          git push --force-with-lease="refs/heads/${BRANCH}:${REMOTE_SHA}" origin "HEAD:refs/heads/${BRANCH}"
           if gh pr view "$BRANCH" --json number >/dev/null 2>&1; then
             echo "Pull request for $BRANCH already open; branch updated."
             exit 0
           fi
-          gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "Mirrors \`schema/\` from middag-io/middag-php-ui@${TAG} into \`packages/contracts\` and regenerates \`@middag-io/ui-contracts\` and the engine copy.
+          BODY="Mirrors \`schema/\` from middag-io/middag-php-ui@${TAG} into \`packages/contracts\` and regenerates \`@middag-io/ui-contracts\` and the engine copy.
 
           Compatibility with the previous mirror: **${LEVEL}** (details in the Contracts mirror run log)."
+          DRAFT=()
+          if [ "$TYPECHECK" != "success" ]; then
+            DRAFT=(--draft)
+            BODY="${BODY}
+
+          **Typecheck is red on the mirrored tree.** This pull request is a draft: a maintainer completes it (adapts the consumers to the new contract) and marks it ready for review."
+          fi
+          gh pr create --base main --head "$BRANCH" "${DRAFT[@]}" --title "$TITLE" --body "$BODY"
