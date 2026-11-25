@@ -295,7 +295,7 @@ export { useRemember } from "@/base/hooks/useRemember";
 // @middag-io/react-pro and register via registerProDefaults().
 
 export { AuthShell } from "@/base/shell/AuthShell";
-export { BasicShell } from "@/base/shell/BasicShell";
+export { BasicShell, type BasicShellProps, type BasicShellTitleTag } from "@/base/shell/BasicShell";
 export { ImmersiveShell } from "@/base/shell/ImmersiveShell";
 
 // ── Shell partials (Community building blocks for custom shells) ────────────
@@ -393,7 +393,7 @@ export { FormPanelBlockLazy as FormPanelBlock } from "@/base/blocks/FormPanelBlo
 // FormField — the per-field router used by form_panel. Exported so consumers
 // (and @middag-io/react-pro) can render individual schema fields outside a full
 // form, reusing every registered field component.
-export { FormField, type FormFieldProps } from "@/base/form/FormField";
+export { FormField, type FormFieldProps, type HeadingLevel } from "@/base/form/FormField";
 
 // The Pro/interactive block components (chart_panel, flow_editor,
 // condition_tree, sentence_builder, form_builder, kanban_board) ship in

@@ -157,7 +157,24 @@ function HeaderUserMenu({
   );
 }
 
-export function BasicShell({ children }: ShellProps): ReactElement {
+/** Element that renders the page title in the BasicShell header. */
+export type BasicShellTitleTag = "h1" | "h2" | "div";
+
+export interface BasicShellProps extends ShellProps {
+  /**
+   * Element for the page title (default "h1"). Embedded hosts whose page
+   * already has an h1 pass "h2" or "div".
+   */
+  titleAs?: BasicShellTitleTag;
+  /** Render the skip-to-content link (default true). Hosts that already render one pass false. */
+  skipLink?: boolean;
+}
+
+export function BasicShell({
+  children,
+  titleAs: TitleTag = "h1",
+  skipLink = true,
+}: BasicShellProps): ReactElement {
   const { t } = useTranslation();
   const { props } = usePage<SharedProps>();
   const isDark = useIsDark();
@@ -183,13 +200,15 @@ export function BasicShell({ children }: ShellProps): ReactElement {
       {/* Hidden until focused by an unlayered rule in tailwind.css, not by
           sr-only: host themes (Bootstrap) ship their own unlayered .sr-only,
           which would keep the link clipped even on focus. */}
-      <a
-        href="#middag-main-content"
-        data-slot="skip-link"
-        className="bg-background text-foreground focus-visible:ring-ring rounded-md px-3 py-2 text-sm font-medium shadow-md focus-visible:ring-2 focus-visible:outline-none"
-      >
-        {t("middag.ui.shell.skip_to_content")}
-      </a>
+      {skipLink && (
+        <a
+          href="#middag-main-content"
+          data-slot="skip-link"
+          className="bg-background text-foreground focus-visible:ring-ring rounded-md px-3 py-2 text-sm font-medium shadow-md focus-visible:ring-2 focus-visible:outline-none"
+        >
+          {t("middag.ui.shell.skip_to_content")}
+        </a>
+      )}
 
       <Sidebar collapsible="offcanvas" className="border-sidebar-border bg-sidebar border-r">
         <SidebarHeader className="border-sidebar-border border-b px-4 py-3">
@@ -278,13 +297,14 @@ export function BasicShell({ children }: ShellProps): ReactElement {
               </nav>
             )}
             {/* The page title is the level-1 heading. The wrapper carries the
-                look; the <h1> inherits it (tailwind.css resets host h1 styles
+                look; the title element (h1 unless titleAs says otherwise)
+                inherits it (tailwind.css resets host h1 styles
                 such as Moodle's on [data-slot="page-title"]). */}
             {page.title && (
               <div className="text-foreground min-w-0 text-sm font-medium">
-                <h1 data-slot="page-title" className="truncate">
+                <TitleTag data-slot="page-title" className="truncate">
                   {renderLabel(page.title, t)}
-                </h1>
+                </TitleTag>
               </div>
             )}
           </div>

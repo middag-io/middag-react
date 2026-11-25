@@ -257,10 +257,11 @@
   border: 0;
 }
 
-/* Shell page title: a real <h1> that looks like the text around it. Host
-   themes (Moodle/Bootstrap) size and space every h1 with unlayered rules that
-   beat the utilities, so the title inherits its typography from its wrapper. */
-.middag-root h1[data-slot="page-title"] {
+/* Shell page title (h1 by default, h2 or div via titleAs) that looks like the
+   text around it. Host themes (Moodle/Bootstrap) size and space headings with
+   unlayered rules that beat the utilities, so the title inherits its
+   typography from its wrapper. */
+.middag-root [data-slot="page-title"] {
   margin: 0;
   font: inherit;
   color: inherit;
