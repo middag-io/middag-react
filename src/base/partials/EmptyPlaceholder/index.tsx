@@ -151,7 +151,7 @@ export function EmptyPlaceholder({
       )}
 
       {ctaSecondary && (
-        <Link href={ctaSecondary.href} className="text-info mt-2.5 text-xs hover:underline">
+        <Link href={ctaSecondary.href} className="text-info-text mt-2.5 text-xs hover:underline">
           {ctaSecondary.label} &rarr;
         </Link>
       )}

@@ -62,6 +62,12 @@
   --color-info-subtle: var(--info-subtle);
   --color-info-muted: var(--info-muted);
 
+  /* ── Status text (AA on canvas, card, subtle and tinted fills) ── */
+  --color-destructive-text: var(--destructive-text);
+  --color-success-text: var(--success-text);
+  --color-warning-text: var(--warning-text);
+  --color-info-text: var(--info-text);
+
   /* ── Chart colors ── */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);

@@ -41,7 +41,7 @@ function formatValue(value: string | number, locale = "pt-BR", compact = false):
 }
 
 const DELTA_STYLES = {
-  positive: "text-success",
+  positive: "text-success-text",
   negative: "text-destructive",
   neutral: "text-muted-foreground",
 };

@@ -71,7 +71,7 @@ function CodeBlockCopyButton({ code }: { code: string }): ReactElement {
         size={14}
         className={cn(
           "transition-colors",
-          copied ? "text-success" : "text-muted-foreground hover:text-foreground",
+          copied ? "text-success-text" : "text-muted-foreground hover:text-foreground",
         )}
       />
     </button>

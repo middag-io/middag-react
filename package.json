@@ -92,6 +92,7 @@
     "typecheck": "tsc --noEmit",
     "typecheck:tests": "tsc -p tsconfig.test.json --noEmit",
     "typecheck:demo": "tsc -p demo/tsconfig.json --noEmit",
+    "theme:contrast": "node scripts/check-contrast.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:format": "npm run format && eslint . --fix",
