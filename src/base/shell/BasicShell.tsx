@@ -273,17 +273,15 @@ export function BasicShell({ children }: ShellProps): ReactElement {
                 ))}
               </nav>
             )}
-            {/* The page title is the level-1 heading. A role rather than an <h1>
-                tag: hosts such as Moodle style h1 globally (unlayered), which
-                would override the utility classes and resize the header. */}
+            {/* The page title is the level-1 heading. The wrapper carries the
+                look; the <h1> inherits it (tailwind.css resets host h1 styles
+                such as Moodle's on [data-slot="page-title"]). */}
             {page.title && (
-              <span
-                role="heading"
-                aria-level={1}
-                className="text-foreground truncate text-sm font-medium"
-              >
-                {renderLabel(page.title, t)}
-              </span>
+              <div className="text-foreground min-w-0 text-sm font-medium">
+                <h1 data-slot="page-title" className="truncate">
+                  {renderLabel(page.title, t)}
+                </h1>
+              </div>
             )}
           </div>
 

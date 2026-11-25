@@ -95,7 +95,8 @@ describe("BasicShell", () => {
   it("exposes the page title as the level-1 heading", async () => {
     renderShell();
 
-    expect(await screen.findByRole("heading", { level: 1, name: "Courses" })).toBeDefined();
+    const title = await screen.findByRole("heading", { level: 1, name: "Courses" });
+    expect(title.tagName).toBe("H1");
   });
 });
 

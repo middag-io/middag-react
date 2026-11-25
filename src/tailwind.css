@@ -234,6 +234,17 @@
  * Tailwind @layer utilities. Scoped to .middag-root.
  * See the CSS isolation strategy above.
  */
+/* Shell page title: a real <h1> that looks like the text around it. Host
+   themes (Moodle/Bootstrap) size and space every h1 with unlayered rules that
+   beat the utilities, so the title inherits its typography from its wrapper. */
+.middag-root h1[data-slot="page-title"] {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
 @media (min-width: 48rem) {
   .middag-root [data-slot="sidebar-container"] {
     display: flex;
