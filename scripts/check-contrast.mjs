@@ -42,6 +42,12 @@ export const TEXT_PAIRS = [
   ["muted-foreground", "popover"],
   ["muted-foreground", "muted"],
   ["muted-foreground", "sidebar"],
+  // ... and on the interactive surfaces under it: hovered and selected table
+  // rows, hovered menu items
+  ["muted-foreground", "sidebar-hover"],
+  ["muted-foreground", "info-subtle"],
+  ["muted-foreground", "accent"],
+  ["muted-foreground", "secondary"],
   ["secondary-foreground", "secondary"],
   ["secondary-foreground", "background"],
   ["accent-foreground", "accent"],

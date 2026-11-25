@@ -57,7 +57,7 @@
 
   /* ── Neutral (Surface & Structure) ── */
   --muted: oklch(0.97 0.001 286);
-  --muted-foreground: oklch(0.54 0.008 286);
+  --muted-foreground: oklch(0.52 0.008 286);
   --accent: oklch(0.97 0.001 286);
   --accent-foreground: oklch(0.21 0.014 285.82);
 
@@ -257,7 +257,7 @@
 
   /* ── Neutral (Surface & Structure) ── */
   --muted: oklch(0.2 0.005 286.38);
-  --muted-foreground: oklch(0.6 0.01 285.82);
+  --muted-foreground: oklch(0.62 0.01 285.82);
   --accent: oklch(0.22 0.005 286.38);
   --accent-foreground: oklch(0.9 0.005 285.82);
 

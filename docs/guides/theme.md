@@ -78,7 +78,7 @@ All tokens are defined in `:root` and can be overridden at any scope. Dark mode 
 | Token                 | Light Default              | Dark Default               | Purpose                                          |
 |-----------------------|----------------------------|----------------------------|--------------------------------------------------|
 | `--muted`             | `oklch(0.97 0.001 286)`    | `oklch(0.2 0.005 286.38)`  | Muted backgrounds (disabled, secondary panels)   |
-| `--muted-foreground`  | `oklch(0.54 0.008 286)`    | `oklch(0.6 0.01 285.82)`   | Text on muted surfaces (help text, placeholders) |
+| `--muted-foreground`  | `oklch(0.52 0.008 286)`    | `oklch(0.62 0.01 285.82)`  | Text on muted surfaces (help text, placeholders) |
 | `--accent`            | `oklch(0.97 0.001 286)`    | `oklch(0.22 0.005 286.38)` | Accent backgrounds (hover rows, active nav)      |
 | `--accent-foreground` | `oklch(0.21 0.014 285.82)` | `oklch(0.9 0.005 285.82)`  | Text on accent surfaces                          |
 
