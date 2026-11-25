@@ -16,6 +16,8 @@ export interface RatingFieldProps {
   error?: string;
   helpTextId?: string;
   errorId?: string;
+  /** Id of the visible label (FormField renders it); names the group for assistive tech. */
+  labelId?: string;
 }
 
 export function RatingField({
@@ -28,6 +30,7 @@ export function RatingField({
   error,
   helpTextId,
   errorId,
+  labelId,
 }: RatingFieldProps): ReactElement {
   const describedBy =
     [error ? errorId : undefined, helpTextId].filter(Boolean).join(" ") || undefined;
@@ -36,6 +39,7 @@ export function RatingField({
     <div
       id={id}
       role="radiogroup"
+      aria-labelledby={labelId}
       aria-required={required || undefined}
       aria-invalid={error ? true : undefined}
       aria-describedby={describedBy}

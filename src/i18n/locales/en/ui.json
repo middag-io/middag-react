@@ -167,6 +167,7 @@
   "middag.ui.form.multiselect_selected": "{count} selected",
   "middag.ui.form.no_fields": "No fields configured for this form.",
   "middag.ui.form.phone_placeholder": "Phone number",
+  "middag.ui.form.required_hint": "(required)",
   "middag.ui.form.required_label": "Required",
   "middag.ui.form.save": "Save",
   "middag.ui.form.saving": "Saving...",

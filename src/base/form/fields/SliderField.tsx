@@ -23,6 +23,8 @@ export interface SliderFieldProps {
   error?: string;
   helpTextId?: string;
   errorId?: string;
+  /** Id of the visible label (FormField renders it); names the group for assistive tech. */
+  labelId?: string;
 }
 
 export function SliderField({
@@ -38,6 +40,7 @@ export function SliderField({
   error,
   helpTextId,
   errorId,
+  labelId,
 }: SliderFieldProps): ReactElement {
   const describedBy =
     [error ? errorId : undefined, helpTextId].filter(Boolean).join(" ") || undefined;
@@ -53,7 +56,7 @@ export function SliderField({
   const display = multiple ? arrayValue.join(" – ") : String(arrayValue[0] ?? min);
 
   return (
-    <div className="flex items-center gap-4">
+    <div role="group" aria-labelledby={labelId} className="flex items-center gap-4">
       <Slider
         id={id}
         value={arrayValue}

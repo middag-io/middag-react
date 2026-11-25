@@ -161,6 +161,7 @@ export function FormField({
   const generatedId = useId();
   const fieldId = `field-${field.key}-${generatedId}`;
   const errorId = `${fieldId}-error`;
+  const labelId = `${fieldId}-label`;
 
   const { component, props } = field;
 
@@ -197,6 +198,7 @@ export function FormField({
     error,
     helpTextId,
     errorId,
+    labelId,
     t,
     sourceValues,
     effectiveDisabled,
@@ -207,9 +209,18 @@ export function FormField({
     <div className="space-y-1.5" data-testid={fieldTestId(field.key)}>
       {/* Label */}
       {!isInlineLabel && (
-        <Label htmlFor={fieldId}>
+        <Label id={labelId} htmlFor={fieldId}>
           {props.label}
-          {effectiveRequired && <span className="text-destructive ml-0.5">*</span>}
+          {effectiveRequired && (
+            <>
+              {/* The asterisk is visual only; screen readers hear the hidden
+                  text instead, whatever the field's role supports. */}
+              <span className="text-destructive ml-0.5" aria-hidden="true">
+                *
+              </span>
+              <span className="sr-only">{` ${t("middag.ui.form.required_hint")}`}</span>
+            </>
+          )}
         </Label>
       )}
 
@@ -245,6 +256,7 @@ function renderField(
   error: string | undefined,
   helpTextId: string | undefined,
   errorId: string,
+  labelId: string,
   _t: TFunction,
   sourceValues: Record<string, unknown>,
   disabled: boolean,
@@ -356,6 +368,7 @@ function renderField(
       return (
         <MultiSelectField
           {...common}
+          labelId={labelId}
           value={value as string[]}
           onChange={onChange as (v: string[]) => void}
           options={props.options ?? []}
@@ -368,6 +381,7 @@ function renderField(
       return (
         <RadioField
           {...common}
+          labelId={labelId}
           value={value as string}
           onChange={onChange as (v: string) => void}
           options={props.options ?? []}
@@ -402,6 +416,7 @@ function renderField(
       return (
         <SliderField
           {...common}
+          labelId={labelId}
           value={value as number | number[] | null}
           onChange={onChange as (v: number | number[]) => void}
           min={props.min}
@@ -577,6 +592,7 @@ function renderField(
         <Suspense fallback={<InputSkeleton />}>
           <LazyDateRangeField
             {...common}
+            labelId={labelId}
             value={value}
             onChange={onChange}
             operator={props.operator}
@@ -588,6 +604,7 @@ function renderField(
       return (
         <RatingField
           {...common}
+          labelId={labelId}
           value={value as number | null}
           onChange={onChange as (v: number) => void}
           maxRating={props.maxRating}

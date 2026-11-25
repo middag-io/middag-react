@@ -32,6 +32,8 @@ export interface MultiSelectFieldProps {
   error?: string;
   helpTextId?: string;
   errorId?: string;
+  /** Id of the visible label (FormField renders it); names the group for assistive tech. */
+  labelId?: string;
   /**
    * Rendering mode. "auto" (default) uses a checkbox list for small option sets
    * and the searchable combobox for large ones; "combobox" / "checkbox" force it.
@@ -52,6 +54,7 @@ export function MultiSelectField({
   error,
   helpTextId,
   errorId,
+  labelId,
   variant = "auto",
 }: MultiSelectFieldProps): ReactElement {
   const { t } = useTranslation();
@@ -71,6 +74,7 @@ export function MultiSelectField({
         selected={selected}
         onChange={onChange}
         disabled={disabled}
+        labelId={labelId}
         describedBy={describedBy}
         t={t}
       />
@@ -102,6 +106,7 @@ function CheckboxList({
   selected,
   onChange,
   disabled,
+  labelId,
   describedBy,
   t,
 }: {
@@ -110,6 +115,7 @@ function CheckboxList({
   selected: string[];
   onChange: (value: string[]) => void;
   disabled?: boolean;
+  labelId?: string;
   describedBy?: string;
   t: TFunction;
 }): ReactElement {
@@ -127,6 +133,7 @@ function CheckboxList({
     <div
       id={id}
       role="group"
+      aria-labelledby={labelId}
       aria-describedby={describedBy}
       className="border-input max-h-48 space-y-2 overflow-y-auto rounded-md border p-3"
     >
