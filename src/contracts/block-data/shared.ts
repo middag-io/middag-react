@@ -8,13 +8,7 @@
 
 // ── EntityRef (shared by columns and fields that link to navigable entities) ─
 
-/** Reference to a navigable entity. Resolved via PageContract.entities map. */
-export interface EntityRef {
-  /** Entity type key (matches a key in PageContract.entities). */
-  type: string;
-  /** Field name in the row/record that contains the entity's ID value. */
-  id: string;
-}
+export type { EntityRef } from "@/contracts/generated";
 
 // ── Form conditions & validation ────────────────────────────────────────────
 
@@ -35,10 +29,4 @@ export interface FormFieldEntityOption {
 
 // ── Empty state (shared by blocks with empty states) ────────────────────────
 
-/** Shared empty state configuration used by blocks with empty states. */
-export interface EmptyStateDef {
-  icon?: string;
-  title?: string;
-  description?: string;
-  cta?: { label: string; href: string };
-}
+export type { EmptyStateDef } from "@/contracts/generated";

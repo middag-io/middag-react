@@ -213,7 +213,7 @@ describe("block data shapes", () => {
       filters: { available: [], applied: {} },
     };
     expect(data.columns).toHaveLength(1);
-    expect(data.pagination.total).toBe(1);
+    expect(data.pagination?.total).toBe(1);
   });
 
   it("MetricCardBlockData", () => {
