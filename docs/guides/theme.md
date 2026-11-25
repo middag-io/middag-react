@@ -138,6 +138,8 @@ All tokens are defined in `:root` and can be overridden at any scope. Dark mode 
 
 ### Typography Scale
 
+Public override point: no engine component reads these tokens today. They are kept for hosts to set or read and will not be removed as unused.
+
 | Token             | Default                     | Purpose                                      |
 |-------------------|-----------------------------|----------------------------------------------|
 | `--text-display`  | `clamp(1.75rem, 4vw, 2rem)` | Hero headings, page title emphasis (28-32px) |
@@ -165,7 +167,7 @@ All tokens are defined in `:root` and can be overridden at any scope. Dark mode 
 | `--radius-full` | `9999px`          | Pill shape (avatars, badges)                    |
 
 ::: info Tailwind radius mapping
-The Tailwind `@theme` block derives `--radius-sm`, `--radius-md`, `--radius-lg`, `--radius-xl`, and `--radius-2xl` from the base `--radius` value using `calc()`. If you override `--radius`, all Tailwind radius utilities adjust proportionally.
+`tokens.css` is the only place that sets the `--radius-*` values. The Tailwind `@theme` block (`tailwind-theme.css`, `theme.css`) points `rounded-sm` … `rounded-2xl` at these tokens, so override `--radius-sm` … `--radius-2xl` to change the corners. `--radius` is the base value for the vendored primitives that compute from it (`calc(var(--radius) - 5px)`); overriding it does not rescale the `--radius-*` scale.
 :::
 
 ### Shadows
@@ -242,6 +244,8 @@ When `prefers-reduced-motion: reduce` is active, all animation and transition du
 
 ### Component Sizing
 
+Public override point: no engine component reads these tokens today. They are kept for hosts to set or read and will not be removed as unused.
+
 | Token                 | Value  | Purpose                            |
 |-----------------------|--------|------------------------------------|
 | `--size-button-sm`    | `32px` | Small button height                |
@@ -255,6 +259,8 @@ When `prefers-reduced-motion: reduce` is active, all animation and transition du
 | `--size-avatar-lg`    | `40px` | Large avatar                       |
 
 ### Z-Index Scale
+
+Public override point: only `--z-toast` is read by the engine (the page progress bar). The others are kept for hosts to set or read and will not be removed as unused.
 
 | Token          | Value | Purpose                         |
 |----------------|-------|---------------------------------|

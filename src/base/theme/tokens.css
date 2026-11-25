@@ -128,7 +128,10 @@
   --space-16: 64px;
   --space-20: 80px;
 
-  /* ── Typography Scale ── */
+  /* ── Typography Scale ──
+     Public override points: no engine component reads --text-* today (the
+     components use Tailwind text utilities). Hosts may set or read them, so
+     they stay; do not remove them as unused. */
   --text-display: clamp(1.75rem, 4vw, 2rem); /* 32px — hero, page title destaque */
   --text-h1: 1.5rem; /* 24px — page title (1 per page) */
   --text-h2: 1.25rem; /* 20px — section title */
@@ -169,7 +172,10 @@
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
 
-  /* ── Component Sizing (touch targets) ── */
+  /* ── Component Sizing (touch targets) ──
+     Public override points: no engine component reads --size-* today
+     (tailwind-theme.css maps some of them, but no utility uses the mapping).
+     Hosts may set or read them, so they stay; do not remove them as unused. */
   --size-button-sm: 32px;
   --size-button-md: 36px;
   --size-button-lg: 44px;
@@ -180,7 +186,10 @@
   --size-avatar-md: 32px;
   --size-avatar-lg: 40px;
 
-  /* ── Z-Index Scale ── */
+  /* ── Z-Index Scale ──
+     Public override points: only --z-toast is read by the engine (tailwind.css,
+     page progress bar). The rest are kept for hosts to set or read; do not
+     remove them as unused. */
   --z-base: 0;
   --z-sticky: 10;
   --z-dropdown: 20;
@@ -190,7 +199,9 @@
   --z-toast: 60;
   --z-command: 100;
 
-  /* ── Border Radius Scale (Maia) ── */
+  /* ── Border Radius Scale (Maia) ──
+     Single source of the radius values: tailwind-theme.css, theme.css and the
+     named themes reference these, they do not redeclare them. */
   --radius-none: 0px;
   --radius-sm: 4px;
   --radius-md: 6px;

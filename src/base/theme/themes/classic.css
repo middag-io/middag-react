@@ -93,11 +93,7 @@
 
   /* --- Radii (Maia — generous) ------------------------------------------- */
   --radius: 0.625rem;
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --radius-2xl: 16px;
+  /* --radius-sm … --radius-2xl come from tokens.css (single source). */
 
   /* --- Layout ------------------------------------------------------------- */
   --sidebar-width: 260px;
