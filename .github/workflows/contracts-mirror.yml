@@ -16,9 +16,13 @@ name: Contracts mirror
 # The pull request is opened with the token of the org release GitHub App
 # (vars.GH_APPS_MIDDAG_CI_RELEASE_CLIENT_ID +
 # secrets.GH_APPS_MIDDAG_CI_RELEASE_PRIVATE_KEY), so its CI runs. Its title
-# carries the npm bump of @middag-io/ui-contracts: feat for an additive
-# change, fix for a regeneration with no wire change, feat! for a breaking
-# change that bumps x-contract-version.
+# carries the npm bump of @middag-io/ui-contracts: feat for an additive or
+# a breaking change (one that bumps x-contract-version), fix for a
+# regeneration with no wire change. The title and the commit never carry a
+# '!' nor a BREAKING CHANGE footer, so a bot pull request never hands a
+# breaking marker to release-please: a breaking change is described only in
+# the pull request body, under a "Breaking change" section, and the release
+# level stays a maintainer decision.
 #
 # The bot commit and push skip the repository git hooks (core.hooksPath is
 # set by `npm ci` through `prepare`): a type error in the regenerated code
@@ -112,9 +116,9 @@ jobs:
           TYPECHECK: ${{ steps.typecheck.outcome }}
         run: |
           case "$LEVEL" in
-            breaking) TYPE='feat(ui-contracts)!' ;;
-            additive) TYPE='feat(ui-contracts)' ;;
-            *)        TYPE='fix(ui-contracts)' ;;
+            # No '!' and no BREAKING CHANGE footer: a break goes in the body only.
+            breaking|additive) TYPE='feat(ui-contracts)' ;;
+            *)                 TYPE='fix(ui-contracts)' ;;
           esac
           TITLE="${TYPE}: mirror the middag-php-ui ${TAG} schemas"
           BRANCH="contracts/php-ui-${TAG}"
@@ -136,6 +140,13 @@ jobs:
           BODY="Mirrors \`schema/\` from middag-io/middag-php-ui@${TAG} into \`packages/contracts\` and regenerates \`@middag-io/ui-contracts\` and the engine copy.
 
           Compatibility with the previous mirror: **${LEVEL}** (details in the Contracts mirror run log)."
+          if [ "$LEVEL" = "breaking" ]; then
+            BODY="${BODY}
+
+          ## Breaking change
+
+          middag-php-ui ${TAG} changes the wire contract in a way that is not backward compatible and bumps \`x-contract-version\`. Consumers of \`@middag-io/ui-contracts\` must adapt to the new contract; the compat report in the Contracts mirror run log lists each break. This pull request keeps the plain \`feat\` type on purpose: the release level is a maintainer decision, not the bot's."
+          fi
           DRAFT=()
           if [ "$TYPECHECK" != "success" ]; then
             DRAFT=(--draft)
